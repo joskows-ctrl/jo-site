@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --red: #e00;
+  --black: #0a0a0a;
+  --off-white: #f9f7f4;
+  --mid: #888;
+  --border: #e2ddd8;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--off-white);
+  color: var(--black);
+  overflow-x: hidden;
+}
+
+/* ── OPT NAV ── */
+.opt-nav {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9999;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  max-width: 220px;
+  justify-content: flex-end;
+}
+.opt-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: rgba(255,255,255,0.7);
+  color: #999;
+  text-decoration: none;
+  font-size: 10px;
+  font-family: 'DM Sans', sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+.opt-nav a:hover, .opt-nav a.active {
+  background: var(--black);
+  color: #fff;
+  border-color: var(--black);
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 60px 48px 40px;
+  border-bottom: 2px solid var(--black);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 8px;
+}
+
+.hero-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(5rem, 18vw, 19rem);
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  color: var(--black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.hero-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 28px;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.hero-subtitle {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
+  font-weight: 400;
+  color: var(--mid);
+  letter-spacing: 0.02em;
+}
+
+.hero-awards {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  text-align: right;
+}
+
+/* ── SECTION COMMON ── */
+.editorial-section {
+  padding: 80px 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  margin-bottom: 48px;
+}
+
+.section-number {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--mid);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+  color: var(--black);
+}
+
+/* ── MAGAZINE GRID ── */
+/* Asymmetric layout: big (2-col) + small */
+.mag-grid {
+  display: grid;
+  gap: 12px;
+}
+.mag-grid-comedy {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+}
+.mag-grid-comedy .thumb:nth-child(1) {
+  grid-column: 1 / 3;
+}
+.mag-grid-comedy .thumb:nth-child(4) {
+  grid-column: 2 / 4;
+}
+
+.mag-grid-social {
+  grid-template-columns: repeat(3, 1fr);
+}
+.mag-grid-social .thumb:nth-child(3) {
+  grid-column: 2 / 4;
+  grid-row: 2;
+}
+
+.mag-grid-film {
+  grid-template-columns: repeat(3, 1fr);
+}
+.mag-grid-film .thumb:nth-child(2) {
+  grid-column: 2 / 4;
+}
+
+.mag-grid-ai {
+  grid-template-columns: repeat(3, 1fr);
+}
+.mag-grid-ai .thumb:nth-child(5) {
+  grid-column: 1 / 3;
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #e8e4df;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.thumb::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--accent, #ccc);
+  transition: width 0.25s, background 0.25s;
+}
+
+.thumb:hover {
+  border-color: var(--red);
+  transform: scale(1.01);
+}
+.thumb:hover::before {
+  background: var(--red);
+  width: 5px;
+}
+
+.thumb-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: rgba(0,0,0,0.35);
+  transition: color 0.2s;
+}
+.thumb:hover .thumb-play { color: var(--red); }
+
+.thumb-label {
+  position: absolute;
+  bottom: 10px;
+  left: 14px;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.25);
+}
+
+/* Category accents */
+.cat-comedy .thumb { --accent: #0a0a0a; }
+.cat-social .thumb { --accent: #0099bb; }
+.cat-film   .thumb { --accent: #888; }
+.cat-ai     .thumb { --accent: #5a9900; }
+
+/* ── ABOUT ── */
+.about-section {
+  padding: 80px 48px;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 80px;
+  align-items: start;
+}
+
+.about-text-col {}
+.about-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 24px;
+}
+.about-pull {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--black);
+  margin-bottom: 28px;
+  border-left: 3px solid var(--black);
+  padding-left: 24px;
+}
+.about-body {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #444;
+  max-width: 540px;
+}
+.about-body + .about-body { margin-top: 16px; }
+
+.about-image-col {}
+.about-portrait {
+  width: 100%;
+  display: block;
+  border: 1px solid var(--border);
+  aspect-ratio: 3/4;
+  object-fit: cover;
+}
+.about-caption {
+  margin-top: 12px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--black);
+  padding: 56px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.footer-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.08em;
+}
+footer a {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+footer a:hover { color: #fff; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .hero { padding: 48px 24px 32px; }
+  .editorial-section { padding: 60px 24px; }
+  .mag-grid-comedy,
+  .mag-grid-social,
+  .mag-grid-film,
+  .mag-grid-ai {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .mag-grid-comedy .thumb:nth-child(1),
+  .mag-grid-comedy .thumb:nth-child(4),
+  .mag-grid-social .thumb:nth-child(3),
+  .mag-grid-film .thumb:nth-child(2),
+  .mag-grid-ai .thumb:nth-child(5) {
+    grid-column: auto;
+  }
+  .about-section {
+    grid-template-columns: 1fr;
+    padding: 60px 24px;
+    gap: 40px;
+  }
+  footer { padding: 40px 24px; }
+}
+
+@media (max-width: 560px) {
+  .hero-name { font-size: clamp(3.5rem, 18vw, 7rem); white-space: normal; }
+  .mag-grid-comedy,
+  .mag-grid-social,
+  .mag-grid-film,
+  .mag-grid-ai { grid-template-columns: 1fr; }
+  .opt-nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Dev Nav -->
+<nav class="opt-nav">
+  <a href="option-1.html">1</a>
+  <a href="option-2.html">2</a>
+  <a href="option-3.html" class="active">3</a>
+  <a href="option-4.html">4</a>
+  <a href="option-5.html">5</a>
+  <a href="option-6.html">6</a>
+  <a href="option-7.html">7</a>
+  <a href="option-8.html">8</a>
+  <a href="option-9.html">9</a>
+  <a href="option-10.html">10</a>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-eyebrow">Film &amp; Commercial Editor &nbsp;·&nbsp; New York</div>
+  <h1 class="hero-name">JONAH OSKOW</h1>
+  <div class="hero-bottom">
+    <p class="hero-subtitle"><em>Cutting comedy. Shaping story. Making the frame count.</em></p>
+    <div class="hero-awards">Cannes Lions &nbsp;/&nbsp; Clios &nbsp;/&nbsp; One Show</div>
+  </div>
+</header>
+
+<!-- Comedy -->
+<section class="editorial-section cat-comedy" id="comedy">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <h2 class="section-title">Comedy</h2>
+  </div>
+  <div class="mag-grid mag-grid-comedy">
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 01</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 02</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 03</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 04</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 05</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 06</div></div>
+  </div>
+</section>
+
+<!-- Social Media -->
+<section class="editorial-section cat-social" id="social">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <h2 class="section-title">Social Media</h2>
+  </div>
+  <div class="mag-grid mag-grid-social">
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 01</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 02</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 03</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 04</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 05</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 06</div></div>
+  </div>
+</section>
+
+<!-- Film / Episodic -->
+<section class="editorial-section cat-film" id="film">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <h2 class="section-title">Film / Episodic</h2>
+  </div>
+  <div class="mag-grid mag-grid-film">
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 01</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 02</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 03</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 04</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 05</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 06</div></div>
+  </div>
+</section>
+
+<!-- AI Direction -->
+<section class="editorial-section cat-ai" id="ai">
+  <div class="section-header">
+    <span class="section-number">04</span>
+    <h2 class="section-title">AI Direction</h2>
+  </div>
+  <div class="mag-grid mag-grid-ai">
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 01</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 02</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 03</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 04</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 05</div></div>
+    <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 06</div></div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about-section" id="about">
+  <div class="about-text-col">
+    <div class="about-label">About</div>
+    <blockquote class="about-pull">The editor is the last writer. Every cut is an argument.</blockquote>
+    <p class="about-body">Jonah Oskow is a New York-based editor specializing in comedy, commercial, and long-form narrative work. With roots in NYC commercial editorial, his instinct for rhythm, timing, and performance has earned him recognition at the industry's most prestigious awards shows — Cannes Lions, Clios, and the One Show.</p>
+    <p class="about-body">His long-form credits include work for Comedy Central and Netflix, with on-screen talent including Idris Elba, Pete Davidson, and Jamie Lee Curtis. Jonah operates at the intersection of high-craft comedy and emotionally resonant storytelling — finding the breath between the punchlines.</p>
+    <p class="about-body">Clients span major advertising agencies, tech giants, and independent production companies. Jonah is available for commercial, episodic, and branded content projects.</p>
+  </div>
+  <div class="about-image-col">
+    <img class="about-portrait"
+      src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg"
+      alt="Jonah Oskow">
+    <div class="about-caption">Jonah Oskow &nbsp;·&nbsp; New York</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-name">JONAH OSKOW</div>
+  <a href="mailto:joskows@gmail.com">joskows@gmail.com</a>
+</footer>
+
+</body>
+</html>

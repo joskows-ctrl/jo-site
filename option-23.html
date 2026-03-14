@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JONAH OSKOW — Film & Commercial Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #111;
+    --text: #fff;
+    --accent: #44aaff;
+    --muted: rgba(255,255,255,0.25);
+    --left-w: 38vw;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    height: 100%;
+  }
+
+  /* OPT-NAV */
+  #opt-nav {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 220px;
+  }
+  #opt-nav a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--muted);
+    padding: 2px 5px;
+    border-radius: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  #opt-nav a:hover, #opt-nav a.active { color: var(--accent); border-color: var(--accent); }
+
+  /* LAYOUT */
+  .site-wrapper {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width: var(--left-w);
+    min-width: 280px;
+    flex-shrink: 0;
+    background: var(--bg);
+    border-right: 1px solid rgba(255,255,255,0.08);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 52px 40px;
+    z-index: 20;
+  }
+
+  .name-block { margin-bottom: 20px; }
+  .name-block .first {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(2.2rem, 3.8vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .name-block .last {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(2.2rem, 3.8vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .role {
+    font-size: 0.72rem;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 12px;
+    margin-bottom: 6px;
+  }
+  .email-link {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    transition: color 0.2s;
+  }
+  .email-link:hover { color: var(--accent); }
+
+  .spokesman-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 32px;
+    margin-bottom: 8px;
+  }
+  .spokesman-thumb {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 16/9;
+    background: #1a1a1a;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.2s;
+  }
+  .spokesman-thumb:hover { border-color: var(--accent); }
+  .spokesman-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover; opacity: 0.45;
+  }
+  .play-circle {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .play-circle svg { width: 48px; height: 48px; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.7)); }
+
+  .left-footer {
+    margin-top: auto;
+    font-size: 0.6rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    line-height: 1.7;
+  }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    margin-left: var(--left-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* CATEGORY TABS */
+  .cat-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 15;
+    padding-top: 52px;
+  }
+  .cat-tab {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 14px 22px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .cat-tab:hover { color: var(--text); }
+  .cat-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* LIST PANEL / WATCH PANEL CONTAINER */
+  .panel-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    min-height: 60vh;
+  }
+
+  /* BROWSE STATE */
+  .browse-state {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.1) transparent;
+  }
+  .browse-state::-webkit-scrollbar { width: 4px; }
+  .browse-state::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+  .browse-state.hidden {
+    opacity: 0;
+    transform: translateX(-40px);
+    pointer-events: none;
+  }
+
+  .work-row {
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    height: 64px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s;
+    gap: 20px;
+  }
+  .work-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.2s;
+    transform-origin: center;
+  }
+  .work-row:hover::before { transform: scaleY(1); }
+  .work-row:hover { background: rgba(255,255,255,0.03); }
+
+  .row-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    width: 28px;
+    flex-shrink: 0;
+  }
+  .row-title {
+    font-size: 0.85rem;
+    font-weight: 400;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .row-client {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .row-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* THUMBNAIL PREVIEW ON HOVER */
+  .row-thumb-preview {
+    position: fixed;
+    width: 200px;
+    aspect-ratio: 16/9;
+    background: #1c1c1c;
+    border-radius: 3px;
+    border: 1px solid rgba(68, 170, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0;
+    transition: opacity 0.2s;
+    overflow: hidden;
+  }
+  .row-thumb-preview.visible { opacity: 1; }
+  .row-thumb-preview svg { opacity: 0.5; }
+
+  /* WATCH STATE */
+  .watch-state {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    opacity: 0;
+    transform: translateX(40px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    overflow-y: auto;
+  }
+  .watch-state.visible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    margin-bottom: 28px;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: color 0.2s;
+  }
+  .back-btn:hover { color: var(--accent); }
+  .back-btn::before { content: '←'; font-size: 0.9rem; }
+
+  #watch-video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    display: block;
+    border-radius: 4px;
+  }
+
+  .watch-meta {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .watch-cat {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .watch-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .watch-sub {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ABOUT SECTION */
+  .about-section {
+    min-height: 100vh;
+    background: #0c0c0c;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .about-inner {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .about-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 60px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .pull-quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.6rem, 2.8vw, 2.6rem);
+    line-height: 1.4;
+    color: var(--text);
+    max-width: 420px;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .pull-quote.revealed { opacity: 1; }
+  .pull-quote em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .pull-quote-attr {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-top: 24px;
+    text-transform: uppercase;
+    font-style: normal;
+  }
+
+  .about-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 60px;
+    overflow: hidden;
+  }
+
+  .about-portrait {
+    width: min(360px, 80%);
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 4px;
+    transform: scale(1.05);
+    transition: transform 1s ease;
+  }
+  .about-portrait.revealed { transform: scale(1); }
+
+  /* SPOKESMAN MODAL */
+  #spokesman-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.93);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  #spokesman-modal.open { display: flex; }
+  .modal-inner {
+    position: relative;
+    width: min(80vw, 900px);
+  }
+  .modal-inner video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: block;
+    background: #000;
+    border-radius: 4px;
+  }
+  .modal-close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.6rem;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .modal-close:hover { opacity: 1; }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .left-panel {
+      position: sticky; top: 0; width: 100%; min-width: unset; height: auto;
+      flex-direction: row; flex-wrap: wrap; align-items: center;
+      padding: 14px 20px; gap: 12px;
+      border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .name-block .first, .name-block .last { font-size: 1.4rem; }
+    .spokesman-label, .spokesman-thumb, .left-footer { display: none; }
+    .right-panel { margin-left: 0; }
+    .cat-tabs { padding-top: 16px; overflow-x: auto; }
+    .work-row { padding: 0 20px; gap: 12px; }
+    .row-client { display: none; }
+    .about-inner { flex-direction: column; }
+    .about-left { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 60px 30px; }
+    .about-right { padding: 60px 30px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="opt-nav">
+  <a href="option-21.html">21</a>
+  <a href="option-22.html">22</a>
+  <a href="option-23.html" class="active">23</a>
+  <a href="option-24.html">24</a>
+  <a href="option-25.html">25</a>
+</nav>
+
+<div class="site-wrapper">
+
+  <!-- LEFT PANEL -->
+  <aside class="left-panel">
+    <div class="name-block">
+      <div class="first">JONAH</div>
+      <div class="last">OSKOW</div>
+    </div>
+    <div class="role">Film &amp; Commercial Editor</div>
+    <a class="email-link" href="mailto:joskows@gmail.com">joskows@gmail.com</a>
+
+    <div class="spokesman-label">Get Up To Speed</div>
+    <div class="spokesman-thumb" id="spokesman-thumb" role="button" tabindex="0">
+      <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+      <div class="play-circle">
+        <svg viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="23" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.4)"/>
+          <polygon points="20,15 34,24 20,33" fill="white"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="left-footer">
+      CANNES · CLIOS · ONE SHOW<br>
+      COMEDY CENTRAL · NETFLIX<br>
+      IDRIS ELBA · PETE DAVIDSON<br>
+      JAMIE LEE CURTIS
+    </div>
+  </aside>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="cat-tabs" id="cat-tabs"></div>
+
+    <div class="panel-container" id="panel-container">
+      <!-- BROWSE STATE -->
+      <div class="browse-state" id="browse-state">
+        <div id="work-list"></div>
+      </div>
+
+      <!-- WATCH STATE -->
+      <div class="watch-state" id="watch-state">
+        <button class="back-btn" id="back-btn">Back to list</button>
+        <video id="watch-video" controls playsinline></video>
+        <div class="watch-meta">
+          <div class="watch-cat" id="watch-cat"></div>
+          <div class="watch-title" id="watch-title"></div>
+          <div class="watch-sub" id="watch-sub"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOVER PREVIEW -->
+    <div class="row-thumb-preview" id="thumb-preview">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+    </div>
+
+    <!-- ABOUT -->
+    <section class="about-section" id="about">
+      <div class="about-inner">
+        <div class="about-left">
+          <blockquote class="pull-quote" id="pull-quote">
+            "Seasoned comedy editor.<br>
+            <em>NYC commercial roots.</em><br>
+            Cannes. Clios. One Show."
+            <div class="pull-quote-attr">— Jonah Oskow, Film &amp; Commercial Editor</div>
+          </blockquote>
+        </div>
+        <div class="about-right">
+          <img class="about-portrait" id="about-portrait" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- SPOKESMAN MODAL -->
+<div id="spokesman-modal" role="dialog" aria-modal="true">
+  <div class="modal-inner">
+    <button class="modal-close" id="modal-close">×</button>
+    <video id="spokesman-video" controls playsinline src="https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4"></video>
+  </div>
+</div>
+
+<script>
+const VM = {
+  current: null,
+  play(el) {
+    if (this.current && this.current !== el) {
+      this.current.pause();
+      this.current.currentTime = 0;
+    }
+    this.current = el;
+  },
+  stop() {
+    if (this.current) {
+      this.current.pause();
+      this.current.currentTime = 0;
+      this.current = null;
+    }
+  }
+};
+
+const CATEGORIES = [
+  { id: 'comedy', label: 'Comedy' },
+  { id: 'social', label: 'Social Media' },
+  { id: 'film', label: 'Film / Episodic' },
+  { id: 'ai', label: 'AI Direction' },
+];
+
+const WORK_SRC = 'https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4';
+
+const WORK_DATA = [
+  // Comedy
+  { title: 'Mountain Dew "Kickstart"', client: 'Mountain Dew', year: '2023', cat: 'Comedy' },
+  { title: 'Tide "Miracle Clothes"', client: 'Tide', year: '2022', cat: 'Comedy' },
+  { title: 'Old Spice "Horse"', client: 'Old Spice', year: '2022', cat: 'Comedy' },
+  { title: 'Pizza Hut "Stuffed"', client: 'Pizza Hut', year: '2023', cat: 'Comedy' },
+  { title: 'Pepsi "Live For Now"', client: 'Pepsi', year: '2021', cat: 'Comedy' },
+  { title: 'Snickers "You\'re Not You"', client: 'Snickers', year: '2023', cat: 'Comedy' },
+  // Social
+  { title: 'Charmin "Bears"', client: 'Charmin', year: '2023', cat: 'Social Media' },
+  { title: 'E*TRADE "Baby"', client: 'E*TRADE', year: '2022', cat: 'Social Media' },
+  { title: 'Geico "Hump Day"', client: 'Geico', year: '2023', cat: 'Social Media' },
+  { title: 'Bud Light "Dilly Dilly"', client: 'Bud Light', year: '2022', cat: 'Social Media' },
+  { title: 'Progressive "Flo"', client: 'Progressive', year: '2023', cat: 'Social Media' },
+  { title: 'Dollar Shave Club', client: 'DSC', year: '2022', cat: 'Social Media' },
+  // Film
+  { title: 'Netflix "Stranger Promos"', client: 'Netflix', year: '2023', cat: 'Film / Episodic' },
+  { title: 'Comedy Central Rebrand', client: 'CC', year: '2022', cat: 'Film / Episodic' },
+  { title: 'SNL Digital Short', client: 'NBC', year: '2023', cat: 'Film / Episodic' },
+  { title: 'Adult Swim "Off the Air"', client: 'Adult Swim', year: '2022', cat: 'Film / Episodic' },
+  { title: 'Hulu Original Cut', client: 'Hulu', year: '2023', cat: 'Film / Episodic' },
+  { title: 'Amazon "Making The Cut"', client: 'Amazon', year: '2022', cat: 'Film / Episodic' },
+  // AI
+  { title: 'AI Campaign "Next Self"', client: 'Synthetic Co.', year: '2024', cat: 'AI Direction' },
+  { title: 'Synthetic Spot "FutureCo"', client: 'FutureCo', year: '2024', cat: 'AI Direction' },
+  { title: 'DeepBrand "Launch"', client: 'DeepBrand', year: '2024', cat: 'AI Direction' },
+  { title: 'Generative Film "Echo"', client: 'Echo Labs', year: '2024', cat: 'AI Direction' },
+  { title: 'LLM Director Cut', client: 'Neural Films', year: '2024', cat: 'AI Direction' },
+  { title: 'Neural Reel 2025', client: 'Various', year: '2025', cat: 'AI Direction' },
+];
+
+let activeCat = 0;
+const catTabs = document.getElementById('cat-tabs');
+const workList = document.getElementById('work-list');
+const browseState = document.getElementById('browse-state');
+const watchState = document.getElementById('watch-state');
+const watchVideo = document.getElementById('watch-video');
+const watchCat = document.getElementById('watch-cat');
+const watchTitle = document.getElementById('watch-title');
+const watchSub = document.getElementById('watch-sub');
+const backBtn = document.getElementById('back-btn');
+const thumbPreview = document.getElementById('thumb-preview');
+
+CATEGORIES.forEach((cat, i) => {
+  const tab = document.createElement('button');
+  tab.className = 'cat-tab' + (i === 0 ? ' active' : '');
+  tab.textContent = cat.label;
+  tab.addEventListener('mouseenter', () => switchCat(i));
+  catTabs.appendChild(tab);
+});
+
+function switchCat(idx) {
+  document.querySelectorAll('.cat-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  activeCat = idx;
+  renderList(idx);
+  goToBrowse();
+}
+
+function renderList(catIdx) {
+  const cat = CATEGORIES[catIdx];
+  const works = WORK_DATA.filter(w => w.cat === cat.label);
+  workList.innerHTML = '';
+
+  works.forEach((work, i) => {
+    const row = document.createElement('div');
+    row.className = 'work-row';
+    row.innerHTML = `
+      <span class="row-num">${String(i + 1).padStart(2,'0')}</span>
+      <span class="row-title">${work.title}</span>
+      <span class="row-client">${work.client}</span>
+      <span class="row-year">${work.year}</span>
+    `;
+
+    row.addEventListener('mouseenter', e => {
+      thumbPreview.classList.add('visible');
+      positionPreview(e);
+    });
+    row.addEventListener('mousemove', positionPreview);
+    row.addEventListener('mouseleave', () => thumbPreview.classList.remove('visible'));
+    row.addEventListener('click', () => playWork(work, i));
+    workList.appendChild(row);
+  });
+}
+
+function positionPreview(e) {
+  const x = e.clientX + 20;
+  const y = e.clientY - 60;
+  const maxX = window.innerWidth - 220;
+  const maxY = window.innerHeight - 130;
+  thumbPreview.style.left = Math.min(x, maxX) + 'px';
+  thumbPreview.style.top = Math.min(Math.max(y, 10), maxY) + 'px';
+}
+
+function playWork(work, idx) {
+  watchCat.textContent = work.cat;
+  watchTitle.textContent = work.title;
+  watchSub.textContent = work.client + ' · ' + work.year;
+  watchVideo.src = WORK_SRC;
+
+  browseState.classList.add('hidden');
+  watchState.classList.add('visible');
+
+  VM.play(watchVideo);
+  watchVideo.play().catch(() => {});
+}
+
+function goToBrowse() {
+  VM.stop();
+  watchVideo.src = '';
+  browseState.classList.remove('hidden');
+  watchState.classList.remove('visible');
+}
+
+backBtn.addEventListener('click', goToBrowse);
+
+renderList(0);
+
+// Spokesman modal
+const spokeThumb = document.getElementById('spokesman-thumb');
+const spokeModal = document.getElementById('spokesman-modal');
+const spokeVideo = document.getElementById('spokesman-video');
+const modalClose = document.getElementById('modal-close');
+
+function openModal() {
+  spokeModal.classList.add('open');
+  VM.play(spokeVideo);
+  spokeVideo.play().catch(() => {});
+}
+function closeModal() {
+  VM.stop();
+  spokeModal.classList.remove('open');
+}
+spokeThumb.addEventListener('click', openModal);
+spokeThumb.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(); });
+modalClose.addEventListener('click', closeModal);
+spokeModal.addEventListener('click', e => { if (e.target === spokeModal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// About IntersectionObserver
+const pullQuote = document.getElementById('pull-quote');
+const aboutPortrait = document.getElementById('about-portrait');
+
+const aboutObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      pullQuote.classList.add('revealed');
+      aboutPortrait.classList.add('revealed');
+    }
+  });
+}, { threshold: 0.2 });
+
+aboutObs.observe(document.getElementById('about'));
+</script>
+</body>
+</html>

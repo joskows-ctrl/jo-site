@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #111111;
+  --white: #ffffff;
+  --accent: #44aaff;
+  --dim: #333333;
+  --sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --mono: 'Space Mono', monospace;
+  --overlay: rgba(0,0,0,0.6);
+  --panel-w: 38vw;
+  --wipe-ease: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--sans);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── OPT NAV ── */
+#opt-nav {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  display: flex;
+  gap: 3px;
+  background: rgba(0,0,0,0.75);
+  padding: 5px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.07);
+  flex-wrap: wrap;
+  max-width: 200px;
+}
+#opt-nav a {
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: color 0.2s;
+}
+#opt-nav a:hover { color: var(--white); }
+#opt-nav a.active { color: var(--accent); }
+
+/* ── BG VIDEO ── */
+#bg-video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+#bg-video.visible { opacity: 1; }
+
+#bg-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+#bg-overlay.visible { opacity: 1; }
+
+/* ── MAIN LAYOUT ── */
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── LEFT PANEL ── */
+.left-panel {
+  width: var(--panel-w);
+  min-width: 300px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: #0d0d0d;
+  border-right: 1px solid var(--dim);
+  display: flex;
+  flex-direction: column;
+  padding: 60px 48px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.left-top {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.name-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.88;
+  margin-bottom: 20px;
+}
+
+.name-word {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(5rem, 8vw, 9rem);
+  letter-spacing: -0.02em;
+  color: var(--white);
+  display: block;
+}
+
+.role-line {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  display: block;
+  margin-top: 22px;
+}
+
+/* WATCH INTRO button */
+.watch-intro-btn {
+  margin-top: 32px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity 0.25s;
+  user-select: none;
+}
+.watch-intro-btn:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+/* Divider below button */
+.left-divider {
+  margin-top: 28px;
+  height: 1px;
+  background: var(--dim);
+  flex-shrink: 0;
+}
+
+/* Left bottom: email */
+.left-bottom {
+  margin-top: auto;
+  padding-top: 32px;
+}
+
+.email-label {
+  font-family: var(--mono);
+  font-size: 0.53rem;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.28);
+  display: block;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.email-link {
+  font-size: 0.75rem;
+  letter-spacing: 0.07em;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.email-link:hover { color: var(--accent); }
+
+/* ── MODAL ── */
+#intro-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#intro-modal.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-inner {
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+}
+
+.modal-inner video {
+  width: 100%;
+  display: block;
+  border-radius: 4px;
+  background: #000;
+}
+
+.modal-close {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  color: rgba(255,255,255,0.6);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.modal-close:hover { color: var(--white); }
+
+/* ── RIGHT PANEL ── */
+.right-panel {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 60px 56px 80px 52px;
+}
+
+/* Category rows */
+.cat-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.cat-item {
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  cursor: default;
+  position: relative;
+}
+.cat-item:first-child { border-top: 1px solid rgba(255,255,255,0.08); }
+
+.cat-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.cat-num {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.3);
+  flex-shrink: 0;
+  transition: color 0.3s;
+}
+
+.cat-name {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(2rem, 3.2vw, 3.4rem);
+  letter-spacing: -0.01em;
+  color: rgba(255,255,255,0.4);
+  line-height: 1;
+  transition: color 0.35s ease, letter-spacing 0.35s ease;
+}
+
+.cat-sub {
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.13em;
+  color: rgba(255,255,255,0);
+  margin-left: auto;
+  text-transform: uppercase;
+  transition: color 0.35s ease;
+  flex-shrink: 0;
+}
+
+.cat-item.is-active .cat-name {
+  color: var(--white);
+  letter-spacing: 0.01em;
+}
+.cat-item.is-active .cat-num { color: var(--accent); }
+.cat-item.is-active .cat-sub { color: rgba(255,255,255,0.38); }
+
+/* Thumb grid */
+.cat-thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.6s cubic-bezier(0.16,1,0.3,1),
+              opacity 0.45s ease 0.08s;
+  pointer-events: none;
+}
+.cat-item.is-active .cat-thumbs {
+  max-height: 700px;
+  opacity: 1;
+  pointer-events: all;
+}
+
+.thumb-wrap {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.thumb-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* About link */
+.about-link-wrap {
+  margin-top: 52px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.about-link {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.about-link:hover { color: var(--accent); }
+
+/* ── ABOUT SECTION ── */
+.about-section {
+  background: #0d0d0d;
+  border-top: 1px solid var(--dim);
+  padding: 100px 60px;
+  overflow: hidden;
+}
+
+.about-inner {
+  display: grid;
+  grid-template-columns: minmax(200px, 380px) 1fr;
+  gap: 72px;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+/* ── CINEMATIC CURTAIN WIPE ── */
+/* Each reveal-item has a wipe overlay div inside */
+.reveal-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.reveal-curtain {
+  position: absolute;
+  inset: 0;
+  background: #111111;
+  transform: scaleX(1);
+  transform-origin: left center;
+  transition: transform 0.8s var(--wipe-ease);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* When section is revealed: curtain pulls right */
+.about-section.revealed .reveal-item:nth-child(1) .reveal-curtain {
+  transform: scaleX(0);
+  transform-origin: right center;
+}
+.about-section.revealed .reveal-item:nth-child(2) .reveal-curtain {
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition-delay: 0.2s;
+}
+
+.about-portrait-col {
+  /* inside reveal-item */
+}
+.about-portrait-col img {
+  width: 100%;
+  display: block;
+  border-radius: 4px;
+  filter: grayscale(12%) contrast(1.05);
+}
+
+.about-text-col {
+  padding-top: 8px;
+}
+
+.about-kicker {
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 24px;
+}
+
+.about-name {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 4vw, 4rem);
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  margin-bottom: 32px;
+  color: var(--white);
+}
+
+.about-bio {
+  font-size: 1rem;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 36px;
+}
+.about-bio strong { color: var(--white); font-weight: 700; }
+
+.awards-row {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 32px;
+}
+.award-item { display: flex; flex-direction: column; gap: 3px; }
+.award-name {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--white);
+}
+.award-sub {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+
+.about-email {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(68,170,255,0.35);
+  padding-bottom: 2px;
+  transition: border-color 0.3s, color 0.3s;
+}
+.about-email:hover { color: var(--white); border-color: rgba(255,255,255,0.4); }
+
+/* ── FOOTER ── */
+footer {
+  background: #080808;
+  padding: 28px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--dim);
+}
+.footer-name {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.45);
+}
+.footer-email {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.28);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.footer-email:hover { color: var(--accent); }
+
+/* ── MOBILE ── */
+@media (max-width: 860px) {
+  #opt-nav { display: none; }
+
+  .main-layout { flex-direction: column; }
+
+  .left-panel {
+    width: 100%;
+    position: relative;
+    height: auto;
+    min-height: auto;
+    padding: 40px 28px 32px;
+    border-right: none;
+    border-bottom: 1px solid var(--dim);
+  }
+  .name-word { font-size: clamp(4rem, 14vw, 6rem); }
+  .left-bottom { padding-top: 24px; }
+
+  .right-panel { padding: 36px 24px 60px; }
+  .cat-name { font-size: clamp(1.8rem, 7vw, 2.8rem); }
+
+  .about-section { padding: 60px 24px; }
+  .about-inner { grid-template-columns: 1fr; gap: 40px; }
+
+  footer { padding: 20px 24px; flex-direction: column; gap: 10px; text-align: center; }
+
+  .modal-inner { width: 95%; }
+  .modal-close { top: -36px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Opt Nav -->
+<nav id="opt-nav">
+  <a href="option-1.html">1</a>
+  <a href="option-2.html">2</a>
+  <a href="option-3.html">3</a>
+  <a href="option-4.html">4</a>
+  <a href="option-5.html">5</a>
+  <a href="option-6.html">6</a>
+  <a href="option-7.html">7</a>
+  <a href="option-8.html">8</a>
+  <a href="option-9.html">9</a>
+  <a href="option-10.html">10</a>
+  <a href="option-11.html">11</a>
+  <a href="option-12.html" class="active">12</a>
+  <a href="option-13.html">13</a>
+  <a href="option-14.html">14</a>
+  <a href="option-15.html">15</a>
+</nav>
+
+<!-- BG Video -->
+<video id="bg-video" muted loop playsinline preload="metadata">
+  <source src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" type="video/mp4">
+</video>
+<div id="bg-overlay"></div>
+
+<!-- MODAL -->
+<div id="intro-modal" role="dialog" aria-modal="true" aria-label="Intro video">
+  <div class="modal-inner" id="modal-inner">
+    <button class="modal-close" id="modal-close" aria-label="Close">&#x00D7;</button>
+    <video
+      id="modal-video"
+      controls
+      src="https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4"
+      preload="none"
+    ></video>
+  </div>
+</div>
+
+<!-- Main split layout -->
+<div class="main-layout">
+
+  <!-- LEFT PANEL -->
+  <aside class="left-panel">
+    <div class="left-top">
+      <div class="name-block">
+        <span class="name-word">JONAH</span>
+        <span class="name-word">OSKOW</span>
+      </div>
+      <span class="role-line">Film &amp; Commercial Editor</span>
+
+      <button class="watch-intro-btn" id="watch-intro-btn">&#x25B6;&ensp;WATCH INTRO</button>
+
+      <div class="left-divider"></div>
+    </div>
+
+    <div class="left-bottom">
+      <span class="email-label">Contact</span>
+      <a href="mailto:joskows@gmail.com" class="email-link">joskows@gmail.com</a>
+    </div>
+  </aside>
+
+  <!-- RIGHT PANEL -->
+  <main class="right-panel" id="right-panel">
+    <div class="cat-list" id="cat-list">
+
+      <div class="cat-item" data-cat="comedy">
+        <div class="cat-header">
+          <span class="cat-num">01</span>
+          <span class="cat-name">Comedy</span>
+          <span class="cat-sub">Specials · Sketches · Spots</span>
+        </div>
+        <div class="cat-thumbs">
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+        </div>
+      </div>
+
+      <div class="cat-item" data-cat="social">
+        <div class="cat-header">
+          <span class="cat-num">02</span>
+          <span class="cat-name">Social Media</span>
+          <span class="cat-sub">Campaigns · Branded Content</span>
+        </div>
+        <div class="cat-thumbs">
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+        </div>
+      </div>
+
+      <div class="cat-item" data-cat="film">
+        <div class="cat-header">
+          <span class="cat-num">03</span>
+          <span class="cat-name">Film / Episodic</span>
+          <span class="cat-sub">Narrative · Series · Docs</span>
+        </div>
+        <div class="cat-thumbs">
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+        </div>
+      </div>
+
+      <div class="cat-item" data-cat="ai">
+        <div class="cat-header">
+          <span class="cat-num">04</span>
+          <span class="cat-name">AI Direction</span>
+          <span class="cat-sub">Generative · Hybrid · Experimental</span>
+        </div>
+        <div class="cat-thumbs">
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+          <div class="thumb-wrap"><video muted loop preload="none" src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" controls></video></div>
+        </div>
+      </div>
+
+    </div><!-- /cat-list -->
+
+    <div class="about-link-wrap">
+      <a href="#about" class="about-link">About Jonah ↓</a>
+    </div>
+  </main>
+
+</div><!-- /main-layout -->
+
+<!-- ABOUT SECTION -->
+<section class="about-section" id="about">
+  <div class="about-inner">
+
+    <!-- Portrait — reveal item 1 -->
+    <div class="reveal-item about-portrait-col">
+      <div class="reveal-curtain"></div>
+      <img
+        src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg"
+        alt="Jonah Oskow"
+        loading="lazy"
+        style="display:block;width:100%;border-radius:4px;filter:grayscale(12%) contrast(1.05);"
+      >
+    </div>
+
+    <!-- Text — reveal item 2 -->
+    <div class="reveal-item about-text-col">
+      <div class="reveal-curtain"></div>
+      <span class="about-kicker">About the Editor</span>
+      <h2 class="about-name">JONAH<br>OSKOW</h2>
+      <p class="about-bio">
+        Seasoned comedy editor rooted in <strong>NYC commercial editorial</strong>. Over a decade shaping the timing that makes a joke land — and the silence right before it.<br><br>
+        Credits include <strong>Comedy Central</strong> and <strong>Netflix</strong>. On-screen collaborators: <strong>Idris Elba, Pete Davidson, Jamie Lee Curtis</strong>. Clients range from major agencies to global tech.
+      </p>
+      <div class="awards-row">
+        <div class="award-item">
+          <span class="award-name">Cannes</span>
+          <span class="award-sub">Lions Winner</span>
+        </div>
+        <div class="award-item">
+          <span class="award-name">Clios</span>
+          <span class="award-sub">Winner</span>
+        </div>
+        <div class="award-item">
+          <span class="award-name">One Show</span>
+          <span class="award-sub">Winner</span>
+        </div>
+        <div class="award-item">
+          <span class="award-name">NYC</span>
+          <span class="award-sub">Based</span>
+        </div>
+      </div>
+      <a href="mailto:joskows@gmail.com" class="about-email">joskows@gmail.com</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <span class="footer-name">JONAH OSKOW</span>
+  <a href="mailto:joskows@gmail.com" class="footer-email">joskows@gmail.com</a>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── MODAL ── */
+  var modal      = document.getElementById('intro-modal');
+  var modalVideo = document.getElementById('modal-video');
+  var modalInner = document.getElementById('modal-inner');
+  var openBtn    = document.getElementById('watch-intro-btn');
+  var closeBtn   = document.getElementById('modal-close');
+
+  function openModal() {
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    modalVideo.load();
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+    modalVideo.pause();
+    modalVideo.currentTime = 0;
+  }
+
+  openBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+
+  // Click outside the video (on the overlay) to close
+  modal.addEventListener('click', function (e) {
+    if (!modalInner.contains(e.target)) closeModal();
+  });
+
+  // ESC key
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+  });
+
+  /* ── BG VIDEO ── */
+  var bgVideo   = document.getElementById('bg-video');
+  var bgOverlay = document.getElementById('bg-overlay');
+  var catItems  = document.querySelectorAll('.cat-item');
+  var rightPanel = document.getElementById('right-panel');
+  var activeItem = null;
+  var bgPlaying  = false;
+
+  function showBg() {
+    if (!bgPlaying) {
+      bgVideo.play().catch(function () {});
+      bgPlaying = true;
+    }
+    bgVideo.classList.add('visible');
+    bgOverlay.classList.add('visible');
+  }
+
+  function hideBg() {
+    bgVideo.classList.remove('visible');
+    bgOverlay.classList.remove('visible');
+  }
+
+  catItems.forEach(function (item) {
+    item.addEventListener('mouseenter', function () {
+      if (activeItem && activeItem !== item) {
+        activeItem.classList.remove('is-active');
+        activeItem.querySelectorAll('video').forEach(function (v) {
+          v.pause(); v.currentTime = 0;
+        });
+      }
+      activeItem = item;
+      item.classList.add('is-active');
+      showBg();
+    });
+  });
+
+  rightPanel.addEventListener('mouseleave', hideBg);
+  rightPanel.addEventListener('mouseenter', function () {
+    if (activeItem) showBg();
+  });
+
+  /* ── THUMBNAIL HOVER ── */
+  document.querySelectorAll('.thumb-wrap').forEach(function (wrap) {
+    var vid = wrap.querySelector('video');
+    if (!vid) return;
+    wrap.addEventListener('mouseenter', function () { vid.play().catch(function () {}); });
+    wrap.addEventListener('mouseleave', function () { vid.pause(); vid.currentTime = 0; });
+  });
+
+  /* ── ABOUT: CURTAIN WIPE via IntersectionObserver ── */
+  var aboutSection = document.querySelector('.about-section');
+  if (aboutSection) {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          aboutSection.classList.add('revealed');
+          obs.unobserve(aboutSection);
+        }
+      });
+    }, { threshold: 0.12 });
+    obs.observe(aboutSection);
+  }
+
+  /* ── MOBILE: tap to toggle ── */
+  if (window.matchMedia('(max-width: 860px)').matches) {
+    catItems.forEach(function (item) {
+      item.addEventListener('click', function () {
+        var isOpen = item.classList.contains('is-active');
+        catItems.forEach(function (i) { i.classList.remove('is-active'); });
+        if (!isOpen) item.classList.add('is-active');
+      });
+    });
+  }
+
+}());
+</script>
+</body>
+</html>

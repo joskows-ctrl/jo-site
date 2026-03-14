@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --text-light: #888888;
+  --text-xlight: #cccccc;
+  --accent: #111111;
+  --line: #e8e8e8;
+}
+
+html, body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  cursor: none;
+}
+
+/* ─── CUSTOM CURSOR ─── */
+#cursor {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: #111;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+  mix-blend-mode: multiply;
+}
+#cursor.hover-cat {
+  width: 60px;
+  height: 60px;
+  background: rgba(17,17,17,0.06);
+  border: 1px solid #111;
+}
+#cursor.hover-thumb {
+  width: 48px;
+  height: 48px;
+  background: #111;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 32px 48px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  z-index: 100;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.intro-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--text-light);
+  background: none;
+  border: none;
+  cursor: none;
+  padding: 0;
+  transition: color 0.2s;
+}
+.intro-btn:hover { color: var(--text); }
+
+.header-email {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.header-email:hover { color: var(--text); }
+
+.header-role {
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--text-xlight);
+}
+
+/* ─── GHOST THUMBNAIL (top-right hover reveal) ─── */
+#ghost-thumb {
+  position: fixed;
+  top: 100px;
+  right: 48px;
+  width: 320px;
+  aspect-ratio: 16/9;
+  background: #f4f4f4;
+  border: 1px solid var(--line);
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#ghost-thumb.visible { opacity: 1; }
+.ghost-play {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(17,17,17,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--text);
+  padding-left: 4px;
+}
+.ghost-label {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  right: 16px;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--text-light);
+  text-transform: uppercase;
+}
+
+/* ─── MAIN CONTENT ─── */
+main {
+  padding-top: 96px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── CATEGORY SECTION ─── */
+.cat-section {
+  border-bottom: 1px solid var(--line);
+}
+
+.cat-header {
+  padding: 0 48px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  cursor: none;
+  transition: background 0.25s ease;
+  position: relative;
+}
+.cat-header:hover { background: #fafafa; }
+.cat-header.expanded { background: #fafafa; }
+
+.cat-num {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: var(--text-xlight);
+  min-width: 28px;
+}
+.cat-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 400;
+  color: var(--text);
+  transition: font-style 0.2s;
+}
+.cat-header:hover .cat-title,
+.cat-header.expanded .cat-title { font-style: italic; }
+
+.cat-count {
+  margin-left: auto;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--text-xlight);
+}
+.cat-toggle {
+  font-size: 1.2rem;
+  color: var(--text-xlight);
+  transition: transform 0.35s ease, color 0.2s;
+}
+.cat-header.expanded .cat-toggle {
+  transform: rotate(45deg);
+  color: var(--text);
+}
+
+/* ─── THUMB DRAWER ─── */
+.thumb-drawer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.thumb-drawer.open { max-height: 500px; }
+
+.thumb-row {
+  padding: 24px 48px 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.thumb {
+  aspect-ratio: 16/9;
+  background: #f4f4f4;
+  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.25s;
+}
+.thumb:hover { background: #eeeeee; }
+
+.thumb-play {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(17,17,17,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: var(--text);
+  padding-left: 3px;
+  transition: background 0.2s, transform 0.2s;
+}
+.thumb:hover .thumb-play {
+  background: rgba(17,17,17,0.18);
+  transform: scale(1.08);
+}
+.thumb-sub {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 12px;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-light);
+  text-transform: uppercase;
+  background: linear-gradient(to top, rgba(0,0,0,0.04), transparent);
+}
+
+/* ─── ABOUT SECTION ─── */
+.about-section {
+  padding: 80px 48px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.about-portrait {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  filter: grayscale(100%);
+  mix-blend-mode: multiply;
+}
+
+.about-right {}
+.about-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  color: var(--text-xlight);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.about-headline {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--text);
+  margin-bottom: 32px;
+}
+.about-body {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--text-light);
+  margin-bottom: 16px;
+}
+.about-divider {
+  width: 32px;
+  height: 1px;
+  background: var(--line);
+  margin: 32px 0;
+}
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+.skill-tag {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  color: var(--text-light);
+  text-transform: uppercase;
+}
+.about-cta {
+  display: inline-block;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--text);
+  padding-bottom: 2px;
+  text-transform: uppercase;
+  transition: color 0.2s, border-color 0.2s;
+}
+.about-cta:hover { color: var(--text-light); border-color: var(--text-light); }
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 24px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+footer p { font-size: 0.72rem; letter-spacing: 0.08em; color: var(--text-xlight); }
+footer a { color: var(--text-xlight); text-decoration: none; font-size: 0.72rem; letter-spacing: 0.08em; }
+footer a:hover { color: var(--text-light); }
+
+/* ─── MODAL ─── */
+#modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.97);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+#modal-video {
+  width: 90%;
+  max-width: 960px;
+  aspect-ratio: 16/9;
+}
+#modal-close {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  font-size: 2.5rem;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* ─── OPT-NAV ─── */
+#opt-nav {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 8888;
+  font-size: 10px;
+  font-family: monospace;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 10px;
+  max-height: 220px;
+  overflow-y: auto;
+  line-height: 1.8;
+}
+#opt-nav a {
+  color: #999;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0 3px;
+  transition: color 0.2s;
+}
+#opt-nav a:hover { color: #111; }
+#opt-nav a.current { color: #111; font-weight: bold; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 860px) {
+  header { padding: 20px 24px; flex-wrap: wrap; gap: 12px; }
+  .cat-header { padding: 0 24px; }
+  .thumb-row { padding: 20px 24px 32px; grid-template-columns: 1fr 1fr; }
+  .about-section { padding: 48px 24px; grid-template-columns: 1fr; gap: 32px; }
+  #ghost-thumb { display: none; }
+  footer { padding: 20px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+
+<!-- MODAL -->
+<div id="modal">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2.5rem;color:#fff;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+</div>
+
+<!-- GHOST THUMBNAIL -->
+<div id="ghost-thumb">
+  <div class="ghost-play">▶</div>
+  <div class="ghost-label" id="ghost-label">Project Preview</div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="site-name">Jonah Oskow</div>
+  <div class="header-meta">
+    <span class="header-role">Film &amp; Commercial Editor</span>
+    <button class="intro-btn" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">▶ Watch Intro · 0:37</button>
+    <a href="mailto:joskows@gmail.com" class="header-email">joskows@gmail.com</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- CATEGORY: COMEDY -->
+  <div class="cat-section" data-cat="comedy">
+    <div class="cat-header" onclick="toggleCat(this)" data-label="Comedy">
+      <span class="cat-num">01</span>
+      <span class="cat-title">Comedy</span>
+      <span class="cat-count">3 Projects</span>
+      <span class="cat-toggle">+</span>
+    </div>
+    <div class="thumb-drawer">
+      <div class="thumb-row">
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('Sketch Series · 2024')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">Sketch Series · 2024</div>
+        </div>
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('Branded Comedy · 2023')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">Branded Comedy · 2023</div>
+        </div>
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('Character Spots · 2023')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">Character Spots · 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY: SOCIAL MEDIA -->
+  <div class="cat-section" data-cat="social">
+    <div class="cat-header" onclick="toggleCat(this)" data-label="Social Media">
+      <span class="cat-num">02</span>
+      <span class="cat-title">Social Media</span>
+      <span class="cat-count">3 Projects</span>
+      <span class="cat-toggle">+</span>
+    </div>
+    <div class="thumb-drawer">
+      <div class="thumb-row">
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('Campaign Reels · 2024')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">Campaign Reels · 2024</div>
+        </div>
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('Short-form Series · 2024')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">Short-form Series · 2024</div>
+        </div>
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('Influencer Edits · 2023')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">Influencer Edits · 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY: FILM / EPISODIC -->
+  <div class="cat-section" data-cat="film">
+    <div class="cat-header" onclick="toggleCat(this)" data-label="Film / Episodic">
+      <span class="cat-num">03</span>
+      <span class="cat-title">Film / Episodic</span>
+      <span class="cat-count">3 Projects</span>
+      <span class="cat-toggle">+</span>
+    </div>
+    <div class="thumb-drawer">
+      <div class="thumb-row">
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('Feature Documentary · 2024')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">Feature Documentary · 2024</div>
+        </div>
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('Pilot Episode · 2023')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">Pilot Episode · 2023</div>
+        </div>
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('Short Film · 2022')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">Short Film · 2022</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY: AI DIRECTION -->
+  <div class="cat-section" data-cat="ai">
+    <div class="cat-header" onclick="toggleCat(this)" data-label="AI Direction">
+      <span class="cat-num">04</span>
+      <span class="cat-title">AI Direction</span>
+      <span class="cat-count">3 Projects</span>
+      <span class="cat-toggle">+</span>
+    </div>
+    <div class="thumb-drawer">
+      <div class="thumb-row">
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('AI Narrative · 2024')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">AI Narrative · 2024</div>
+        </div>
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('Hybrid Production · 2024')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">Hybrid Production · 2024</div>
+        </div>
+        <div class="thumb"
+          onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"
+          onmouseenter="showGhost('AI Direction Reel · 2023')"
+          onmouseleave="hideGhost()">
+          <div class="thumb-play">▶</div>
+          <div class="thumb-sub">AI Direction Reel · 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT SECTION -->
+  <div class="about-section">
+    <div>
+      <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow" class="about-portrait">
+    </div>
+    <div class="about-right">
+      <div class="about-label">About</div>
+      <h2 class="about-headline">Film &amp; commercial editor based in New York.</h2>
+      <p class="about-body">Jonah Oskow works across comedy, branded content, narrative film, and AI-directed media — bringing a disciplined editorial voice and an obsession with rhythm to every project he touches.</p>
+      <p class="about-body">He's collaborated with brands, networks, and independent filmmakers to turn raw footage into finished work that actually lands. Precision in the cut. Clarity in the story.</p>
+      <div class="about-divider"></div>
+      <div class="skill-list">
+        <span class="skill-tag">Comedy</span>
+        <span class="skill-tag">Social Media</span>
+        <span class="skill-tag">Film / Episodic</span>
+        <span class="skill-tag">AI Direction</span>
+        <span class="skill-tag">Avid</span>
+        <span class="skill-tag">Premiere Pro</span>
+        <span class="skill-tag">DaVinci Resolve</span>
+      </div>
+      <a href="mailto:joskows@gmail.com" class="about-cta">Contact Jonah →</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2024 Jonah Oskow</p>
+    <a href="mailto:joskows@gmail.com">joskows@gmail.com</a>
+  </footer>
+
+</main>
+
+<!-- OPT-NAV -->
+<div id="opt-nav">
+  Options:
+  <a href="option-1.html">1</a><a href="option-2.html">2</a><a href="option-3.html">3</a><a href="option-4.html">4</a><a href="option-5.html">5</a><a href="option-6.html">6</a><a href="option-7.html">7</a><a href="option-8.html">8</a><a href="option-9.html">9</a><a href="option-10.html">10</a><a href="option-11.html">11</a><a href="option-12.html">12</a><a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a><a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a><a href="option-19.html">19</a><a href="option-20.html">20</a><a href="option-21.html">21</a><a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a><a href="option-25.html">25</a><a href="option-26.html">26</a><a href="option-27.html">27</a><a href="option-28.html">28</a><a href="option-29.html">29</a><a href="option-30.html">30</a><a href="option-31.html">31</a><a href="option-32.html">32</a><a href="option-33.html">33</a><a href="option-34.html">34</a><a href="option-35.html">35</a><a href="option-36.html">36</a><a href="option-37.html" class="current">37</a><a href="option-38.html">38</a><a href="option-39.html">39</a><a href="option-40.html">40</a><a href="option-41.html">41</a><a href="option-42.html">42</a><a href="option-43.html">43</a><a href="option-44.html">44</a><a href="option-45.html">45</a>
+</div>
+
+<script>
+// ─── CURSOR ───
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+
+// Cursor effects on cat headers
+document.querySelectorAll('.cat-header').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover-cat'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover-cat'));
+});
+document.querySelectorAll('.thumb').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover-thumb'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover-thumb'));
+});
+
+// ─── MODAL ───
+const modal = document.getElementById('modal');
+const mv = document.getElementById('modal-video');
+function openVideo(src) { mv.src = src; modal.style.display = 'flex'; mv.play(); }
+function closeModal() { mv.pause(); mv.src = ''; modal.style.display = 'none'; }
+document.getElementById('modal-close').onclick = closeModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ─── CATEGORY TOGGLE ───
+function toggleCat(header) {
+  const drawer = header.nextElementSibling;
+  const isOpen = drawer.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.thumb-drawer').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.cat-header').forEach(h => h.classList.remove('expanded'));
+
+  // Toggle current
+  if (!isOpen) {
+    drawer.classList.add('open');
+    header.classList.add('expanded');
+  }
+}
+
+// ─── GHOST THUMBNAIL ───
+const ghost = document.getElementById('ghost-thumb');
+const ghostLabel = document.getElementById('ghost-label');
+
+function showGhost(label) {
+  ghostLabel.textContent = label;
+  ghost.classList.add('visible');
+}
+function hideGhost() {
+  ghost.classList.remove('visible');
+}
+
+// Open comedy on load
+setTimeout(() => {
+  const firstHeader = document.querySelector('.cat-header');
+  if (firstHeader) toggleCat(firstHeader);
+}, 200);
+</script>
+</body>
+</html>

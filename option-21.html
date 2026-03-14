@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JONAH OSKOW — Film & Commercial Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #111;
+    --text: #fff;
+    --accent: #44aaff;
+    --muted: rgba(255,255,255,0.25);
+    --left: 28vw;
+    --center: 30vw;
+    --right: 42vw;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* OPT-NAV */
+  #opt-nav {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 220px;
+  }
+  #opt-nav a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--muted);
+    padding: 2px 5px;
+    border-radius: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  #opt-nav a:hover, #opt-nav a.active { color: var(--accent); border-color: var(--accent); }
+
+  /* THREE-PANEL LAYOUT */
+  .three-panel {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width: var(--left);
+    min-width: 260px;
+    flex-shrink: 0;
+    background: var(--bg);
+    border-right: 1px solid rgba(255,255,255,0.08);
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 48px 36px;
+    z-index: 10;
+  }
+
+  .name-block {
+    margin-bottom: 20px;
+  }
+  .name-block .first {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--text);
+  }
+  .name-block .last {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .role {
+    font-size: 0.7rem;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 10px;
+    margin-bottom: 6px;
+  }
+  .email-link {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    transition: color 0.2s;
+  }
+  .email-link:hover { color: var(--accent); }
+
+  .spokesman-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 28px;
+    margin-bottom: 8px;
+  }
+  .spokesman-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #1a1a1a;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.2s;
+  }
+  .spokesman-thumb:hover { border-color: var(--accent); }
+  .spokesman-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+  }
+  .play-circle {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .play-circle svg {
+    width: 44px;
+    height: 44px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+  }
+
+  .left-footer {
+    margin-top: auto;
+    font-size: 0.6rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    line-height: 1.6;
+  }
+
+  /* CENTER PANEL */
+  .center-panel {
+    width: var(--center);
+    margin-left: var(--left);
+    flex-shrink: 0;
+    background: #0e0e0e;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.1) transparent;
+    position: fixed;
+    left: var(--left);
+    top: 0;
+    padding: 48px 24px;
+    z-index: 5;
+  }
+  .center-panel::-webkit-scrollbar { width: 4px; }
+  .center-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+  .cat-section { margin-bottom: 40px; }
+  .cat-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .cat-header.active, .cat-header:hover { color: var(--accent); }
+
+  .thumb-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .thumb-item {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: #1c1c1c;
+    border-radius: 3px;
+    cursor: pointer;
+    overflow: hidden;
+    border: 1px solid transparent;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .thumb-item:hover { border-color: var(--accent); transform: scale(1.02); }
+  .thumb-item.playing { border-color: var(--accent); }
+
+  .thumb-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .thumb-play svg { width: 22px; height: 22px; opacity: 0.6; transition: opacity 0.2s; }
+  .thumb-item:hover .thumb-play svg { opacity: 1; }
+
+  .thumb-num {
+    position: absolute;
+    bottom: 5px;
+    left: 7px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    width: var(--right);
+    margin-left: calc(var(--left) + var(--center));
+    flex-shrink: 0;
+    background: var(--bg);
+    height: 100vh;
+    position: fixed;
+    left: calc(var(--left) + var(--center));
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+  }
+
+  .player-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    opacity: 0.3;
+  }
+  .player-placeholder .big-arrow {
+    font-size: 2rem;
+    color: var(--muted);
+  }
+  .player-placeholder p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .player-area {
+    width: 100%;
+    padding: 40px;
+    display: none;
+    flex-direction: column;
+    gap: 0;
+  }
+  .player-area.visible { display: flex; }
+
+  .player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .player-cat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .player-stop-btn {
+    background: none;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .player-stop-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  #main-player {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    display: block;
+    border-radius: 4px;
+  }
+
+  .player-meta {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .player-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .player-subtitle {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* SPOKESMAN MODAL */
+  #spokesman-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  #spokesman-modal.open { display: flex; }
+  .modal-inner {
+    position: relative;
+    width: min(80vw, 900px);
+  }
+  .modal-inner video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: block;
+    background: #000;
+  }
+  .modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .modal-close:hover { opacity: 1; }
+
+  /* ABOUT SECTION */
+  .about-section {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* shown as separate scrollable page */
+    /* We'll handle this as a full-width section below the 3-panel */
+    display: none;
+  }
+
+  /* WRAPPER for scroll */
+  body { overflow: hidden; }
+
+  .page-wrapper {
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+  }
+  .page-wrapper::-webkit-scrollbar { display: none; }
+
+  .snap-section {
+    scroll-snap-align: start;
+    height: 100vh;
+    flex-shrink: 0;
+  }
+
+  .about-full {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    padding: 80px 60px;
+  }
+
+  .about-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 80px;
+    align-items: center;
+    width: 100%;
+  }
+
+  .about-portrait {
+    width: 340px;
+    flex-shrink: 0;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 4px;
+    opacity: 0;
+    transform: translateX(80px);
+    transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.8s;
+  }
+  .about-portrait.revealed { opacity: 1; transform: translateX(0); }
+
+  .about-text { flex: 1; }
+  .about-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .about-text h2 {
+    font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+  .bio-para {
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.75);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    margin-bottom: 16px;
+  }
+  .bio-para.revealed { opacity: 1; transform: translateY(0); }
+
+  .about-awards {
+    margin-top: 32px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .award-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 5px 10px;
+    border-radius: 2px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .award-tag.revealed { opacity: 1; transform: translateY(0); }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    html, body { overflow: auto; }
+    .page-wrapper { scroll-snap-type: none; }
+    .three-panel { flex-direction: column; height: auto; }
+    .left-panel {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      min-width: unset;
+      height: auto;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 16px 20px;
+      z-index: 100;
+      border-right: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      gap: 12px;
+      align-items: center;
+    }
+    .name-block .first, .name-block .last { font-size: 1.4rem; }
+    .spokesman-label, .spokesman-thumb { display: none; }
+    .left-footer { display: none; }
+    .center-panel {
+      position: static;
+      margin-left: 0;
+      width: 100%;
+      height: auto;
+      overflow-y: visible;
+    }
+    .right-panel {
+      position: static;
+      margin-left: 0;
+      width: 100%;
+      height: auto;
+      min-height: 60vw;
+    }
+    .about-full { padding: 40px 24px; }
+    .about-inner { flex-direction: column; gap: 40px; }
+    .about-portrait { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- OPT-NAV -->
+<nav id="opt-nav">
+  <a href="option-21.html" class="active">21</a>
+  <a href="option-22.html">22</a>
+  <a href="option-23.html">23</a>
+  <a href="option-24.html">24</a>
+  <a href="option-25.html">25</a>
+</nav>
+
+<div class="page-wrapper">
+  <!-- SNAP: THREE PANEL -->
+  <div class="snap-section">
+    <div class="three-panel">
+
+      <!-- LEFT PANEL -->
+      <aside class="left-panel">
+        <div class="name-block">
+          <div class="first">JONAH</div>
+          <div class="last">OSKOW</div>
+        </div>
+        <div class="role">Film &amp; Commercial Editor</div>
+        <a class="email-link" href="mailto:joskows@gmail.com">joskows@gmail.com</a>
+
+        <div class="spokesman-label">Get Up To Speed</div>
+        <div class="spokesman-thumb" id="spokesman-thumb" role="button" tabindex="0" aria-label="Play spokesman video">
+          <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+          <div class="play-circle">
+            <svg viewBox="0 0 44 44" fill="none">
+              <circle cx="22" cy="22" r="21" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.4)"/>
+              <polygon points="18,14 32,22 18,30" fill="white"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="left-footer">
+          CANNES · CLIOS · ONE SHOW<br>
+          COMEDY CENTRAL · NETFLIX<br>
+          NYC
+        </div>
+      </aside>
+
+      <!-- CENTER PANEL -->
+      <nav class="center-panel" id="center-panel">
+        <!-- Populated by JS -->
+      </nav>
+
+      <!-- RIGHT PANEL -->
+      <main class="right-panel" id="right-panel">
+        <div class="player-placeholder" id="player-placeholder">
+          <div class="big-arrow">←</div>
+          <p>Select a work</p>
+        </div>
+
+        <div class="player-area" id="player-area">
+          <div class="player-header">
+            <span class="player-cat-label" id="player-cat-label"></span>
+            <button class="player-stop-btn" id="player-stop-btn" aria-label="Close player">×</button>
+          </div>
+          <video id="main-player" controls playsinline></video>
+          <div class="player-meta">
+            <div class="player-title" id="player-title">Title Placeholder</div>
+            <div class="player-subtitle" id="player-subtitle">Category · Year</div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- SNAP: ABOUT -->
+  <section class="about-full" id="about">
+    <div class="about-inner">
+      <img class="about-portrait" id="about-portrait" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+      <div class="about-text">
+        <div class="about-label">About</div>
+        <h2>Seasoned comedy editor.<br>NYC commercial roots.</h2>
+        <p class="bio-para">Jonah Oskow is a film and commercial editor with deep roots in New York's advertising world. His work spans comedy, narrative, and brand storytelling — always with a sharp eye for timing and rhythm.</p>
+        <p class="bio-para">Award winner at Cannes Lions, the Clios, and the One Show. Featured work on Comedy Central and Netflix. Collaborated with Idris Elba, Pete Davidson, and Jamie Lee Curtis.</p>
+        <p class="bio-para">Available for commercial, episodic, and branded content projects. Based in NYC, working globally.</p>
+        <div class="about-awards">
+          <span class="award-tag">CANNES LIONS</span>
+          <span class="award-tag">CLIOS</span>
+          <span class="award-tag">ONE SHOW</span>
+          <span class="award-tag">COMEDY CENTRAL</span>
+          <span class="award-tag">NETFLIX</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SPOKESMAN MODAL -->
+<div id="spokesman-modal" role="dialog" aria-modal="true" aria-label="Spokesman video">
+  <div class="modal-inner">
+    <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+    <video id="spokesman-video" controls playsinline src="https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4"></video>
+  </div>
+</div>
+
+<script>
+// ─── VIDEO MANAGER ───────────────────────────────────────────
+const VM = {
+  current: null,
+  play(el) {
+    if (this.current && this.current !== el) {
+      this.current.pause();
+      this.current.currentTime = 0;
+    }
+    this.current = el;
+  },
+  stop() {
+    if (this.current) {
+      this.current.pause();
+      this.current.currentTime = 0;
+      this.current = null;
+    }
+  }
+};
+
+// ─── DATA ────────────────────────────────────────────────────
+const CATEGORIES = [
+  { id: 'comedy', label: 'Comedy', count: 6 },
+  { id: 'social', label: 'Social Media', count: 6 },
+  { id: 'film', label: 'Film / Episodic', count: 6 },
+  { id: 'ai', label: 'AI Direction', count: 6 },
+];
+
+const WORK_SRC = 'https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4';
+
+const TITLES = [
+  'Mountain Dew "Kickstart"', 'Tide "Miracle Clothes"', 'Old Spice "Horse"',
+  'Pizza Hut "Stuffed"', 'Pepsi "Live For Now"', 'Snickers "You\'re Not You"',
+  'Charmin "Bears"', 'E*TRADE "Baby"', 'Geico "Hump Day"',
+  'Bud Light "Dilly Dilly"', 'Progressive "Flo"', 'Dollar Shave Club',
+  'Netflix "Stranger Promos"', 'Comedy Central Rebrand', 'SNL Digital Short',
+  'Adult Swim "Off the Air"', 'Hulu Original Cut', 'Amazon "Making The Cut"',
+  'AI Campaign "Next Self"', 'Synthetic Spot "FutureCo"', 'DeepBrand "Launch"',
+  'Generative Film "Echo"', 'LLM Director Cut', 'Neural Reel 2025',
+];
+
+// ─── BUILD CENTER PANEL ──────────────────────────────────────
+const centerPanel = document.getElementById('center-panel');
+let titleIndex = 0;
+
+CATEGORIES.forEach(cat => {
+  const section = document.createElement('div');
+  section.className = 'cat-section';
+  section.dataset.cat = cat.id;
+
+  const header = document.createElement('div');
+  header.className = 'cat-header';
+  header.textContent = cat.label;
+  header.dataset.cat = cat.id;
+
+  // Sticky hover: stays active on mouseenter, only changes on another mouseenter
+  header.addEventListener('mouseenter', () => {
+    document.querySelectorAll('.cat-header').forEach(h => h.classList.remove('active'));
+    header.classList.add('active');
+  });
+
+  const grid = document.createElement('div');
+  grid.className = 'thumb-grid';
+
+  for (let i = 0; i < cat.count; i++) {
+    const item = document.createElement('div');
+    item.className = 'thumb-item';
+    item.dataset.title = TITLES[titleIndex % TITLES.length];
+    item.dataset.cat = cat.label;
+    item.dataset.num = String(titleIndex + 1).padStart(2, '0');
+    titleIndex++;
+
+    item.innerHTML = `
+      <div class="thumb-play">
+        <svg viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+      <span class="thumb-num">${item.dataset.num}</span>
+    `;
+
+    item.addEventListener('click', () => playWork(item));
+    grid.appendChild(item);
+  }
+
+  section.appendChild(header);
+  section.appendChild(grid);
+  centerPanel.appendChild(section);
+});
+
+// ─── PLAYER LOGIC ────────────────────────────────────────────
+const placeholder = document.getElementById('player-placeholder');
+const playerArea = document.getElementById('player-area');
+const mainPlayer = document.getElementById('main-player');
+const playerCatLabel = document.getElementById('player-cat-label');
+const playerTitle = document.getElementById('player-title');
+const playerSubtitle = document.getElementById('player-subtitle');
+const playerStopBtn = document.getElementById('player-stop-btn');
+
+function playWork(thumbEl) {
+  // Remove playing class from all
+  document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('playing'));
+  thumbEl.classList.add('playing');
+
+  mainPlayer.src = WORK_SRC;
+  playerCatLabel.textContent = thumbEl.dataset.cat;
+  playerTitle.textContent = thumbEl.dataset.title;
+  playerSubtitle.textContent = thumbEl.dataset.cat + ' · 2024';
+
+  placeholder.style.display = 'none';
+  playerArea.style.display = 'flex';
+  playerArea.classList.add('visible');
+
+  VM.play(mainPlayer);
+  mainPlayer.play().catch(() => {});
+}
+
+playerStopBtn.addEventListener('click', () => {
+  VM.stop();
+  document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('playing'));
+  playerArea.classList.remove('visible');
+  playerArea.style.display = 'none';
+  placeholder.style.display = 'flex';
+  mainPlayer.src = '';
+});
+
+// ─── SPOKESMAN MODAL ─────────────────────────────────────────
+const spokeThumb = document.getElementById('spokesman-thumb');
+const spokeModal = document.getElementById('spokesman-modal');
+const spokeVideo = document.getElementById('spokesman-video');
+const modalClose = document.getElementById('modal-close');
+
+function openModal() {
+  spokeModal.classList.add('open');
+  VM.play(spokeVideo);
+  spokeVideo.play().catch(() => {});
+}
+
+function closeModal() {
+  VM.stop();
+  spokeModal.classList.remove('open');
+}
+
+spokeThumb.addEventListener('click', openModal);
+spokeThumb.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(); });
+modalClose.addEventListener('click', closeModal);
+spokeModal.addEventListener('click', e => { if (e.target === spokeModal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ─── ABOUT INTERSECTIONOBSERVER ──────────────────────────────
+const portrait = document.getElementById('about-portrait');
+const bioParas = document.querySelectorAll('.bio-para');
+const awardTags = document.querySelectorAll('.award-tag');
+
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      if (entry.target === portrait) {
+        portrait.classList.add('revealed');
+      } else if (entry.target.classList.contains('bio-para')) {
+        const idx = Array.from(bioParas).indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('revealed'), idx * 120);
+      } else if (entry.target.classList.contains('award-tag')) {
+        const idx = Array.from(awardTags).indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('revealed'), idx * 80 + 300);
+      }
+    }
+  });
+}, { threshold: 0.2 });
+
+revealObs.observe(portrait);
+bioParas.forEach(p => revealObs.observe(p));
+awardTags.forEach(t => revealObs.observe(t));
+</script>
+</body>
+</html>

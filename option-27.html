@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0e0e0e;
+    --fg: #f0f0f0;
+    --red: #ff4444;
+    --dim: #555;
+    --border: rgba(255,255,255,0.1);
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── TOP BAR ── */
+  #top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 28px;
+    padding: 0 32px;
+    z-index: 200;
+  }
+  .top-link {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    transition: color 0.2s;
+  }
+  .top-link:hover { color: var(--fg); }
+  .top-link.red { color: var(--red); }
+
+  /* ── MAIN STAGE ── */
+  #stage {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── WORK DISPLAY ── */
+  #work-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 700px;
+    padding: 0 20px;
+  }
+
+  #category-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    align-self: flex-start;
+    padding-left: 4px;
+  }
+
+  #thumb-wrapper {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #111;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.2s;
+  }
+  #thumb-wrapper:hover { border-color: rgba(255,255,255,0.2); }
+  #thumb-wrapper:hover .play-big { opacity: 1; transform: scale(1); }
+
+  .play-big {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.4;
+    transform: scale(0.92);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  .play-big svg { width: 48px; height: 48px; fill: #fff; }
+
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 4px;
+  }
+
+  .arrow-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--fg);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: border-color 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+  .arrow-btn:hover { border-color: var(--fg); }
+  .arrow-btn:disabled { opacity: 0.15; cursor: not-allowed; }
+
+  #counter {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── BOTTOM FIXED ── */
+  #bottom-left {
+    position: fixed;
+    bottom: 28px;
+    left: 32px;
+    z-index: 200;
+  }
+  #bottom-left span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.25);
+    line-height: 1;
+  }
+
+  #bottom-right {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    z-index: 200;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .cat-pill {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+    background: none;
+    border: 1px solid #2a2a2a;
+    padding: 5px 12px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .cat-pill:hover { color: var(--fg); border-color: #555; }
+  .cat-pill.active { color: var(--red); border-color: var(--red); }
+
+  /* ── ABOUT OVERLAY ── */
+  #about-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(14,14,14,0.97);
+    z-index: 8000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+  }
+  #about-overlay.visible { opacity: 1; pointer-events: all; }
+  .about-inner {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+    max-width: 900px;
+    padding: 40px;
+  }
+  .about-portrait {
+    width: 260px;
+    flex-shrink: 0;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    filter: grayscale(100%);
+  }
+  .about-text h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 0.05em;
+    color: #fff;
+    line-height: 0.95;
+    margin-bottom: 24px;
+  }
+  .about-text p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #aaa;
+    max-width: 480px;
+    margin-bottom: 14px;
+  }
+  .about-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .about-tag {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    border: 1px solid rgba(255,68,68,0.3);
+    padding: 4px 10px;
+  }
+  #about-close {
+    position: fixed;
+    top: 28px;
+    right: 36px;
+    font-size: 2rem;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+  }
+  #about-close:hover { opacity: 1; }
+
+  @media (max-width: 700px) {
+    .about-inner { flex-direction: column; gap: 30px; padding: 60px 24px 24px; }
+    .about-portrait { width: 100%; max-width: 220px; }
+    #bottom-right { gap: 6px; right: 16px; bottom: 16px; }
+    .cat-pill { padding: 4px 8px; font-size: 9px; }
+    #bottom-left { left: 16px; bottom: 16px; }
+    #work-display { max-width: 100%; }
+  }
+
+  /* ── MODAL ── */
+  #modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  #modal-video { width: 90%; max-width: 960px; aspect-ratio: 16/9; }
+  #modal-close {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    font-size: 2rem;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* ── OPT-NAV ── */
+  #opt-nav {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap: 4px;
+    max-width: 180px;
+    justify-content: flex-end;
+  }
+  #opt-nav a {
+    font-size: 9px;
+    color: #2a2a2a;
+    text-decoration: none;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #1e1e1e;
+    transition: color 0.2s, border-color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  #opt-nav a:hover, #opt-nav a.current { color: #fff; border-color: #444; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="top-bar">
+  <button class="top-link red" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">▶ Watch Intro</button>
+  <button class="top-link" onclick="showAbout()">About</button>
+</div>
+
+<!-- STAGE -->
+<div id="stage">
+  <div id="work-display">
+    <div id="category-label">Comedy</div>
+    <div id="thumb-wrapper" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <div class="play-big">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+    </div>
+    <div id="nav-row">
+      <button class="arrow-btn" id="btn-prev" onclick="navigate(-1)">←</button>
+      <span id="counter">WORK 01 / 06</span>
+      <button class="arrow-btn" id="btn-next" onclick="navigate(1)">→</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM LEFT -->
+<div id="bottom-left"><span>Jonah Oskow</span></div>
+
+<!-- BOTTOM RIGHT - category pills -->
+<div id="bottom-right">
+  <button class="cat-pill active" onclick="setCategory('Comedy')">Comedy</button>
+  <button class="cat-pill" onclick="setCategory('Social')">Social</button>
+  <button class="cat-pill" onclick="setCategory('Film')">Film</button>
+  <button class="cat-pill" onclick="setCategory('AI')">AI</button>
+</div>
+
+<!-- ABOUT OVERLAY -->
+<div id="about-overlay">
+  <div class="about-inner">
+    <img class="about-portrait" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+    <div class="about-text">
+      <h2>Jonah<br>Oskow</h2>
+      <p>NYC commercial editor. Cannes Lions, Clio Awards, One Show. Comedy Central, Netflix.</p>
+      <p>Work with Idris Elba, Pete Davidson, Jamie Lee Curtis. Cutting comedy, social, film and AI content that earns attention in a world that gives it reluctantly.</p>
+      <p><a href="mailto:joskows@gmail.com" style="color:#ff4444;text-decoration:none;">joskows@gmail.com</a></p>
+      <div class="about-tags">
+        <span class="about-tag">Cannes Lions</span>
+        <span class="about-tag">Clio Awards</span>
+        <span class="about-tag">One Show</span>
+        <span class="about-tag">Comedy Central</span>
+        <span class="about-tag">Netflix</span>
+      </div>
+    </div>
+  </div>
+  <button id="about-close" onclick="hideAbout()">×</button>
+</div>
+
+<!-- MODAL -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:#000;z-index:9999;align-items:center;justify-content:center;">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2rem;color:#fff;background:none;border:none;cursor:pointer;">×</button>
+</div>
+
+<!-- OPT-NAV -->
+<nav id="opt-nav">
+  <a href="option-1.html">1</a><a href="option-2.html">2</a><a href="option-3.html">3</a><a href="option-4.html">4</a><a href="option-5.html">5</a>
+  <a href="option-6.html">6</a><a href="option-7.html">7</a><a href="option-8.html">8</a><a href="option-9.html">9</a><a href="option-10.html">10</a>
+  <a href="option-11.html">11</a><a href="option-12.html">12</a><a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a>
+  <a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a><a href="option-19.html">19</a><a href="option-20.html">20</a>
+  <a href="option-21.html">21</a><a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a><a href="option-25.html">25</a>
+  <a href="option-26.html">26</a><a href="option-27.html" class="current">27</a><a href="option-28.html">28</a><a href="option-29.html">29</a><a href="option-30.html">30</a>
+</nav>
+
+<script>
+  const VIDEO_SRC = 'https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4';
+
+  const works = [
+    { category: 'Comedy', label: 'Comedy' },
+    { category: 'Comedy', label: 'Comedy' },
+    { category: 'Comedy', label: 'Comedy' },
+    { category: 'Comedy', label: 'Comedy' },
+    { category: 'Comedy', label: 'Comedy' },
+    { category: 'Comedy', label: 'Comedy' },
+    { category: 'Social', label: 'Social Media' },
+    { category: 'Social', label: 'Social Media' },
+    { category: 'Social', label: 'Social Media' },
+    { category: 'Social', label: 'Social Media' },
+    { category: 'Social', label: 'Social Media' },
+    { category: 'Social', label: 'Social Media' },
+    { category: 'Film', label: 'Film / Episodic' },
+    { category: 'Film', label: 'Film / Episodic' },
+    { category: 'Film', label: 'Film / Episodic' },
+    { category: 'Film', label: 'Film / Episodic' },
+    { category: 'Film', label: 'Film / Episodic' },
+    { category: 'Film', label: 'Film / Episodic' },
+    { category: 'AI', label: 'AI Direction' },
+    { category: 'AI', label: 'AI Direction' },
+    { category: 'AI', label: 'AI Direction' },
+    { category: 'AI', label: 'AI Direction' },
+    { category: 'AI', label: 'AI Direction' },
+    { category: 'AI', label: 'AI Direction' },
+  ];
+
+  let currentCategory = 'Comedy';
+  let currentIndex = 0;
+  let filteredWorks = [];
+
+  function setCategory(cat) {
+    currentCategory = cat;
+    currentIndex = 0;
+    filteredWorks = works.filter(w => w.category === cat);
+    document.querySelectorAll('.cat-pill').forEach(p => {
+      p.classList.toggle('active', p.textContent === cat);
+    });
+    updateDisplay();
+  }
+
+  function navigate(dir) {
+    currentIndex = Math.max(0, Math.min(filteredWorks.length - 1, currentIndex + dir));
+    updateDisplay();
+  }
+
+  function updateDisplay() {
+    const work = filteredWorks[currentIndex];
+    document.getElementById('category-label').textContent = work.label;
+    const n = String(currentIndex + 1).padStart(2, '0');
+    const total = String(filteredWorks.length).padStart(2, '0');
+    document.getElementById('counter').textContent = `WORK ${n} / ${total}`;
+    document.getElementById('btn-prev').disabled = currentIndex === 0;
+    document.getElementById('btn-next').disabled = currentIndex === filteredWorks.length - 1;
+
+    // Animate thumb
+    const tw = document.getElementById('thumb-wrapper');
+    tw.style.opacity = '0';
+    tw.style.transform = 'scale(0.97)';
+    setTimeout(() => {
+      tw.style.transition = 'opacity 0.25s, transform 0.25s';
+      tw.style.opacity = '1';
+      tw.style.transform = 'scale(1)';
+    }, 50);
+  }
+
+  function showAbout() {
+    document.getElementById('about-overlay').classList.add('visible');
+  }
+  function hideAbout() {
+    document.getElementById('about-overlay').classList.remove('visible');
+  }
+
+  // Initialize
+  filteredWorks = works.filter(w => w.category === currentCategory);
+  updateDisplay();
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') navigate(-1);
+    if (e.key === 'ArrowRight') navigate(1);
+    if (e.key === 'Escape') {
+      closeModal();
+      hideAbout();
+    }
+  });
+
+  // Modal
+  const modal = document.getElementById('modal');
+  const mv = document.getElementById('modal-video');
+  function openVideo(src) { mv.src = src; modal.style.display = 'flex'; mv.play(); }
+  function closeModal() { mv.pause(); mv.src = ''; modal.style.display = 'none'; }
+  document.getElementById('modal-close').onclick = closeModal;
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+</script>
+</body>
+</html>

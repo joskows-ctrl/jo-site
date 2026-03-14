@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #000;
+  --off-white: #e8e6e2;
+  --white: #fff;
+  --dim: rgba(232, 230, 226, 0.4);
+  --faint: rgba(232, 230, 226, 0.18);
+  --rule: rgba(232, 230, 226, 0.1);
+  --rule-bright: rgba(232, 230, 226, 0.22);
+  --cursor-color: #e8e6e2;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--black);
+  color: var(--off-white);
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 80px 80px;
+  position: relative;
+}
+
+/* Subtle grid lines */
+.hero::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(rgba(232,230,226,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,230,226,0.025) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+}
+
+/* Prompt line */
+.prompt-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  margin-bottom: 12px;
+}
+
+.prompt-symbol {
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 300;
+  color: var(--dim);
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.hero-name {
+  font-size: clamp(2.8rem, 7vw, 6.5rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--white);
+  line-height: 1;
+}
+
+.cursor {
+  display: inline-block;
+  width: clamp(0.16em, 0.4vw, 0.38em);
+  height: 1em;
+  background: var(--cursor-color);
+  margin-left: 6px;
+  vertical-align: baseline;
+  animation: blink 1.1s step-end infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Meta lines */
+.meta-block {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.meta-line {
+  font-size: clamp(0.72rem, 1.1vw, 0.88rem);
+  font-weight: 300;
+  color: var(--dim);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+}
+
+.meta-line .key {
+  color: var(--faint);
+  display: inline-block;
+  min-width: 120px;
+}
+
+.meta-line .val {
+  color: var(--off-white);
+}
+
+.meta-line .val-dim {
+  color: var(--dim);
+}
+
+/* Intro link */
+.intro-cmd {
+  margin-top: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--off-white);
+  cursor: pointer;
+  text-decoration: none;
+  background: none;
+  border: none;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 0;
+  transition: color 0.15s;
+  letter-spacing: 0.02em;
+}
+.intro-cmd .prompt-symbol { font-size: 0.85rem; }
+.intro-cmd:hover { color: var(--white); }
+.intro-cmd:hover .file-name { border-bottom-color: rgba(232,230,226,0.6); }
+
+.file-name {
+  border-bottom: 1px solid rgba(232,230,226,0.25);
+  padding-bottom: 1px;
+  transition: border-color 0.15s;
+}
+
+.cmd-meta {
+  color: var(--faint);
+  font-size: 0.78rem;
+}
+
+/* Scroll hint */
+.scroll-hint {
+  margin-top: 60px;
+  font-size: 0.65rem;
+  color: var(--faint);
+  letter-spacing: 0.15em;
+  font-weight: 300;
+}
+
+/* ── WORK SECTION ── */
+.work-section {
+  padding: 0 80px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 36px;
+  padding-top: 8px;
+}
+
+.section-prompt {
+  font-size: 0.72rem;
+  color: var(--faint);
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  text-transform: lowercase;
+}
+
+/* Divider */
+.divider {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin-bottom: 32px;
+}
+
+/* Category list */
+.cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.cat-item {
+  border-top: 1px solid var(--rule);
+}
+.cat-item:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.cat-trigger {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 0;
+  cursor: pointer;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--off-white);
+  font-family: 'IBM Plex Mono', monospace;
+  text-align: left;
+  transition: color 0.15s;
+}
+.cat-trigger:hover { color: var(--white); }
+.cat-trigger:hover .cat-num { color: rgba(232,230,226,0.5); }
+.cat-trigger:hover .cat-arrow { opacity: 1; }
+
+.cat-num {
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--faint);
+  min-width: 36px;
+  transition: color 0.15s;
+}
+
+.cat-name {
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  flex: 1;
+}
+
+.cat-count {
+  font-size: 0.68rem;
+  font-weight: 300;
+  color: var(--faint);
+}
+
+.cat-arrow {
+  font-size: 0.8rem;
+  color: var(--dim);
+  opacity: 0.4;
+  transition: opacity 0.15s, transform 0.25s;
+}
+.cat-item.open .cat-arrow {
+  transform: rotate(90deg);
+  opacity: 1;
+}
+
+/* Category panel */
+.cat-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.cat-item.open .cat-panel {
+  max-height: 600px;
+}
+
+.cat-panel-inner {
+  padding: 6px 0 28px 56px;
+}
+
+.thumbs-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.thumb {
+  aspect-ratio: 16/9;
+  background: rgba(232,230,226,0.03);
+  border: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+}
+.thumb:hover {
+  border-color: rgba(232,230,226,0.3);
+  background: rgba(232,230,226,0.06);
+}
+.thumb:hover .thumb-play { color: var(--white); }
+.thumb:hover .thumb-line { opacity: 1; }
+
+.thumb-play {
+  font-size: 1.4rem;
+  color: var(--faint);
+  transition: color 0.15s;
+  position: relative;
+  z-index: 1;
+  line-height: 1;
+}
+
+/* Top-left corner accent on thumb */
+.thumb-line {
+  position: absolute;
+  top: 8px; left: 8px;
+  width: 16px;
+  height: 16px;
+  border-top: 1px solid rgba(232,230,226,0.3);
+  border-left: 1px solid rgba(232,230,226,0.3);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.thumb-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 6px 10px;
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  background: rgba(0,0,0,0.5);
+}
+
+/* ── ABOUT ── */
+.about-section {
+  padding: 60px 80px 100px;
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--rule);
+}
+
+.about-header {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 48px;
+}
+
+.about-inner {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Portrait — "file attachment" styling */
+.about-portrait-wrap {
+  position: relative;
+}
+
+.file-tag {
+  font-size: 0.6rem;
+  font-weight: 300;
+  color: var(--faint);
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.file-tag::before {
+  content: '//';
+  color: rgba(232,230,226,0.12);
+}
+
+.about-portrait {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(20%) contrast(1.04);
+  border: 1px solid var(--rule);
+}
+
+.portrait-meta {
+  margin-top: 10px;
+  font-size: 0.6rem;
+  font-weight: 300;
+  color: var(--faint);
+  letter-spacing: 0.08em;
+  line-height: 1.7;
+}
+
+/* About text */
+.about-text-block {}
+
+.about-bio-line {
+  font-size: 0.62rem;
+  font-weight: 300;
+  color: var(--faint);
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.about-bio {
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 2;
+  color: var(--dim);
+  margin-bottom: 16px;
+}
+
+.about-bio strong {
+  font-weight: 400;
+  color: var(--off-white);
+}
+
+.about-contact-block {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contact-line {
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--dim);
+  display: flex;
+  gap: 16px;
+}
+.contact-line .key { color: var(--faint); min-width: 80px; }
+.contact-line a {
+  color: var(--off-white);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(232,230,226,0.2);
+  padding-bottom: 1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.contact-line a:hover { color: var(--white); border-color: rgba(232,230,226,0.5); }
+
+/* ── MODAL ── */
+#modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.97);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── OPT-NAV ── */
+.opt-nav {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 600;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  background: rgba(0,0,0,0.9);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 10px 14px;
+  max-height: 220px;
+  overflow-y: auto;
+  backdrop-filter: blur(8px);
+}
+.opt-nav summary {
+  cursor: pointer;
+  color: var(--faint);
+  text-transform: lowercase;
+  letter-spacing: 0.1em;
+  font-size: 0.58rem;
+  list-style: none;
+  margin-bottom: 6px;
+}
+.opt-nav summary:hover { color: var(--dim); }
+.opt-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.opt-nav-links a {
+  color: rgba(232,230,226,0.2);
+  text-decoration: none;
+  font-size: 0.58rem;
+  transition: color 0.15s;
+}
+.opt-nav-links a:hover { color: var(--dim); }
+.opt-nav-links a.current { color: var(--off-white); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero" id="top">
+  <div class="hero-content">
+
+    <div class="prompt-line">
+      <span class="prompt-symbol">&gt;&nbsp;</span>
+      <h1 class="hero-name">JONAH OSKOW<span class="cursor"></span></h1>
+    </div>
+
+    <div class="meta-block">
+      <p class="meta-line">
+        <span class="key">role</span>
+        <span class="val">film &amp; commercial editor</span>
+      </p>
+      <p class="meta-line">
+        <span class="key">location</span>
+        <span class="val">los angeles, ca</span>
+      </p>
+      <p class="meta-line">
+        <span class="key">specialties</span>
+        <span class="val">comedy</span>
+        <span class="val-dim"> / </span>
+        <span class="val">social media</span>
+        <span class="val-dim"> / </span>
+        <span class="val">film &amp; episodic</span>
+        <span class="val-dim"> / </span>
+        <span class="val">ai direction</span>
+      </p>
+      <p class="meta-line">
+        <span class="key">status</span>
+        <span class="val">available for projects</span>
+      </p>
+    </div>
+
+    <button class="intro-cmd" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">
+      <span class="prompt-symbol">&gt;&nbsp;</span>
+      <span>watch_intro<span class="file-name">.mp4</span></span>
+      <span class="cmd-meta">[0:37]</span>
+    </button>
+
+    <p class="scroll-hint">// scroll to view selected work</p>
+  </div>
+</section>
+
+<!-- ── WORK SECTION ── -->
+<section class="work-section" id="work">
+  <div class="section-header">
+    <span class="section-prompt">&gt;&nbsp;</span>
+    <span class="section-title">ls ./selected_work/</span>
+  </div>
+  <hr class="divider">
+
+  <div class="cat-list">
+
+    <!-- Comedy -->
+    <div class="cat-item" id="cat-comedy">
+      <button class="cat-trigger" onclick="toggleCat('cat-comedy')">
+        <span class="cat-num">[01]</span>
+        <span class="cat-name">comedy</span>
+        <span class="cat-count">3 files</span>
+        <span class="cat-arrow">▶</span>
+      </button>
+      <div class="cat-panel">
+        <div class="cat-panel-inner">
+          <div class="thumbs-row">
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">brand_spot_30s.mp4</span>
+            </div>
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">sketch_series_ep01.mp4</span>
+            </div>
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">comedy_reel_cut.mp4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Media -->
+    <div class="cat-item" id="cat-social">
+      <button class="cat-trigger" onclick="toggleCat('cat-social')">
+        <span class="cat-num">[02]</span>
+        <span class="cat-name">social_media</span>
+        <span class="cat-count">3 files</span>
+        <span class="cat-arrow">▶</span>
+      </button>
+      <div class="cat-panel">
+        <div class="cat-panel-inner">
+          <div class="thumbs-row">
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">viral_campaign.mp4</span>
+            </div>
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">short_form_series.mp4</span>
+            </div>
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">platform_launch.mp4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Film/Episodic -->
+    <div class="cat-item" id="cat-film">
+      <button class="cat-trigger" onclick="toggleCat('cat-film')">
+        <span class="cat-num">[03]</span>
+        <span class="cat-name">film_episodic</span>
+        <span class="cat-count">3 files</span>
+        <span class="cat-arrow">▶</span>
+      </button>
+      <div class="cat-panel">
+        <div class="cat-panel-inner">
+          <div class="thumbs-row">
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">short_film.mp4</span>
+            </div>
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">pilot_cut.mp4</span>
+            </div>
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">episodic_reel.mp4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Direction -->
+    <div class="cat-item" id="cat-ai">
+      <button class="cat-trigger" onclick="toggleCat('cat-ai')">
+        <span class="cat-num">[04]</span>
+        <span class="cat-name">ai_direction</span>
+        <span class="cat-count">3 files</span>
+        <span class="cat-arrow">▶</span>
+      </button>
+      <div class="cat-panel">
+        <div class="cat-panel-inner">
+          <div class="thumbs-row">
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">ai_narrative.mp4</span>
+            </div>
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">synthetic_reel.mp4</span>
+            </div>
+            <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+              <div class="thumb-line"></div>
+              <span class="thumb-play">▶</span>
+              <span class="thumb-label">directed_ai_spot.mp4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section class="about-section" id="about">
+  <div class="about-header">
+    <span class="section-prompt">&gt;&nbsp;</span>
+    <span class="section-title">cat ./profile/jonah_oskow.txt</span>
+  </div>
+
+  <div class="about-inner">
+    <div class="about-portrait-wrap">
+      <p class="file-tag">attachment: portrait.jpg</p>
+      <img class="about-portrait" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+      <div class="portrait-meta">
+        name: jonah_oskow.jpg<br>
+        type: image/jpeg<br>
+        res: high<br>
+        status: current
+      </div>
+    </div>
+
+    <div class="about-text-block">
+      <p class="about-bio-line">// bio</p>
+      <p class="about-bio"><strong>Jonah Oskow</strong> is a Los Angeles-based film and commercial editor. His work spans broadcast campaigns, viral social content, feature films, and emerging AI-driven formats.</p>
+      <p class="about-bio">Specializing in comedy, social media, episodic storytelling, and AI-directed content. A sharp sense of rhythm and an instinct for performance shape every cut — fast where it counts, patient where it matters.</p>
+      <p class="about-bio">He collaborates closely with directors, showrunners, and brand teams alike. Whether trimming a 90-minute cut or shaping a six-second social moment, the commitment to clarity and pace never wavers.</p>
+      <p class="about-bio">Clients range from major studios and streaming platforms to independent filmmakers and direct-to-consumer brands. Every project gets full attention and an edit that serves the story first.</p>
+
+      <div class="about-contact-block">
+        <p class="about-bio-line" style="margin-bottom:0;">// contact</p>
+        <div class="contact-line">
+          <span class="key">email</span>
+          <a href="mailto:joskows@gmail.com">joskows@gmail.com</a>
+        </div>
+        <div class="contact-line">
+          <span class="key">location</span>
+          <span style="color: var(--off-white);">los angeles, ca</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MODAL ── -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:9999;align-items:center;justify-content:center;">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2.5rem;color:#fff;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+</div>
+
+<!-- ── OPT-NAV ── -->
+<details class="opt-nav">
+  <summary>// options</summary>
+  <div class="opt-nav-links">
+    <a href="option-1.html">01</a><a href="option-2.html">02</a><a href="option-3.html">03</a>
+    <a href="option-4.html">04</a><a href="option-5.html">05</a><a href="option-6.html">06</a>
+    <a href="option-7.html">07</a><a href="option-8.html">08</a><a href="option-9.html">09</a>
+    <a href="option-10.html">10</a><a href="option-11.html">11</a><a href="option-12.html">12</a>
+    <a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a>
+    <a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a>
+    <a href="option-19.html">19</a><a href="option-20.html">20</a><a href="option-21.html">21</a>
+    <a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a>
+    <a href="option-25.html">25</a><a href="option-26.html">26</a><a href="option-27.html">27</a>
+    <a href="option-28.html">28</a><a href="option-29.html">29</a><a href="option-30.html">30</a>
+    <a href="option-31.html">31</a><a href="option-32.html">32</a><a href="option-33.html">33</a>
+    <a href="option-34.html">34</a><a href="option-35.html">35</a><a href="option-36.html">36</a>
+    <a href="option-37.html">37</a><a href="option-38.html">38</a><a href="option-39.html">39</a>
+    <a href="option-40.html">40</a><a href="option-41.html">41</a><a href="option-42.html">42</a>
+    <a href="option-43.html">43</a><a href="option-44.html">44</a>
+    <a href="option-45.html" class="current">45</a>
+  </div>
+</details>
+
+<script>
+// ── MODAL ──
+const modal = document.getElementById('modal');
+const mv = document.getElementById('modal-video');
+function openVideo(src) { mv.src = src; modal.style.display = 'flex'; mv.play(); }
+function closeModal() { mv.pause(); mv.src = ''; modal.style.display = 'none'; }
+document.getElementById('modal-close').onclick = closeModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── ACCORDION ──
+function toggleCat(id) {
+  const item = document.getElementById(id);
+  const isOpen = item.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.cat-item.open').forEach(el => el.classList.remove('open'));
+  // Open clicked (unless it was already open)
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>

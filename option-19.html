@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JONAH OSKOW — Film & Commercial Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #111;
+  --text: #fff;
+  --accent: #44aaff;
+  --muted: rgba(255,255,255,0.25);
+  --left-w: 38vw;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* OPT-NAV */
+#opt-nav {
+  position: fixed; top: 12px; right: 12px; z-index: 9999;
+  display: flex; flex-wrap: wrap; gap: 3px; max-width: 240px; justify-content: flex-end;
+}
+#opt-nav a {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+  color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.5rem;
+  text-decoration: none; transition: background 0.2s, color 0.2s;
+}
+#opt-nav a:hover, #opt-nav a.current { background: var(--accent); color: #000; border-color: var(--accent); }
+
+/* LAYOUT */
+.site-main { display: flex; min-height: 100vh; }
+
+/* LEFT PANEL */
+.left-panel {
+  position: fixed; top: 0; left: 0; width: var(--left-w); height: 100vh;
+  background: var(--bg); border-right: 1px solid rgba(255,255,255,0.06);
+  display: flex; flex-direction: column; padding: 3rem 2.5rem;
+  overflow-y: auto; z-index: 100;
+}
+
+.name-block .first {
+  display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
+  font-size: clamp(4rem, 7vw, 8rem); line-height: 0.92; letter-spacing: -0.02em;
+}
+.name-block .last {
+  display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
+  font-size: clamp(4rem, 7vw, 8rem); line-height: 0.92; letter-spacing: -0.02em; color: var(--accent);
+}
+.role-line {
+  font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted);
+  letter-spacing: 0.18em; text-transform: uppercase; margin-top: 1rem; margin-bottom: 0.3rem;
+}
+.email-line { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--accent); letter-spacing: 0.1em; }
+.email-line a { color: inherit; text-decoration: none; }
+.divider { width: 100%; height: 1px; background: rgba(255,255,255,0.08); margin: 1.5rem 0; }
+
+/* SPOKESMAN */
+.spokesman-label {
+  font-family: 'Space Mono', monospace; font-size: 0.55rem;
+  color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.6rem;
+}
+.spokesman-thumb {
+  position: relative; aspect-ratio: 16/9; background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.08); overflow: hidden; cursor: pointer; border-radius: 3px;
+}
+.spokesman-thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.play-overlay {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.35); transition: background 0.2s;
+}
+.spokesman-thumb:hover .play-overlay { background: rgba(0,0,0,0.15); }
+.play-circle {
+  width: 50px; height: 50px; border-radius: 50%;
+  background: rgba(255,255,255,0.18); backdrop-filter: blur(4px);
+  border: 2px solid rgba(255,255,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s, background 0.2s;
+}
+.spokesman-thumb:hover .play-circle { transform: scale(1.1); background: rgba(255,255,255,0.28); }
+.play-circle svg { width: 18px; height: 18px; fill: #fff; margin-left: 3px; }
+
+.credits-block {
+  margin-top: 1.2rem; font-family: 'Space Mono', monospace; font-size: 0.52rem;
+  color: var(--muted); letter-spacing: 0.07em; line-height: 1.9;
+}
+.credits-block strong { color: rgba(255,255,255,0.55); }
+
+/* RIGHT PANEL */
+.right-panel {
+  margin-left: var(--left-w);
+  width: calc(100vw - var(--left-w));
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* CAT TABS */
+.cat-tabs {
+  display: flex; border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 2rem; background: var(--bg); position: sticky; top: 0; z-index: 50;
+}
+.cat-tab {
+  font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--muted); padding: 1rem 1.2rem;
+  cursor: pointer; border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s; user-select: none;
+}
+.cat-tab:hover { color: rgba(255,255,255,0.7); }
+.cat-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* RIGHT INNER */
+.right-inner { flex: 1; padding: 2.5rem 2rem; }
+
+.cat-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
+  font-size: clamp(2rem, 3.5vw, 4rem); letter-spacing: -0.02em; line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.cat-hint {
+  font-family: 'Space Mono', monospace; font-size: 0.52rem;
+  color: var(--muted); letter-spacing: 0.12em; margin-bottom: 1.5rem;
+}
+
+/* EXPANDABLE GRID */
+.expand-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 8px;
+  /* Fixed height so expansion stays within panel */
+}
+
+.grid-cell {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #1c1c1c;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 3px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: opacity 0.3s ease, border-color 0.2s;
+  /* Grid placement transitions */
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.grid-cell:hover:not(.expanded) { border-color: rgba(255,255,255,0.2); }
+
+.grid-cell.collapsed {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.grid-cell.expanded {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  aspect-ratio: unset;
+  height: 100%;
+  cursor: default;
+  border-color: var(--accent);
+  z-index: 10;
+}
+
+/* When grid has an expanded cell, lock the grid height */
+.expand-grid.has-expanded {
+  grid-template-rows: 1fr 1fr;
+}
+
+/* THUMB LAYER */
+.cell-thumb {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.3s;
+}
+
+.cell-thumb-play {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.grid-cell:hover .cell-thumb-play {
+  background: rgba(68,170,255,0.25); border-color: var(--accent);
+}
+
+.cell-thumb-play svg { width: 12px; height: 12px; fill: #fff; margin-left: 2px; }
+
+.cell-num {
+  position: absolute; bottom: 8px; left: 10px;
+  font-family: 'Space Mono', monospace; font-size: 0.5rem;
+  color: var(--muted); letter-spacing: 0.1em;
+  transition: opacity 0.3s;
+}
+
+/* VIDEO LAYER (hidden by default) */
+.cell-video {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.cell-video video {
+  width: 100%; height: 100%; object-fit: contain; background: #000; display: block;
+}
+
+/* When expanded, show video hide thumb */
+.grid-cell.expanded .cell-thumb { opacity: 0; pointer-events: none; }
+.grid-cell.expanded .cell-num { opacity: 0; }
+.grid-cell.expanded .cell-video { opacity: 1; pointer-events: all; }
+
+/* CLOSE BUTTON on expanded */
+.cell-close {
+  position: absolute; top: 10px; right: 10px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.25);
+  color: #fff; font-size: 1rem; cursor: pointer;
+  display: none; align-items: center; justify-content: center;
+  z-index: 20; transition: background 0.2s; font-family: 'Space Mono', monospace;
+}
+.cell-close:hover { background: rgba(0,0,0,0.85); }
+.grid-cell.expanded .cell-close { display: flex; }
+
+/* SPOKESMAN MODAL */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.93);
+  z-index: 2000; display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-inner { position: relative; width: 90%; max-width: 900px; aspect-ratio: 16/9; }
+.modal-inner video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+.modal-close {
+  position: fixed; top: 1.5rem; right: 1.5rem; width: 44px; height: 44px;
+  border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  color: #fff; font-size: 1.4rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2001; transition: background 0.2s; font-family: 'Space Mono', monospace;
+}
+.modal-close:hover { background: rgba(255,255,255,0.22); }
+
+/* ABOUT SECTION — curtain wipe */
+.about-section {
+  width: 100%; padding: 6rem 3rem;
+  background: #0d0d0d; border-top: 1px solid rgba(255,255,255,0.06);
+}
+.about-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;
+}
+.curtain-wrap {
+  position: relative; overflow: hidden; display: inline-block; width: 100%;
+}
+.curtain-wrap .curtain {
+  position: absolute; inset: 0;
+  background: #0d0d0d;
+  transform: scaleX(1);
+  transform-origin: right;
+  transition: transform 0.8s cubic-bezier(0.77, 0, 0.18, 1);
+  z-index: 2;
+}
+.curtain-wrap.revealed .curtain { transform: scaleX(0); }
+
+.about-portrait-wrap { border-radius: 3px; overflow: hidden; }
+.about-portrait-wrap img {
+  width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: top;
+  display: block; filter: grayscale(15%);
+}
+
+.about-text-col {}
+.about-label { font-family: 'Space Mono', monospace; font-size: 0.55rem; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.5rem; }
+.about-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
+  font-size: clamp(2rem, 3vw, 3.5rem); letter-spacing: -0.02em; line-height: 1; margin-bottom: 1.5rem;
+}
+.about-bio {
+  font-size: 0.95rem; line-height: 1.78; color: rgba(255,255,255,0.7);
+  font-weight: 300; margin-bottom: 2rem;
+}
+.awards-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.award-tag {
+  font-family: 'Space Mono', monospace; font-size: 0.5rem; letter-spacing: 0.1em;
+  color: var(--muted); border: 1px solid rgba(255,255,255,0.12); padding: 0.35rem 0.7rem;
+  border-radius: 2px; text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  :root { --left-w: 100vw; }
+  .left-panel { position: sticky; top: 0; width: 100%; height: auto; padding: 1.5rem; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); z-index: 200; }
+  .name-block .first, .name-block .last { font-size: clamp(3rem, 12vw, 5rem); }
+  .site-main { flex-direction: column; }
+  .right-panel { margin-left: 0; width: 100%; }
+  .expand-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-inner { grid-template-columns: 1fr; gap: 2rem; }
+}
+</style>
+</head>
+<body>
+
+<nav id="opt-nav">
+  <a href="option-16.html">16</a>
+  <a href="option-17.html">17</a>
+  <a href="option-18.html">18</a>
+  <a href="option-19.html" class="current">19</a>
+  <a href="option-20.html">20</a>
+</nav>
+
+<!-- SPOKESMAN MODAL -->
+<div class="modal-overlay" id="spokesman-modal">
+  <div class="modal-inner">
+    <video id="spokesman-modal-video" src="https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4" controls preload="none"></video>
+  </div>
+  <button class="modal-close" id="spokesman-modal-close">×</button>
+</div>
+
+<div class="site-main">
+  <!-- LEFT PANEL -->
+  <aside class="left-panel">
+    <div class="name-block">
+      <span class="first">JONAH</span>
+      <span class="last">OSKOW</span>
+    </div>
+    <div class="role-line">Film &amp; Commercial Editor</div>
+    <div class="email-line"><a href="mailto:joskows@gmail.com">joskows@gmail.com</a></div>
+    <div class="divider"></div>
+    <div class="spokesman-label">Get Up to Speed</div>
+    <div class="spokesman-thumb" id="spokesman-thumb" role="button" tabindex="0" aria-label="Play spokesman video">
+      <video src="https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4" preload="none" muted playsinline></video>
+      <div class="play-overlay">
+        <div class="play-circle">
+          <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="credits-block">
+      <strong>Cannes Lions · Clios · One Show</strong><br>
+      Comedy Central · Netflix<br>
+      Idris Elba · Pete Davidson<br>
+      Jamie Lee Curtis
+    </div>
+  </aside>
+
+  <!-- RIGHT PANEL -->
+  <main class="right-panel">
+    <div class="cat-tabs">
+      <div class="cat-tab active" data-cat="comedy">Comedy</div>
+      <div class="cat-tab" data-cat="social">Social</div>
+      <div class="cat-tab" data-cat="film">Film</div>
+      <div class="cat-tab" data-cat="ai">AI Direction</div>
+    </div>
+
+    <div class="right-inner">
+      <div class="cat-heading" id="cat-heading">Comedy</div>
+      <div class="cat-hint">Click any work to expand · × to close</div>
+
+      <div class="expand-grid" id="expand-grid">
+        <!-- JS populated -->
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ABOUT SECTION -->
+<section class="about-section">
+  <div class="about-inner">
+    <div class="curtain-wrap" id="curtain-portrait">
+      <div class="curtain"></div>
+      <div class="about-portrait-wrap">
+        <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+      </div>
+    </div>
+    <div class="about-text-col">
+      <div class="curtain-wrap" id="curtain-label" style="margin-bottom:1.5rem;">
+        <div class="curtain"></div>
+        <div class="about-label">About Jonah</div>
+      </div>
+      <div class="curtain-wrap" id="curtain-heading" style="margin-bottom:1.5rem;">
+        <div class="curtain"></div>
+        <h2 class="about-heading">Seasoned<br>Comedy Editor</h2>
+      </div>
+      <div class="curtain-wrap" id="curtain-bio" style="margin-bottom:2rem;">
+        <div class="curtain"></div>
+        <p class="about-bio">NYC commercial roots. Global recognition. Comedy Central. Netflix. Idris Elba, Pete Davidson, Jamie Lee Curtis. Cutting comedy at the highest level for two decades.</p>
+      </div>
+      <div class="curtain-wrap" id="curtain-awards">
+        <div class="curtain"></div>
+        <div class="awards-list">
+          <span class="award-tag">Cannes Lions</span>
+          <span class="award-tag">Clios</span>
+          <span class="award-tag">One Show</span>
+          <span class="award-tag">Comedy Central</span>
+          <span class="award-tag">Netflix</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// VIDEO MANAGER
+const VM = {
+  current: null,
+  play(el) {
+    if (this.current && this.current !== el) {
+      this.current.pause();
+      this.current.currentTime = 0;
+    }
+    this.current = el;
+  },
+  stop() {
+    if (this.current) {
+      this.current.pause();
+      this.current.currentTime = 0;
+      this.current = null;
+    }
+  }
+};
+
+const VIDEO_SRC = 'https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4';
+
+const categories = {
+  comedy: 'Comedy',
+  social: 'Social Media',
+  film:   'Film / Episodic',
+  ai:     'AI Direction'
+};
+
+let currentCat = 'comedy';
+let expandedCell = null;
+const expandGrid = document.getElementById('expand-grid');
+
+function buildGrid(cat) {
+  expandGrid.innerHTML = '';
+  expandGrid.classList.remove('has-expanded');
+  expandedCell = null;
+
+  for (let i = 0; i < 6; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'grid-cell';
+    cell.dataset.index = i;
+
+    cell.innerHTML = `
+      <div class="cell-thumb">
+        <div class="cell-thumb-play">
+          <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+      <div class="cell-num">0${i + 1}</div>
+      <div class="cell-video">
+        <video src="" preload="none"></video>
+      </div>
+      <button class="cell-close" aria-label="Close">×</button>
+    `;
+
+    const closeBtn = cell.querySelector('.cell-close');
+    closeBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      collapseGrid(cell);
+    });
+
+    cell.addEventListener('click', () => {
+      if (cell.classList.contains('expanded')) return;
+      if (expandedCell) return; // prevent clicking collapsed cells
+      expandCell(cell);
+    });
+
+    expandGrid.appendChild(cell);
+  }
+}
+
+function expandCell(cell) {
+  expandedCell = cell;
+  const vid = cell.querySelector('video');
+  vid.src = VIDEO_SRC;
+
+  // Mark all others as collapsed
+  expandGrid.querySelectorAll('.grid-cell').forEach(c => {
+    if (c !== cell) c.classList.add('collapsed');
+  });
+
+  cell.classList.add('expanded');
+  expandGrid.classList.add('has-expanded');
+
+  VM.play(vid);
+  vid.play().catch(() => {});
+}
+
+function collapseGrid(cell) {
+  const vid = cell.querySelector('video');
+  VM.stop();
+  vid.src = '';
+
+  expandGrid.querySelectorAll('.grid-cell').forEach(c => {
+    c.classList.remove('collapsed', 'expanded');
+  });
+
+  expandGrid.classList.remove('has-expanded');
+  expandedCell = null;
+}
+
+buildGrid('comedy');
+
+// CATEGORY TABS
+const catHeading = document.getElementById('cat-heading');
+
+document.querySelectorAll('.cat-tab').forEach(tab => {
+  tab.addEventListener('mouseenter', () => {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentCat = tab.dataset.cat;
+    catHeading.textContent = categories[currentCat];
+    VM.stop();
+    buildGrid(currentCat);
+  });
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentCat = tab.dataset.cat;
+    catHeading.textContent = categories[currentCat];
+    VM.stop();
+    buildGrid(currentCat);
+  });
+});
+
+// ESC to collapse
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (expandedCell) {
+      collapseGrid(expandedCell);
+    }
+    closeSpokesman();
+  }
+});
+
+// SPOKESMAN
+const spokesmanThumb = document.getElementById('spokesman-thumb');
+const spokesmanModal = document.getElementById('spokesman-modal');
+const spokesmanModalVideo = document.getElementById('spokesman-modal-video');
+const spokesmanModalClose = document.getElementById('spokesman-modal-close');
+
+function openSpokesman() {
+  VM.play(spokesmanModalVideo);
+  spokesmanModal.classList.add('open');
+  spokesmanModalVideo.play().catch(() => {});
+}
+function closeSpokesman() {
+  VM.stop();
+  spokesmanModal.classList.remove('open');
+}
+spokesmanThumb.addEventListener('click', openSpokesman);
+spokesmanThumb.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openSpokesman(); });
+spokesmanModalClose.addEventListener('click', closeSpokesman);
+spokesmanModal.addEventListener('click', e => { if (e.target === spokesmanModal) closeSpokesman(); });
+
+// ABOUT — curtain wipe IntersectionObserver
+const curtainEls = [
+  document.getElementById('curtain-portrait'),
+  document.getElementById('curtain-label'),
+  document.getElementById('curtain-heading'),
+  document.getElementById('curtain-bio'),
+  document.getElementById('curtain-awards')
+];
+
+const curtainObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // stagger by DOM order
+      const idx = curtainEls.indexOf(entry.target);
+      setTimeout(() => {
+        entry.target.classList.add('revealed');
+      }, idx * 80);
+      curtainObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+curtainEls.forEach(el => curtainObserver.observe(el));
+</script>
+</body>
+</html>

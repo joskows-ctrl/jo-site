@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #1a1a1a;
+  --bg2: #141414;
+  --bg3: #202020;
+  --card-bg: #242424;
+  --white: #f2f2f2;
+  --white-dim: rgba(242,242,242,0.55);
+  --white-xdim: rgba(242,242,242,0.25);
+  --accent: #e8e0d0;
+  --line: rgba(255,255,255,0.1);
+  --timeline-line: rgba(255,255,255,0.15);
+  --year-color: rgba(255,255,255,0.2);
+}
+
+html {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 300;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── HEADER / INTRO ─── */
+.site-header {
+  position: relative;
+  padding: 64px 0 56px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.site-name {
+  font-family: 'Libre Baskerville', serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.site-role {
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  color: var(--white-dim);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.intro-link {
+  display: inline-block;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  background: none;
+  border: 1px solid rgba(232,224,208,0.35);
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.intro-link:hover { background: var(--accent); color: var(--bg); }
+
+/* ─── TIMELINE LAYOUT ─── */
+.timeline-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 24px 0;
+  position: relative;
+}
+
+/* The vertical line */
+.timeline-wrap::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--timeline-line);
+  transform: translateX(-50%);
+}
+
+/* ─── YEAR MARKER ─── */
+.year-marker {
+  position: relative;
+  text-align: center;
+  margin: 48px 0 32px;
+  z-index: 2;
+}
+.year-marker span {
+  display: inline-block;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.3em;
+  color: var(--year-color);
+  background: var(--bg);
+  padding: 6px 20px;
+  border: 1px solid var(--line);
+  text-transform: uppercase;
+}
+.year-marker:first-child { margin-top: 0; }
+
+/* ─── TIMELINE CARD ─── */
+.tl-card {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 48px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.tl-card.visible { opacity: 1; transform: translateY(0); }
+
+/* Left cards */
+.tl-card.left {
+  flex-direction: row-reverse;
+  padding-right: calc(50% + 40px);
+}
+/* Right cards */
+.tl-card.right {
+  flex-direction: row;
+  padding-left: calc(50% + 40px);
+}
+
+/* Dot on the line */
+.tl-card::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 24px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px rgba(232,224,208,0.3);
+  z-index: 3;
+}
+
+/* Connector line from dot to card */
+.tl-card.left::after {
+  content: '';
+  position: absolute;
+  top: 18px;
+  right: calc(50%);
+  width: 32px;
+  height: 1px;
+  background: var(--line);
+}
+.tl-card.right::after {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: calc(50%);
+  width: 32px;
+  height: 1px;
+  background: var(--line);
+}
+
+.tl-card-inner {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  transition: border-color 0.3s ease;
+}
+.tl-card-inner:hover { border-color: rgba(232,224,208,0.35); }
+
+.card-meta {
+  padding: 20px 22px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.card-category {
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  opacity: 0.7;
+}
+.card-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.4;
+}
+
+.card-thumb {
+  aspect-ratio: 16/9;
+  background: #2a2a2a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.25s;
+}
+.card-thumb:hover { background: #2f2f2f; }
+
+.play-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(232,224,208,0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: 0.9rem;
+  padding-left: 3px;
+  transition: background 0.25s, border-color 0.25s;
+}
+.card-thumb:hover .play-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.card-thumb-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 14px;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--white-dim);
+  text-transform: uppercase;
+  background: linear-gradient(to top, rgba(26,26,26,0.9), transparent);
+}
+
+/* ─── PROFILE CARD (top of timeline) ─── */
+.profile-card {
+  margin-bottom: 64px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.profile-card-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 28px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  padding: 28px 40px;
+  position: relative;
+}
+.profile-portrait {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top;
+  filter: grayscale(30%);
+  border: 2px solid var(--line);
+}
+.profile-info {}
+.profile-name {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.profile-role {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--white-dim);
+  text-transform: uppercase;
+}
+.profile-intro-btn {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.72rem;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  font-family: 'Space Grotesk', sans-serif;
+  padding: 0;
+  text-align: left;
+}
+.profile-intro-btn:hover { text-decoration: underline; }
+/* Connector from profile card down to timeline */
+.profile-card::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: var(--timeline-line);
+  margin: 0 auto;
+}
+
+/* ─── ABOUT SECTION ─── */
+.about-section {
+  margin-top: 80px;
+  padding: 80px 24px;
+  background: var(--bg2);
+  border-top: 1px solid var(--line);
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.about-section.visible { opacity: 1; transform: translateY(0); }
+
+.about-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 64px;
+  align-items: start;
+}
+.about-portrait {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  filter: grayscale(20%) brightness(0.85);
+  border: 1px solid var(--line);
+}
+.about-text {}
+.about-eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.28em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+.about-headline {
+  font-family: 'Libre Baskerville', serif;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--white);
+  margin-bottom: 24px;
+}
+.about-body {
+  font-size: 0.92rem;
+  line-height: 1.85;
+  color: var(--white-dim);
+  margin-bottom: 16px;
+}
+.about-line {
+  width: 40px;
+  height: 1px;
+  background: var(--line);
+  margin: 28px 0;
+}
+.about-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 32px;
+  margin-bottom: 32px;
+}
+.spec {}
+.spec-k { font-size: 0.6rem; letter-spacing: 0.22em; color: var(--accent); text-transform: uppercase; margin-bottom: 3px; opacity: 0.65; }
+.spec-v { font-size: 0.85rem; color: var(--white-dim); }
+.about-email {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(232,224,208,0.3);
+  padding-bottom: 2px;
+  text-transform: uppercase;
+  transition: border-color 0.2s, opacity 0.2s;
+}
+.about-email:hover { border-color: var(--accent); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 32px 24px;
+  text-align: center;
+  border-top: 1px solid var(--line);
+}
+footer p { font-size: 0.7rem; letter-spacing: 0.12em; color: var(--white-xdim); }
+
+/* ─── MODAL ─── */
+#modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.97);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+#modal-video {
+  width: 90%;
+  max-width: 960px;
+  aspect-ratio: 16/9;
+}
+#modal-close {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  font-size: 2.5rem;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* ─── OPT-NAV ─── */
+#opt-nav {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 8888;
+  font-size: 10px;
+  font-family: monospace;
+  background: rgba(0,0,0,0.85);
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 8px 10px;
+  max-height: 220px;
+  overflow-y: auto;
+  line-height: 1.8;
+}
+#opt-nav a {
+  color: #666;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0 3px;
+  transition: color 0.2s;
+}
+#opt-nav a:hover { color: #e8e0d0; }
+#opt-nav a.current { color: #e8e0d0; font-weight: bold; }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(232,224,208,0.3); border-radius: 2px; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 780px) {
+  .timeline-wrap::before { left: 28px; }
+  .tl-card { flex-direction: row !important; padding-left: 64px !important; padding-right: 0 !important; }
+  .tl-card::before { left: 28px; }
+  .tl-card.left::after { display: none; }
+  .tl-card.right::after { left: 28px; width: 20px; }
+  .year-marker { text-align: left; padding-left: 64px; }
+  .year-marker span { padding: 5px 14px; }
+  .profile-card-inner { flex-direction: column; text-align: center; padding: 24px; }
+  .about-inner { grid-template-columns: 1fr; gap: 32px; }
+  .about-portrait { max-width: 220px; }
+}
+</style>
+</head>
+<body>
+
+<!-- MODAL -->
+<div id="modal">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2.5rem;color:#fff;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="site-name">Jonah Oskow</div>
+  <div class="site-role">Film &amp; Commercial Editor</div>
+  <button class="intro-link" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">▶ Watch Intro · 0:37</button>
+</header>
+
+<!-- TIMELINE -->
+<div class="timeline-wrap">
+
+  <!-- PROFILE CARD -->
+  <div class="profile-card">
+    <div class="profile-card-inner">
+      <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow" class="profile-portrait">
+      <div class="profile-info">
+        <div class="profile-name">Jonah Oskow</div>
+        <div class="profile-role">Film &amp; Commercial Editor · New York</div>
+        <button class="profile-intro-btn" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">▶ Watch Intro · 0:37</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2024 -->
+  <div class="year-marker"><span>2024</span></div>
+
+  <div class="tl-card right">
+    <div class="tl-card-inner">
+      <div class="card-meta">
+        <div class="card-category">Comedy</div>
+        <div class="card-title">Sketch Series — Network Pilot Edit</div>
+      </div>
+      <div class="card-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <div class="play-btn">▶</div>
+        <div class="card-thumb-label">Sketch Series · 2024</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-card left">
+    <div class="tl-card-inner">
+      <div class="card-meta">
+        <div class="card-category">AI Direction</div>
+        <div class="card-title">AI Narrative — Hybrid Feature Project</div>
+      </div>
+      <div class="card-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <div class="play-btn">▶</div>
+        <div class="card-thumb-label">AI Narrative · 2024</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-card right">
+    <div class="tl-card-inner">
+      <div class="card-meta">
+        <div class="card-category">Social Media</div>
+        <div class="card-title">Campaign Reels — Multi-Platform Rollout</div>
+      </div>
+      <div class="card-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <div class="play-btn">▶</div>
+        <div class="card-thumb-label">Campaign Reels · 2024</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-card left">
+    <div class="tl-card-inner">
+      <div class="card-meta">
+        <div class="card-category">Film / Episodic</div>
+        <div class="card-title">Feature Documentary — Full Assembly</div>
+      </div>
+      <div class="card-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <div class="play-btn">▶</div>
+        <div class="card-thumb-label">Feature Documentary · 2024</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2023 -->
+  <div class="year-marker"><span>2023</span></div>
+
+  <div class="tl-card right">
+    <div class="tl-card-inner">
+      <div class="card-meta">
+        <div class="card-category">Comedy</div>
+        <div class="card-title">Branded Comedy — Character Spots Campaign</div>
+      </div>
+      <div class="card-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <div class="play-btn">▶</div>
+        <div class="card-thumb-label">Branded Comedy · 2023</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-card left">
+    <div class="tl-card-inner">
+      <div class="card-meta">
+        <div class="card-category">Film / Episodic</div>
+        <div class="card-title">Pilot Episode — Comedy Series</div>
+      </div>
+      <div class="card-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <div class="play-btn">▶</div>
+        <div class="card-thumb-label">Pilot Episode · 2023</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-card right">
+    <div class="tl-card-inner">
+      <div class="card-meta">
+        <div class="card-category">Social Media</div>
+        <div class="card-title">Short-form Series — Weekly Episodic Cuts</div>
+      </div>
+      <div class="card-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <div class="play-btn">▶</div>
+        <div class="card-thumb-label">Short-form Series · 2023</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2022 -->
+  <div class="year-marker"><span>2022</span></div>
+
+  <div class="tl-card left">
+    <div class="tl-card-inner">
+      <div class="card-meta">
+        <div class="card-category">Film / Episodic</div>
+        <div class="card-title">Short Film — Festival Circuit Edit</div>
+      </div>
+      <div class="card-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <div class="play-btn">▶</div>
+        <div class="card-thumb-label">Short Film · 2022</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-card right">
+    <div class="tl-card-inner">
+      <div class="card-meta">
+        <div class="card-category">Social Media</div>
+        <div class="card-title">Influencer Edits — Brand Partnership Series</div>
+      </div>
+      <div class="card-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <div class="play-btn">▶</div>
+        <div class="card-thumb-label">Influencer Edits · 2022</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2021 -->
+  <div class="year-marker"><span>2021</span></div>
+
+  <div class="tl-card left">
+    <div class="tl-card-inner">
+      <div class="card-meta">
+        <div class="card-category">AI Direction</div>
+        <div class="card-title">AI Direction Reel — Generative Workflow Experiments</div>
+      </div>
+      <div class="card-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <div class="play-btn">▶</div>
+        <div class="card-thumb-label">AI Direction Reel · 2021</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-card right">
+    <div class="tl-card-inner">
+      <div class="card-meta">
+        <div class="card-category">Comedy</div>
+        <div class="card-title">Character Spots — Recurring Series</div>
+      </div>
+      <div class="card-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <div class="play-btn">▶</div>
+        <div class="card-thumb-label">Character Spots · 2021</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /timeline-wrap -->
+
+<!-- ABOUT SECTION -->
+<section class="about-section">
+  <div class="about-inner">
+    <div>
+      <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow" class="about-portrait">
+    </div>
+    <div class="about-text">
+      <div class="about-eyebrow">About Jonah Oskow</div>
+      <h2 class="about-headline">A career built on craft, timing, and the cut that changes everything.</h2>
+      <p class="about-body">Jonah Oskow is a New York-based film and commercial editor with a decade of work spanning comedy, branded content, narrative film, and the emerging world of AI-directed media. He approaches every timeline with the same rigorous attention to rhythm, pacing, and emotional truth.</p>
+      <p class="about-body">From independent short films to network pilots to multi-platform social campaigns, Jonah brings a collaborative spirit and a disciplined editorial eye to projects of all scales and genres.</p>
+      <div class="about-line"></div>
+      <div class="about-specs">
+        <div class="spec">
+          <div class="spec-k">Specialties</div>
+          <div class="spec-v">Comedy · Social Media · Film/Episodic · AI Direction</div>
+        </div>
+        <div class="spec">
+          <div class="spec-k">Location</div>
+          <div class="spec-v">New York, NY</div>
+        </div>
+        <div class="spec">
+          <div class="spec-k">Software</div>
+          <div class="spec-v">Avid · Premiere Pro · DaVinci Resolve</div>
+        </div>
+        <div class="spec">
+          <div class="spec-k">Availability</div>
+          <div class="spec-v">Freelance &amp; Staff</div>
+        </div>
+      </div>
+      <a href="mailto:joskows@gmail.com" class="about-email">joskows@gmail.com →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2024 Jonah Oskow &nbsp;·&nbsp; Film &amp; Commercial Editor &nbsp;·&nbsp; New York</p>
+</footer>
+
+<!-- OPT-NAV -->
+<div id="opt-nav">
+  Options:
+  <a href="option-1.html">1</a><a href="option-2.html">2</a><a href="option-3.html">3</a><a href="option-4.html">4</a><a href="option-5.html">5</a><a href="option-6.html">6</a><a href="option-7.html">7</a><a href="option-8.html">8</a><a href="option-9.html">9</a><a href="option-10.html">10</a><a href="option-11.html">11</a><a href="option-12.html">12</a><a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a><a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a><a href="option-19.html">19</a><a href="option-20.html">20</a><a href="option-21.html">21</a><a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a><a href="option-25.html">25</a><a href="option-26.html">26</a><a href="option-27.html">27</a><a href="option-28.html">28</a><a href="option-29.html">29</a><a href="option-30.html">30</a><a href="option-31.html">31</a><a href="option-32.html">32</a><a href="option-33.html">33</a><a href="option-34.html">34</a><a href="option-35.html">35</a><a href="option-36.html">36</a><a href="option-37.html">37</a><a href="option-38.html" class="current">38</a><a href="option-39.html">39</a><a href="option-40.html">40</a><a href="option-41.html">41</a><a href="option-42.html">42</a><a href="option-43.html">43</a><a href="option-44.html">44</a><a href="option-45.html">45</a>
+</div>
+
+<script>
+// ─── MODAL ───
+const modal = document.getElementById('modal');
+const mv = document.getElementById('modal-video');
+function openVideo(src) { mv.src = src; modal.style.display = 'flex'; mv.play(); }
+function closeModal() { mv.pause(); mv.src = ''; modal.style.display = 'none'; }
+document.getElementById('modal-close').onclick = closeModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ─── INTERSECTION OBSERVER FADE-IN ───
+const observed = document.querySelectorAll('.tl-card, .about-section');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      io.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+observed.forEach(el => io.observe(el));
+</script>
+</body>
+</html>

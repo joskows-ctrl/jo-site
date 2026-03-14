@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --syne: 'Syne', sans-serif;
+  --inter: 'Inter', sans-serif;
+}
+
+html {
+  /* snap scroll on desktop */
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  height: 100%;
+}
+
+body {
+  font-family: var(--inter);
+  background: #0d0d0d;
+  color: #fff;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+/* Disable snap on mobile (too jarring) */
+@media (max-width: 700px) {
+  html { scroll-snap-type: none; }
+}
+
+/* ── OPT NAV ── */
+.opt-nav {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9999;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  max-width: 220px;
+  justify-content: flex-end;
+}
+.opt-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  font-size: 10px;
+  font-family: var(--inter);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+.opt-nav a:hover, .opt-nav a.active {
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+  border-color: rgba(255,255,255,0.3);
+}
+
+/* ── PROGRESS BAR (left edge) ── */
+.progress-bar {
+  position: fixed;
+  left: 0; top: 0;
+  width: 3px;
+  height: 0%;
+  background: rgba(255,255,255,0.5);
+  z-index: 9998;
+  transition: height 0.1s linear;
+}
+
+/* ── SECTION DOTS NAV ── */
+.dot-nav {
+  position: fixed;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+.dot.active {
+  background: #fff;
+  transform: scale(1.4);
+}
+.dot:hover { background: rgba(255,255,255,0.6); }
+
+/* ── CHAPTER BASE ── */
+.chapter {
+  width: 100%;
+  min-height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Chapter backgrounds */
+.ch-0 { background: #0d0d0d; }
+.ch-1 { background: #0a0f0d; } /* comedy — slight green tinge */
+.ch-2 { background: #0d0a0f; } /* social — slight purple */
+.ch-3 { background: #0f0d0a; } /* film — slight warm */
+.ch-4 { background: #0a0a0f; } /* ai — slight blue */
+.ch-5 { background: #0d0d0d; } /* about */
+.ch-6 { background: #080808; } /* contact */
+
+/* ── CHAPTER 0: HERO ── */
+.hero-chapter {
+  align-items: center;
+  text-align: center;
+  padding: 0 24px;
+}
+.hero-name {
+  font-family: var(--syne);
+  font-weight: 800;
+  font-size: clamp(4rem, 14vw, 13rem);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+.hero-sub {
+  margin-top: 28px;
+  font-family: var(--inter);
+  font-size: clamp(0.75rem, 1.8vw, 1.1rem);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+}
+.hero-awards {
+  margin-top: 16px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+}
+.hero-scroll {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: pulse 2.5s ease-in-out infinite;
+}
+.hero-scroll::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,0.15);
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* ── CATEGORY CHAPTERS (1-4) ── */
+.cat-chapter {
+  padding: 60px 64px;
+  position: relative;
+}
+
+/* Watermark: huge category name behind content */
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--syne);
+  font-weight: 800;
+  font-size: clamp(5rem, 15vw, 18rem);
+  white-space: nowrap;
+  opacity: 0.045;
+  color: #fff;
+  pointer-events: none;
+  letter-spacing: -0.04em;
+  user-select: none;
+  z-index: 0;
+}
+
+.cat-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Top 40%: category name */
+.cat-header-area {
+  flex: 0 0 auto;
+  margin-bottom: 32px;
+}
+
+.cat-idx {
+  font-family: var(--inter);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  margin-bottom: 8px;
+}
+.cat-name {
+  font-family: var(--syne);
+  font-weight: 800;
+  font-size: clamp(2rem, 6vw, 5.5rem);
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  color: #fff;
+}
+
+/* Accent line under category name */
+.cat-accent-line {
+  margin-top: 14px;
+  width: 48px;
+  height: 2px;
+  background: var(--accent, #fff);
+}
+
+/* Thumbnail grid: 4 in a row (or 2x2) */
+.cat-thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.cat-thumb {
+  aspect-ratio: 16/9;
+  background: rgba(255,255,255,0.04);
+  border-left: 2px solid var(--accent, #444);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--inter);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.cat-thumb:hover {
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.7);
+}
+
+/* Extra 2 hidden thumbs that appear in "expand" — just show all 6 in 2-row grid */
+.cat-thumbs-full {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Bottom: description */
+.cat-desc {
+  margin-top: 24px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.28);
+  max-width: 600px;
+}
+
+/* Category accents */
+.ch-1 .cat-accent-line,
+.ch-1 .cat-thumb { --accent: rgba(255,255,255,0.6); }
+
+.ch-2 .cat-accent-line { background: #00e5ff; }
+.ch-2 .cat-thumb { --accent: #00e5ff; }
+
+.ch-3 .cat-accent-line { background: #888; }
+.ch-3 .cat-thumb { --accent: #888; }
+
+.ch-4 .cat-accent-line { background: #aaff00; }
+.ch-4 .cat-thumb { --accent: #aaff00; }
+
+/* ── ABOUT CHAPTER (5) ── */
+.about-chapter {
+  padding: 80px 64px;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.about-img-wrap {
+  position: relative;
+  z-index: 1;
+}
+.about-portrait {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(20%) brightness(0.88);
+}
+.about-img-label {
+  margin-top: 12px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+}
+
+.about-text-wrap {
+  position: relative;
+  z-index: 1;
+}
+.about-ch-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 20px;
+}
+.about-headline {
+  font-family: var(--syne);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3.5vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-bottom: 28px;
+}
+.about-body {
+  font-size: 14px;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.5);
+  max-width: 500px;
+}
+.about-body + .about-body { margin-top: 14px; }
+.about-pills {
+  margin-top: 28px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.about-pill {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.35);
+  border-radius: 100px;
+}
+
+/* ── CONTACT CHAPTER (6) ── */
+.contact-chapter {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+}
+.contact-label {
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 24px;
+}
+.contact-email {
+  font-family: var(--syne);
+  font-weight: 700;
+  font-size: clamp(1.4rem, 4vw, 4.5rem);
+  letter-spacing: -0.01em;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  transition: color 0.3s;
+  display: block;
+}
+.contact-email:hover { color: #fff; }
+.contact-name-small {
+  margin-top: 28px;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.12);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .cat-chapter { padding: 48px 28px; }
+  .cat-thumbs { grid-template-columns: repeat(2, 1fr); }
+  .cat-thumbs-full { grid-template-columns: repeat(2, 1fr); }
+  .about-chapter {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 60px 28px;
+  }
+  .about-portrait { max-width: 220px; }
+}
+
+@media (max-width: 600px) {
+  .cat-thumbs { grid-template-columns: repeat(2, 1fr); }
+  .watermark { display: none; }
+  .opt-nav { display: none; }
+  .dot-nav { display: none; }
+  .progress-bar { display: none; }
+  .about-chapter { padding: 60px 20px; }
+  .cat-chapter { padding: 40px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Dev Nav -->
+<nav class="opt-nav">
+  <a href="option-1.html">1</a>
+  <a href="option-2.html">2</a>
+  <a href="option-3.html">3</a>
+  <a href="option-4.html">4</a>
+  <a href="option-5.html" class="active">5</a>
+  <a href="option-6.html">6</a>
+  <a href="option-7.html">7</a>
+  <a href="option-8.html">8</a>
+  <a href="option-9.html">9</a>
+  <a href="option-10.html">10</a>
+</nav>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Dot nav -->
+<nav class="dot-nav" id="dotNav">
+  <div class="dot active" data-idx="0" title="Intro"></div>
+  <div class="dot" data-idx="1" title="Comedy"></div>
+  <div class="dot" data-idx="2" title="Social Media"></div>
+  <div class="dot" data-idx="3" title="Film / Episodic"></div>
+  <div class="dot" data-idx="4" title="AI Direction"></div>
+  <div class="dot" data-idx="5" title="About"></div>
+  <div class="dot" data-idx="6" title="Contact"></div>
+</nav>
+
+<!-- Chapter 0: Hero -->
+<section class="chapter ch-0 hero-chapter" id="ch-0" data-idx="0">
+  <h1 class="hero-name">JONAH<br>OSKOW</h1>
+  <p class="hero-sub">Film &amp; Commercial Editor</p>
+  <p class="hero-awards">Cannes Lions &nbsp;·&nbsp; Clios &nbsp;·&nbsp; One Show</p>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- Chapter 1: Comedy -->
+<section class="chapter ch-1 cat-chapter" id="ch-1" data-idx="1">
+  <div class="watermark">Comedy</div>
+  <div class="cat-content">
+    <div class="cat-header-area">
+      <div class="cat-idx">01 &nbsp;/&nbsp; Comedy</div>
+      <h2 class="cat-name">Comedy</h2>
+      <div class="cat-accent-line"></div>
+    </div>
+    <div class="cat-thumbs">
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+    </div>
+    <div class="cat-thumbs-full">
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+    </div>
+    <p class="cat-desc">Commercial comedy spots for major agencies &amp; Fortune 500 brands — timing-first editorial with a sharp eye for performance.</p>
+  </div>
+</section>
+
+<!-- Chapter 2: Social Media -->
+<section class="chapter ch-2 cat-chapter" id="ch-2" data-idx="2">
+  <div class="watermark">Social</div>
+  <div class="cat-content">
+    <div class="cat-header-area">
+      <div class="cat-idx">02 &nbsp;/&nbsp; Social Media</div>
+      <h2 class="cat-name">Social<br>Media</h2>
+      <div class="cat-accent-line"></div>
+    </div>
+    <div class="cat-thumbs">
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+    </div>
+    <div class="cat-thumbs-full">
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+    </div>
+    <p class="cat-desc">Platform-native cuts built for scroll-stopping impact — vertical, square, and horizontal deliverables across TikTok, Instagram, and beyond.</p>
+  </div>
+</section>
+
+<!-- Chapter 3: Film / Episodic -->
+<section class="chapter ch-3 cat-chapter" id="ch-3" data-idx="3">
+  <div class="watermark">Film</div>
+  <div class="cat-content">
+    <div class="cat-header-area">
+      <div class="cat-idx">03 &nbsp;/&nbsp; Film / Episodic</div>
+      <h2 class="cat-name">Film /<br>Episodic</h2>
+      <div class="cat-accent-line"></div>
+    </div>
+    <div class="cat-thumbs">
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+    </div>
+    <div class="cat-thumbs-full">
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+    </div>
+    <p class="cat-desc">Long-form editorial for Comedy Central and Netflix — building story arc, pacing performance, and holding the room for thirty minutes at a time.</p>
+  </div>
+</section>
+
+<!-- Chapter 4: AI Direction -->
+<section class="chapter ch-4 cat-chapter" id="ch-4" data-idx="4">
+  <div class="watermark">AI</div>
+  <div class="cat-content">
+    <div class="cat-header-area">
+      <div class="cat-idx">04 &nbsp;/&nbsp; AI Direction</div>
+      <h2 class="cat-name">AI<br>Direction</h2>
+      <div class="cat-accent-line"></div>
+    </div>
+    <div class="cat-thumbs">
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+    </div>
+    <div class="cat-thumbs-full">
+      <div class="cat-thumb">▶ PLAY</div>
+      <div class="cat-thumb">▶ PLAY</div>
+    </div>
+    <p class="cat-desc">AI-generated and AI-augmented content — directing image models, integrating synthetic footage, and maintaining human craft at every frame.</p>
+  </div>
+</section>
+
+<!-- Chapter 5: About -->
+<section class="chapter ch-5 about-chapter" id="ch-5" data-idx="5">
+  <div class="about-img-wrap">
+    <img class="about-portrait"
+      src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg"
+      alt="Jonah Oskow">
+    <div class="about-img-label">Jonah Oskow &nbsp;·&nbsp; New York</div>
+  </div>
+  <div class="about-text-wrap">
+    <div class="about-ch-label">About</div>
+    <h2 class="about-headline">Seasoned comedy editor.<br>NYC commercial roots.</h2>
+    <p class="about-body">Jonah Oskow has spent his career at the intersection of comedy and craft — cutting spots that make people laugh, and episodes that make them stay. His editorial instincts are shaped by years in the fast-moving world of NYC advertising and sharpened by long-form narrative work for Comedy Central and Netflix.</p>
+    <p class="about-body">He has collaborated with Idris Elba, Pete Davidson, and Jamie Lee Curtis, and built award-winning relationships with the industry's top agencies and tech brands. Cannes Lions, Clios, and One Show recognition reflect the standard he holds every frame to.</p>
+    <div class="about-pills">
+      <span class="about-pill">Cannes Lions</span>
+      <span class="about-pill">Clio Award</span>
+      <span class="about-pill">One Show</span>
+      <span class="about-pill">Comedy Central</span>
+      <span class="about-pill">Netflix</span>
+    </div>
+  </div>
+</section>
+
+<!-- Chapter 6: Contact -->
+<section class="chapter ch-6 contact-chapter" id="ch-6" data-idx="6">
+  <div class="contact-label">Get in touch</div>
+  <a class="contact-email" href="mailto:joskows@gmail.com">joskows@gmail.com</a>
+  <div class="contact-name-small">Jonah Oskow &nbsp;·&nbsp; Film &amp; Commercial Editor</div>
+</section>
+
+<script>
+(function() {
+  const chapters = Array.from(document.querySelectorAll('.chapter'));
+  const dots = Array.from(document.querySelectorAll('.dot'));
+  const progressBar = document.getElementById('progressBar');
+
+  // Dot click → scroll to chapter
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.dataset.idx);
+      chapters[idx].scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // IntersectionObserver to update dots and progress bar
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+        const idx = parseInt(entry.target.dataset.idx);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.5 });
+
+  chapters.forEach(ch => io.observe(ch));
+
+  // Scroll progress bar
+  const totalH = () => document.documentElement.scrollHeight - window.innerHeight;
+  window.addEventListener('scroll', () => {
+    const pct = totalH() > 0 ? (window.scrollY / totalH()) * 100 : 0;
+    progressBar.style.height = pct + '%';
+  }, { passive: true });
+
+  // Hero fade on scroll (subtle)
+  const hero = chapters[0];
+  const heroName = hero.querySelector('.hero-name');
+  const heroSub = hero.querySelector('.hero-sub');
+  window.addEventListener('scroll', () => {
+    const ratio = Math.min(window.scrollY / window.innerHeight, 1);
+    const opacity = 1 - ratio * 1.5;
+    heroName.style.opacity = Math.max(opacity, 0);
+    heroSub.style.opacity = Math.max(opacity, 0);
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #111;
+  --ink-mid: #333;
+  --ink-dim: #666;
+  --ink-faint: #999;
+  --rule: #ddd;
+  --rule-heavy: #222;
+  --accent: #111;
+  --bg: #fff;
+  --bg-warm: #faf9f7;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* ── MASTHEAD ── */
+.masthead {
+  border-bottom: 3px solid var(--ink);
+  padding: 16px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.masthead-left {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.masthead-center {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--ink-faint);
+}
+.masthead-right {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* ── FEATURE HEADER ── */
+.feature-header {
+  padding: 64px 60px 0;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+
+.feature-kicker {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.feature-kicker::before {
+  content: '';
+  display: inline-block;
+  width: 30px;
+  height: 2px;
+  background: var(--ink);
+}
+
+.feature-title-wrap {
+  border-top: 3px solid var(--ink);
+  padding-top: 24px;
+  padding-bottom: 32px;
+}
+
+.feature-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(3.5rem, 9vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.feature-title .slash {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-dim);
+}
+
+.feature-subhead-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: end;
+  margin-top: 28px;
+  padding-bottom: 36px;
+  border-top: 1px solid var(--rule);
+}
+
+.pull-quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  line-height: 1.55;
+  color: var(--ink-mid);
+  max-width: 640px;
+  padding-top: 24px;
+}
+
+.watch-btn-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  padding-top: 24px;
+  flex-shrink: 0;
+}
+
+.watch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  padding: 13px 24px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.watch-btn:hover {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.watch-btn-meta {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ── WORK SECTION ── */
+.work-section {
+  padding: 56px 60px 60px;
+}
+
+.work-section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 36px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--rule-heavy);
+}
+
+.work-section-label {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.work-section-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* 4-column magazine grid */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-left: 1px solid var(--rule);
+}
+
+.work-col {
+  border-right: 1px solid var(--rule);
+  padding: 0 24px 24px;
+}
+
+.col-header {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--ink);
+  padding: 16px 0 14px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 18px;
+  line-height: 1.1;
+}
+
+.col-number {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Thumbnails */
+.thumb {
+  aspect-ratio: 16/9;
+  background: #f0eeeb;
+  border: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+.thumb:hover { background: #e8e5e0; }
+.thumb:hover .thumb-play { opacity: 1; }
+.thumb:last-child { margin-bottom: 0; }
+
+.thumb-play {
+  font-size: 1.6rem;
+  color: var(--ink-mid);
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  line-height: 1;
+}
+
+.thumb-caption {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 5px 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  background: rgba(255,255,255,0.8);
+}
+
+/* ── ABOUT (MAGAZINE PROFILE) ── */
+.about-section {
+  padding: 60px 60px 80px;
+  background: var(--bg-warm);
+  border-top: 3px solid var(--ink);
+}
+
+.about-kicker {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.about-kicker::before {
+  content: '';
+  display: inline-block;
+  width: 30px;
+  height: 2px;
+  background: var(--ink);
+}
+
+.about-inner {
+  column-count: 2;
+  column-gap: 60px;
+  position: relative;
+}
+
+.about-portrait {
+  float: right;
+  width: 280px;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  margin: 0 0 20px 36px;
+  filter: grayscale(10%);
+  shape-outside: margin-box;
+}
+
+.about-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  line-height: 1;
+  margin-bottom: 20px;
+  column-span: all;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 16px;
+  margin-bottom: 28px;
+}
+
+.about-body {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--ink-mid);
+  margin-bottom: 18px;
+  break-inside: avoid;
+}
+
+.about-body strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.about-contact {
+  margin-top: 24px;
+  column-span: all;
+  border-top: 1px solid var(--rule);
+  padding-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.about-contact a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 1px;
+  transition: color 0.2s;
+}
+.about-contact a:hover { color: var(--ink-mid); }
+
+/* ── FOOTER ── */
+footer {
+  padding: 18px 60px;
+  border-top: 3px solid var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ── MODAL ── */
+#modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.97);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── OPT-NAV ── */
+.opt-nav {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 600;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px 14px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.opt-nav summary {
+  cursor: pointer;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.58rem;
+  list-style: none;
+  margin-bottom: 6px;
+}
+.opt-nav summary:hover { color: #444; }
+.opt-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.opt-nav-links a {
+  color: #bbb;
+  text-decoration: none;
+  font-size: 0.58rem;
+  transition: color 0.15s;
+}
+.opt-nav-links a:hover { color: #333; }
+.opt-nav-links a.current { color: #111; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ── MASTHEAD ── -->
+<div class="masthead">
+  <span class="masthead-left">Portfolio</span>
+  <span class="masthead-center">Film &amp; Commercial Editing</span>
+  <span class="masthead-right">Los Angeles</span>
+</div>
+
+<!-- ── FEATURE HEADER ── -->
+<header class="feature-header">
+  <p class="feature-kicker">Featured Editor</p>
+
+  <div class="feature-title-wrap">
+    <h1 class="feature-title">
+      Jonah Oskow <span class="slash">/</span> Editor
+    </h1>
+  </div>
+
+  <div class="feature-subhead-row">
+    <p class="pull-quote">
+      "The edit is where the story either lives or dies — pacing, rhythm, and the courage to cut what doesn't serve."
+    </p>
+    <div class="watch-btn-wrap">
+      <button class="watch-btn" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">
+        ▶ Watch Intro
+      </button>
+      <span class="watch-btn-meta">0:37 · Introduction</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── WORK SECTION ── -->
+<section class="work-section">
+  <div class="work-section-head">
+    <span class="work-section-label">Selected Work</span>
+    <div class="work-section-rule"></div>
+  </div>
+
+  <div class="work-grid">
+    <!-- Comedy -->
+    <div class="work-col">
+      <div class="col-header">
+        <span class="col-number">01 &mdash;</span>
+        Comedy
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">Brand Spot · 30s</span>
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">Sketch Series · Ep 1</span>
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">Comedy Reel Cut</span>
+      </div>
+    </div>
+
+    <!-- Social Media -->
+    <div class="work-col">
+      <div class="col-header">
+        <span class="col-number">02 &mdash;</span>
+        Social Media
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">Viral Campaign</span>
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">Short-Form Series</span>
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">Platform Launch</span>
+      </div>
+    </div>
+
+    <!-- Film/Episodic -->
+    <div class="work-col">
+      <div class="col-header">
+        <span class="col-number">03 &mdash;</span>
+        Film / Episodic
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">Short Film</span>
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">Pilot Cut</span>
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">Episodic Reel</span>
+      </div>
+    </div>
+
+    <!-- AI Direction -->
+    <div class="work-col">
+      <div class="col-header">
+        <span class="col-number">04 &mdash;</span>
+        AI Direction
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">AI Narrative Piece</span>
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">Synthetic Reel</span>
+      </div>
+      <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+        <span class="thumb-play">▶</span>
+        <span class="thumb-caption">Directed AI Spot</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section class="about-section" id="about">
+  <p class="about-kicker">Profile</p>
+
+  <h2 class="about-name">Jonah Oskow</h2>
+
+  <div class="about-inner">
+    <img class="about-portrait" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+
+    <p class="about-body"><strong>Jonah Oskow</strong> is a Los Angeles-based film and commercial editor whose work spans broadcast campaigns, viral social content, feature films, and emerging AI-driven formats. He brings a rare combination of technical precision and intuitive storytelling to every project he touches.</p>
+
+    <p class="about-body">Specializing in comedy, social media, episodic storytelling, and AI-directed content, Jonah has developed a reputation for edits that move at exactly the right speed — fast where it counts, patient where it matters. His cuts feel inevitable in the best possible way.</p>
+
+    <p class="about-body">He collaborates closely with directors, showrunners, and brand teams alike, treating each project as an opportunity to find the exact version of itself that will resonate most. Whether trimming a 90-minute cut or shaping a six-second social moment, the commitment to clarity and rhythm never wavers.</p>
+
+    <p class="about-body">Clients range from major studios and streaming platforms to independent filmmakers and direct-to-consumer brands. Every project gets the same thing: full attention, sharp instincts, and an edit that serves the story first.</p>
+
+    <div class="about-contact">
+      Contact: <a href="mailto:joskows@gmail.com">joskows@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span>Jonah Oskow &mdash; Film &amp; Commercial Editor</span>
+  <span>Los Angeles, CA</span>
+</footer>
+
+<!-- ── MODAL ── -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:9999;align-items:center;justify-content:center;">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2.5rem;color:#fff;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+</div>
+
+<!-- ── OPT-NAV ── -->
+<details class="opt-nav">
+  <summary>Options</summary>
+  <div class="opt-nav-links">
+    <a href="option-1.html">01</a><a href="option-2.html">02</a><a href="option-3.html">03</a>
+    <a href="option-4.html">04</a><a href="option-5.html">05</a><a href="option-6.html">06</a>
+    <a href="option-7.html">07</a><a href="option-8.html">08</a><a href="option-9.html">09</a>
+    <a href="option-10.html">10</a><a href="option-11.html">11</a><a href="option-12.html">12</a>
+    <a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a>
+    <a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a>
+    <a href="option-19.html">19</a><a href="option-20.html">20</a><a href="option-21.html">21</a>
+    <a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a>
+    <a href="option-25.html">25</a><a href="option-26.html">26</a><a href="option-27.html">27</a>
+    <a href="option-28.html">28</a><a href="option-29.html">29</a><a href="option-30.html">30</a>
+    <a href="option-31.html">31</a><a href="option-32.html">32</a><a href="option-33.html">33</a>
+    <a href="option-34.html">34</a><a href="option-35.html">35</a><a href="option-36.html">36</a>
+    <a href="option-37.html">37</a><a href="option-38.html">38</a><a href="option-39.html">39</a>
+    <a href="option-40.html">40</a><a href="option-41.html">41</a><a href="option-42.html">42</a>
+    <a href="option-43.html">43</a>
+    <a href="option-44.html" class="current">44</a>
+    <a href="option-45.html">45</a>
+  </div>
+</details>
+
+<script>
+// ── MODAL ──
+const modal = document.getElementById('modal');
+const mv = document.getElementById('modal-video');
+function openVideo(src) { mv.src = src; modal.style.display = 'flex'; mv.play(); }
+function closeModal() { mv.pause(); mv.src = ''; modal.style.display = 'none'; }
+document.getElementById('modal-close').onclick = closeModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>

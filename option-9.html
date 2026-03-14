@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --black: #000000;
+  --grey-text: #888;
+  --grey-line: #ddd;
+  --serif: 'Libre Baskerville', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--black);
+  font-family: var(--sans);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── DEV NAV ── */
+#opt-nav {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  display: flex;
+  gap: 4px;
+  background: rgba(0,0,0,0.08);
+  padding: 5px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+#opt-nav a {
+  color: rgba(0,0,0,0.35);
+  text-decoration: none;
+  font-family: var(--sans);
+  font-size: 10px;
+  padding: 2px 4px;
+  transition: color 0.2s;
+}
+#opt-nav a:hover, #opt-nav a.active { color: var(--black); }
+
+/* ── WRAPPER ── */
+.wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ── HEADER ── */
+header {
+  padding: 60px 0 24px;
+  margin-bottom: 0;
+}
+.header-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+.site-name {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--black);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 20px;
+}
+.header-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1.5px solid var(--black);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header-role {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--grey-text);
+}
+header nav {
+  display: flex;
+  gap: 20px;
+}
+header nav a {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--grey-text);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+header nav a:hover { color: var(--black); }
+
+/* ── CATEGORY SECTION ── */
+.cat-section {
+  padding: 48px 0;
+  border-bottom: 1.5px solid var(--black);
+}
+.cat-header {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 32px;
+  margin-bottom: 16px;
+}
+.cat-name {
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--grey-text);
+  font-weight: 500;
+}
+
+/* ── WORK TABLE ── */
+.work-table {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+.work-row {
+  display: grid;
+  grid-template-columns: 36px 1fr 180px 60px;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid var(--grey-line);
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s, color 0.15s;
+}
+.work-row:hover {
+  background: var(--black);
+  color: #fff;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-left: -8px;
+  margin-right: -8px;
+}
+.work-row:hover .row-num,
+.work-row:hover .row-client,
+.work-row:hover .row-year {
+  color: rgba(255,255,255,0.6);
+}
+.work-row:hover .row-preview {
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* Preview thumbnail on hover */
+.row-preview {
+  position: absolute;
+  right: calc(100% + 20px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px;
+  aspect-ratio: 16/9;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 10;
+  flex-shrink: 0;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+.row-preview-play {
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  font-family: var(--sans);
+}
+
+.row-num {
+  font-size: 0.65rem;
+  color: var(--grey-text);
+  font-family: var(--sans);
+  font-weight: 400;
+  user-select: none;
+}
+.row-title {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 16px;
+}
+.row-client {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--grey-text);
+  font-weight: 400;
+}
+.row-year {
+  font-size: 0.65rem;
+  color: var(--grey-text);
+  text-align: right;
+  font-weight: 400;
+}
+
+/* Expanded row detail */
+.row-detail {
+  display: none;
+  grid-column: 1 / -1;
+  padding: 20px 0 8px;
+}
+.row-detail.open {
+  display: block;
+}
+.row-detail-thumb {
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 16/9;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.row-detail-play {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  font-family: var(--sans);
+}
+
+/* ── ABOUT ── */
+.about-section {
+  padding: 64px 0 80px;
+}
+.about-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 60px;
+  align-items: start;
+}
+.about-img-wrap {
+  position: sticky;
+  top: 40px;
+}
+.about-img {
+  width: 100%;
+  display: block;
+  filter: grayscale(5%);
+}
+.about-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--grey-text);
+  margin-bottom: 20px;
+}
+.about-name {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--grey-line);
+}
+.about-bio {
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.85;
+  color: #333;
+  margin-bottom: 32px;
+}
+.about-bio em {
+  font-style: italic;
+}
+.about-meta-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--grey-line);
+  padding-top: 24px;
+}
+.about-meta-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.75rem;
+  gap: 12px;
+}
+.meta-key {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--grey-text);
+  flex-shrink: 0;
+}
+.meta-val {
+  font-family: var(--serif);
+  font-size: 0.88rem;
+  color: var(--black);
+  text-align: right;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1.5px solid var(--black);
+  padding: 32px;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-copy {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--grey-text);
+}
+.footer-email {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  color: var(--black);
+  text-decoration: none;
+  border-bottom: 1px solid var(--black);
+  padding-bottom: 1px;
+  transition: opacity 0.2s;
+}
+.footer-email:hover { opacity: 0.4; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .work-row { grid-template-columns: 28px 1fr 60px; }
+  .row-client { display: none; }
+  .row-preview { display: none; }
+  .about-inner { grid-template-columns: 1fr; gap: 32px; }
+  .about-img-wrap { position: static; }
+  footer { flex-direction: column; gap: 12px; padding: 24px 32px; }
+  #opt-nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Dev Nav -->
+<nav id="opt-nav">
+  <a href="option-1.html">1</a>
+  <a href="option-2.html">2</a>
+  <a href="option-3.html">3</a>
+  <a href="option-4.html">4</a>
+  <a href="option-5.html">5</a>
+  <a href="option-6.html">6</a>
+  <a href="option-7.html">7</a>
+  <a href="option-8.html">8</a>
+  <a href="option-9.html" class="active">9</a>
+  <a href="option-10.html">10</a>
+</nav>
+
+<!-- Header -->
+<header>
+  <div class="header-wrap">
+    <a href="#" class="site-name">Jonah Oskow</a>
+    <div class="header-meta">
+      <span class="header-role">Film &amp; Commercial Editor — New York</span>
+      <nav>
+        <a href="#comedy">Comedy</a>
+        <a href="#social">Social</a>
+        <a href="#film">Film</a>
+        <a href="#ai">AI</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- ── COMEDY ── -->
+<section id="comedy" class="cat-section">
+  <div class="cat-header">
+    <p class="cat-name">Comedy</p>
+  </div>
+  <div class="work-table">
+    <div class="work-row" data-row="c1">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">01</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Comedy Central</span>
+      <span class="row-year">2024</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row" data-row="c2">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">02</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Agency TBD</span>
+      <span class="row-year">2024</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row" data-row="c3">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">03</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Pete Davidson</span>
+      <span class="row-year">2023</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row" data-row="c4">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">04</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Brand TBD</span>
+      <span class="row-year">2023</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row" data-row="c5">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">05</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Agency TBD</span>
+      <span class="row-year">2022</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row" data-row="c6">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">06</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Brand TBD</span>
+      <span class="row-year">2022</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SOCIAL MEDIA ── -->
+<section id="social" class="cat-section">
+  <div class="cat-header">
+    <p class="cat-name">Social Media</p>
+  </div>
+  <div class="work-table">
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">01</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Tech Client TBD</span>
+      <span class="row-year">2024</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">02</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Brand TBD</span>
+      <span class="row-year">2024</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">03</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Agency TBD</span>
+      <span class="row-year">2023</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">04</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Brand TBD</span>
+      <span class="row-year">2023</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">05</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Agency TBD</span>
+      <span class="row-year">2022</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">06</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Brand TBD</span>
+      <span class="row-year">2022</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FILM / EPISODIC ── -->
+<section id="film" class="cat-section">
+  <div class="cat-header">
+    <p class="cat-name">Film / Episodic</p>
+  </div>
+  <div class="work-table">
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">01</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Netflix</span>
+      <span class="row-year">2024</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">02</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Idris Elba</span>
+      <span class="row-year">2024</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">03</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Jamie Lee Curtis</span>
+      <span class="row-year">2023</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">04</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Network TBD</span>
+      <span class="row-year">2023</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">05</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Network TBD</span>
+      <span class="row-year">2022</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">06</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Studio TBD</span>
+      <span class="row-year">2022</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AI DIRECTION ── -->
+<section id="ai" class="cat-section">
+  <div class="cat-header">
+    <p class="cat-name">AI Direction</p>
+  </div>
+  <div class="work-table">
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">01</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Tech Client TBD</span>
+      <span class="row-year">2024</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">02</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Agency TBD</span>
+      <span class="row-year">2024</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">03</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Brand TBD</span>
+      <span class="row-year">2024</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">04</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Agency TBD</span>
+      <span class="row-year">2023</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">05</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Brand TBD</span>
+      <span class="row-year">2023</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+    <div class="work-row">
+      <div class="row-preview"><span class="row-preview-play">▶ Play</span></div>
+      <span class="row-num">06</span>
+      <span class="row-title">Title Placeholder</span>
+      <span class="row-client">Client TBD</span>
+      <span class="row-year">2023</span>
+      <div class="row-detail"><div class="row-detail-thumb"><span class="row-detail-play">▶ Play</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about" class="about-section">
+  <div class="about-inner">
+    <div class="about-img-wrap">
+      <img class="about-img" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+    </div>
+    <div class="about-text">
+      <p class="about-label">About</p>
+      <h2 class="about-name">Jonah Oskow</h2>
+      <p class="about-bio">
+        A comedy editor with deep roots in NYC commercial editorial. Over a decade of shaping the rhythms, pauses, and punchlines that make audiences feel something — then make them laugh.<br><br>
+        His credits span <em>Comedy Central</em> and <em>Netflix</em>, with on-screen collaborators including <em>Idris Elba, Pete Davidson, and Jamie Lee Curtis</em>. His advertising work has won at <em>Cannes, the Clios, and the One Show</em>. He cuts for major agencies and global technology companies.<br><br>
+        The work is never accidental. Neither is the timing.
+      </p>
+      <ul class="about-meta-list">
+        <li class="about-meta-item">
+          <span class="meta-key">Location</span>
+          <span class="meta-val">New York City</span>
+        </li>
+        <li class="about-meta-item">
+          <span class="meta-key">Specialization</span>
+          <span class="meta-val">Comedy &amp; Commercial</span>
+        </li>
+        <li class="about-meta-item">
+          <span class="meta-key">Networks</span>
+          <span class="meta-val">Comedy Central · Netflix</span>
+        </li>
+        <li class="about-meta-item">
+          <span class="meta-key">Awards</span>
+          <span class="meta-val">Cannes Lions · Clios · One Show</span>
+        </li>
+        <li class="about-meta-item">
+          <span class="meta-key">Contact</span>
+          <span class="meta-val"><a href="mailto:joskows@gmail.com" style="color:inherit;">joskows@gmail.com</a></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <span class="footer-copy">&copy; 2025 Jonah Oskow</span>
+  <a href="mailto:joskows@gmail.com" class="footer-email">joskows@gmail.com</a>
+</footer>
+
+<script>
+// Click to expand row detail
+document.querySelectorAll('.work-row').forEach(row => {
+  row.addEventListener('click', () => {
+    const detail = row.querySelector('.row-detail');
+    if (!detail) return;
+    const isOpen = detail.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.row-detail.open').forEach(d => d.classList.remove('open'));
+    // Toggle clicked
+    if (!isOpen) detail.classList.add('open');
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JONAH OSKOW — Film & Commercial Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #111;
+  --text: #fff;
+  --accent: #44aaff;
+  --muted: rgba(255,255,255,0.25);
+  --left-w: 38vw;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* OPT-NAV */
+#opt-nav {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  max-width: 240px;
+  justify-content: flex-end;
+}
+#opt-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+#opt-nav a:hover, #opt-nav a.current {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
+
+/* MAIN LAYOUT */
+.site-main {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* LEFT PANEL */
+.left-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--left-w);
+  height: 100vh;
+  background: var(--bg);
+  border-right: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 2.5rem;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.name-block .first {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(4rem, 7vw, 8rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+.name-block .last {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(4rem, 7vw, 8rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+.role-line {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+}
+.email-line {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
+.email-line a { color: inherit; text-decoration: none; }
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 1.5rem 0;
+}
+
+/* CATEGORY NAV (vertical in left panel) */
+.cat-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.cat-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: color 0.2s;
+  user-select: none;
+}
+
+.cat-nav-item:last-child { border-bottom: none; }
+
+.cat-nav-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.45rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  min-width: 1.5rem;
+}
+
+.cat-nav-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.cat-nav-item.active .cat-nav-label {
+  color: var(--text);
+}
+
+.cat-nav-item:hover .cat-nav-label {
+  color: rgba(255,255,255,0.75);
+}
+
+.cat-nav-item.active .cat-nav-num {
+  color: var(--accent);
+}
+
+.cat-count {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.45rem;
+  color: var(--muted);
+  margin-left: auto;
+  letter-spacing: 0.05em;
+}
+
+/* SPOKESMAN */
+.spokesman-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.spokesman-thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.spokesman-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  transition: background 0.2s;
+}
+
+.spokesman-thumb:hover .play-overlay { background: rgba(0,0,0,0.15); }
+
+.play-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(4px);
+  border: 2px solid rgba(255,255,255,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.spokesman-thumb:hover .play-circle {
+  transform: scale(1.1);
+  background: rgba(255,255,255,0.28);
+}
+
+.play-circle svg { width: 18px; height: 18px; fill: #fff; margin-left: 3px; }
+
+/* RIGHT PANEL */
+.right-panel {
+  margin-left: var(--left-w);
+  width: calc(100vw - var(--left-w));
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.right-inner {
+  flex: 1;
+  padding: 3rem 2.5rem;
+}
+
+.cat-title-large {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.5rem, 4vw, 4.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
+
+.cat-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+/* THUMB GRID */
+.thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.thumb-cell {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #1c1c1c;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 3px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.thumb-cell:hover {
+  border-color: var(--accent);
+  transform: scale(1.02);
+}
+
+.thumb-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumb-play-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.thumb-cell:hover .thumb-play-icon {
+  background: rgba(68,170,255,0.25);
+  border-color: var(--accent);
+}
+
+.thumb-play-icon svg { width: 12px; height: 12px; fill: #fff; margin-left: 2px; }
+
+.thumb-num {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.thumb-label {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.45rem;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* FULLSCREEN MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-video-wrap {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  aspect-ratio: 16/9;
+  z-index: 1001;
+}
+
+.modal-video-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  display: block;
+}
+
+.modal-close {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1002;
+  transition: background 0.2s;
+  font-family: 'Space Mono', monospace;
+  line-height: 1;
+}
+
+.modal-close:hover { background: rgba(255,255,255,0.22); }
+
+/* ABOUT SECTION */
+.about-section {
+  width: 100%;
+  padding: 6rem 3rem;
+  background: #0d0d0d;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.about-label-top {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+}
+
+.bio-lines {
+  max-width: 700px;
+}
+
+.bio-line {
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.bio-line-inner {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.6s ease;
+  color: var(--text);
+}
+
+.bio-line-inner.revealed {
+  clip-path: inset(0 0% 0 0);
+}
+
+.bio-sub {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.6);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-top: 2rem;
+  max-width: 560px;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.6s ease 0.36s;
+}
+
+.bio-sub.revealed { clip-path: inset(0 0% 0 0); }
+
+.about-portrait-sm {
+  float: right;
+  margin: 0 0 2rem 3rem;
+  width: 220px;
+}
+
+.about-portrait-sm img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 3px;
+  filter: grayscale(20%);
+  display: block;
+}
+
+.awards-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2.5rem;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.6s ease 0.42s;
+}
+.awards-row.revealed { clip-path: inset(0 0% 0 0); }
+
+.award-chip {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 0.35rem 0.7rem;
+  border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  :root { --left-w: 100vw; }
+  .left-panel {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: auto;
+    padding: 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    z-index: 200;
+  }
+  .name-block .first, .name-block .last { font-size: clamp(3rem, 12vw, 5rem); }
+  .site-main { flex-direction: column; }
+  .right-panel { margin-left: 0; width: 100%; }
+  .thumb-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); }
+  .about-portrait-sm { float: none; margin: 0 0 2rem 0; width: 100%; max-width: 260px; }
+  .cat-nav-label { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+}
+</style>
+</head>
+<body>
+
+<nav id="opt-nav">
+  <a href="option-16.html">16</a>
+  <a href="option-17.html" class="current">17</a>
+  <a href="option-18.html">18</a>
+  <a href="option-19.html">19</a>
+  <a href="option-20.html">20</a>
+</nav>
+
+<!-- FULLSCREEN MODAL -->
+<div class="modal-overlay" id="work-modal">
+  <div class="modal-video-wrap" id="modal-wrap">
+    <video id="modal-video" src="" controls preload="none"></video>
+  </div>
+  <button class="modal-close" id="modal-close">×</button>
+</div>
+
+<!-- SPOKESMAN MODAL -->
+<div class="modal-overlay" id="spokesman-modal" style="z-index:2000;">
+  <div class="modal-video-wrap">
+    <video id="spokesman-modal-video" src="https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4" controls preload="none"></video>
+  </div>
+  <button class="modal-close" id="spokesman-modal-close" style="z-index:2001;">×</button>
+</div>
+
+<div class="site-main">
+  <!-- LEFT PANEL -->
+  <aside class="left-panel">
+    <div class="name-block">
+      <span class="first">JONAH</span>
+      <span class="last">OSKOW</span>
+    </div>
+    <div class="role-line">Film &amp; Commercial Editor</div>
+    <div class="email-line"><a href="mailto:joskows@gmail.com">joskows@gmail.com</a></div>
+
+    <div class="divider"></div>
+
+    <div class="spokesman-label">Get Up to Speed</div>
+    <div class="spokesman-thumb" id="spokesman-thumb" role="button" tabindex="0" aria-label="Play spokesman video">
+      <video src="https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4" preload="none" muted playsinline></video>
+      <div class="play-overlay">
+        <div class="play-circle">
+          <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <nav class="cat-nav" id="cat-nav">
+      <div class="cat-nav-item active" data-cat="comedy">
+        <span class="cat-nav-num">01</span>
+        <span class="cat-nav-label">Comedy</span>
+        <span class="cat-count">6 works</span>
+      </div>
+      <div class="cat-nav-item" data-cat="social">
+        <span class="cat-nav-num">02</span>
+        <span class="cat-nav-label">Social</span>
+        <span class="cat-count">6 works</span>
+      </div>
+      <div class="cat-nav-item" data-cat="film">
+        <span class="cat-nav-num">03</span>
+        <span class="cat-nav-label">Film</span>
+        <span class="cat-count">6 works</span>
+      </div>
+      <div class="cat-nav-item" data-cat="ai">
+        <span class="cat-nav-num">04</span>
+        <span class="cat-nav-label">AI Direction</span>
+        <span class="cat-count">6 works</span>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- RIGHT PANEL -->
+  <main class="right-panel">
+    <div class="right-inner">
+      <div class="cat-title-large" id="cat-title">Comedy</div>
+      <div class="cat-subtitle" id="cat-subtitle">COMEDIC CUTTING · SELECT A WORK</div>
+
+      <div class="thumb-grid" id="thumb-grid"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ABOUT SECTION -->
+<section class="about-section">
+  <div class="about-label-top">About Jonah</div>
+  <div class="about-portrait-sm">
+    <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+  </div>
+  <div class="bio-lines" id="bio-lines">
+    <div class="bio-line"><div class="bio-line-inner">Seasoned comedy</div></div>
+    <div class="bio-line"><div class="bio-line-inner">editor. NYC</div></div>
+    <div class="bio-line"><div class="bio-line-inner">commercial roots.</div></div>
+    <div class="bio-line"><div class="bio-line-inner">Cannes. Clios.</div></div>
+    <div class="bio-line"><div class="bio-line-inner">One Show.</div></div>
+  </div>
+  <p class="bio-sub" id="bio-sub">
+    Comedy Central. Netflix. Idris Elba, Pete Davidson, Jamie Lee Curtis. Award-winning work from a city-sharp editor who knows how to land the cut.
+  </p>
+  <div class="awards-row" id="awards-row">
+    <span class="award-chip">Cannes Lions</span>
+    <span class="award-chip">Clios</span>
+    <span class="award-chip">One Show</span>
+    <span class="award-chip">Comedy Central</span>
+    <span class="award-chip">Netflix</span>
+  </div>
+</section>
+
+<script>
+// VIDEO MANAGER
+const VM = {
+  current: null,
+  play(el) {
+    if (this.current && this.current !== el) {
+      this.current.pause();
+      this.current.currentTime = 0;
+    }
+    this.current = el;
+  },
+  stop() {
+    if (this.current) {
+      this.current.pause();
+      this.current.currentTime = 0;
+      this.current = null;
+    }
+  }
+};
+
+const VIDEO_SRC = 'https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4';
+
+const categories = {
+  comedy: { label: 'Comedy', sub: 'COMEDIC CUTTING · SELECT A WORK' },
+  social: { label: 'Social Media', sub: 'SOCIAL & DIGITAL · SELECT A WORK' },
+  film:   { label: 'Film / Episodic', sub: 'LONG FORM · SELECT A WORK' },
+  ai:     { label: 'AI Direction', sub: 'AI-DIRECTED WORK · SELECT A WORK' }
+};
+
+let currentCat = 'comedy';
+
+// BUILD GRID
+function buildGrid(cat) {
+  const grid = document.getElementById('thumb-grid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= 6; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'thumb-cell';
+    cell.innerHTML = `
+      <div class="thumb-play">
+        <div class="thumb-play-icon">
+          <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+      <div class="thumb-num">0${i}</div>
+      <div class="thumb-label">${cat}</div>
+    `;
+    cell.addEventListener('click', () => openModal());
+    grid.appendChild(cell);
+  }
+}
+
+buildGrid('comedy');
+
+// MODAL
+const workModal = document.getElementById('work-modal');
+const modalVideo = document.getElementById('modal-video');
+const modalClose = document.getElementById('modal-close');
+const modalWrap = document.getElementById('modal-wrap');
+
+function openModal() {
+  modalVideo.src = VIDEO_SRC;
+  workModal.classList.add('open');
+  VM.play(modalVideo);
+  modalVideo.play().catch(() => {});
+}
+
+function closeModal() {
+  VM.stop();
+  modalVideo.src = '';
+  workModal.classList.remove('open');
+}
+
+modalClose.addEventListener('click', closeModal);
+
+workModal.addEventListener('click', e => {
+  if (!modalWrap.contains(e.target) && e.target !== modalWrap) {
+    closeModal();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeModal();
+    closeSpokesman();
+  }
+});
+
+// CATEGORY NAV — mouseenter stays active
+document.querySelectorAll('.cat-nav-item').forEach(item => {
+  item.addEventListener('mouseenter', () => {
+    document.querySelectorAll('.cat-nav-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    currentCat = item.dataset.cat;
+    const info = categories[currentCat];
+    document.getElementById('cat-title').textContent = info.label;
+    document.getElementById('cat-subtitle').textContent = info.sub;
+    buildGrid(currentCat);
+  });
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.cat-nav-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    currentCat = item.dataset.cat;
+    const info = categories[currentCat];
+    document.getElementById('cat-title').textContent = info.label;
+    document.getElementById('cat-subtitle').textContent = info.sub;
+    buildGrid(currentCat);
+  });
+});
+
+// SPOKESMAN
+const spokesmanThumb = document.getElementById('spokesman-thumb');
+const spokesmanModal = document.getElementById('spokesman-modal');
+const spokesmanModalVideo = document.getElementById('spokesman-modal-video');
+const spokesmanModalClose = document.getElementById('spokesman-modal-close');
+
+function openSpokesman() {
+  VM.play(spokesmanModalVideo);
+  spokesmanModal.classList.add('open');
+  spokesmanModalVideo.play().catch(() => {});
+}
+function closeSpokesman() {
+  VM.stop();
+  spokesmanModal.classList.remove('open');
+}
+
+spokesmanThumb.addEventListener('click', openSpokesman);
+spokesmanThumb.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openSpokesman(); });
+spokesmanModalClose.addEventListener('click', closeSpokesman);
+spokesmanModal.addEventListener('click', e => {
+  if (e.target === spokesmanModal) closeSpokesman();
+});
+
+// ABOUT — clip-path reveal with stagger
+const bioLineEls = document.querySelectorAll('.bio-line-inner');
+const bioSub = document.getElementById('bio-sub');
+const awardsRow = document.getElementById('awards-row');
+
+const aboutObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      bioLineEls.forEach((el, i) => {
+        setTimeout(() => el.classList.add('revealed'), i * 60);
+      });
+      setTimeout(() => bioSub.classList.add('revealed'), bioLineEls.length * 60);
+      setTimeout(() => awardsRow.classList.add('revealed'), bioLineEls.length * 60 + 60);
+      aboutObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.2 });
+
+const bioLines = document.getElementById('bio-lines');
+aboutObserver.observe(bioLines);
+</script>
+</body>
+</html>

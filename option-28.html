@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #111;
+    --fg: #fff;
+    --yellow: #f5c842;
+    --dim: #555;
+    --panel-w: 100vw;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Syne', sans-serif;
+  }
+
+  /* ── FILM STRIP TOP ── */
+  #film-strip {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 32px;
+    background: var(--yellow);
+    z-index: 300;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  #film-strip::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 0;
+    right: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--bg) 0px,
+      var(--bg) 18px,
+      var(--yellow) 18px,
+      var(--yellow) 28px
+    );
+  }
+  .strip-holes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ── CATEGORY TABS ── */
+  #tab-bar {
+    position: fixed;
+    top: 32px;
+    left: 0;
+    right: 0;
+    height: 44px;
+    background: rgba(17,17,17,0.95);
+    backdrop-filter: blur(10px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    border-bottom: 1px solid rgba(245,200,66,0.2);
+  }
+  .tab-name {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: 700;
+  }
+  .tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .tab-btn {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--dim);
+    background: none;
+    border: 1px solid transparent;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--yellow); border-color: rgba(245,200,66,0.3); }
+  .tab-btn.active { color: var(--yellow); border-color: var(--yellow); }
+
+  /* ── SCROLL CONTAINER ── */
+  #reel {
+    position: fixed;
+    top: 76px; /* film strip + tab bar */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+  }
+  #reel::-webkit-scrollbar { display: none; }
+  #reel { scrollbar-width: none; }
+
+  /* ── PANELS ── */
+  .panel {
+    min-width: 100vw;
+    height: 100%;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 48px;
+  }
+
+  /* ── INTRO PANEL ── */
+  #panel-intro {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding-left: clamp(32px, 8vw, 120px);
+  }
+  .intro-name {
+    font-size: clamp(5rem, 14vw, 18rem);
+    font-weight: 900;
+    line-height: 0.88;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .intro-name span { color: var(--yellow); display: block; }
+  .intro-subtitle {
+    margin-top: 28px;
+    font-size: clamp(12px, 1.5vw, 16px);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dim);
+    font-weight: 700;
+  }
+  .intro-tagline {
+    margin-top: 12px;
+    font-size: clamp(10px, 1.2vw, 13px);
+    letter-spacing: 0.15em;
+    color: #444;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .intro-cta {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .watch-intro-btn {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--yellow);
+    background: none;
+    border: 1px solid rgba(245,200,66,0.4);
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    align-self: flex-start;
+  }
+  .watch-intro-btn:hover { background: var(--yellow); color: #000; }
+  .scroll-hint {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #333;
+    font-weight: 700;
+  }
+  .scroll-arrow {
+    display: inline-block;
+    animation: nudge 1.8s ease-in-out infinite;
+  }
+  @keyframes nudge { 0%,100% { transform: translateX(0); } 50% { transform: translateX(8px); } }
+
+  /* ── INTRO decorative line ── */
+  .intro-line {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(245,200,66,0.3) 30%, rgba(245,200,66,0.3) 70%, transparent);
+  }
+
+  /* ── CATEGORY PANELS ── */
+  .cat-panel {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .cat-panel-inner {
+    width: 100%;
+    max-width: 1100px;
+  }
+  .cat-heading {
+    font-size: clamp(2rem, 5vw, 5rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--yellow);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .thumb-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+  .thumb {
+    aspect-ratio: 16 / 9;
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .thumb:hover { border-color: rgba(245,200,66,0.4); }
+  .thumb:hover .play-ic { opacity: 1; transform: scale(1); }
+  .play-ic {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.25;
+    transform: scale(0.9);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .play-ic svg { width: 30px; height: 30px; fill: #fff; }
+
+  /* ── ABOUT PANEL ── */
+  #panel-about {
+    align-items: stretch;
+    padding: 0;
+    gap: 0;
+  }
+  .about-left {
+    width: 50%;
+    overflow: hidden;
+  }
+  .about-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+  }
+  .about-right {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(32px, 6vw, 80px);
+    gap: 20px;
+  }
+  .about-right h2 {
+    font-size: clamp(2.5rem, 5vw, 6rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .about-right h2 em { color: var(--yellow); font-style: normal; display: block; }
+  .about-right p {
+    font-size: clamp(13px, 1.4vw, 16px);
+    line-height: 1.75;
+    color: #888;
+    max-width: 420px;
+  }
+  .about-right .contact-link {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    text-decoration: none;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+  .about-awards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .award-tag {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    border: 1px solid #2a2a2a;
+    padding: 4px 10px;
+    font-weight: 700;
+  }
+
+  @media (max-width: 700px) {
+    .panel { padding: 20px 20px; }
+    .thumb-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); }
+    #panel-about { flex-direction: column; }
+    .about-left, .about-right { width: 100%; }
+    .about-left { height: 50%; }
+    .about-right { padding: 24px; }
+    .tab-btn { padding: 4px 8px; font-size: 9px; }
+    .intro-cta { margin-top: 28px; }
+  }
+
+  /* ── MODAL ── */
+  #modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  #modal-video { width: 90%; max-width: 960px; aspect-ratio: 16/9; }
+  #modal-close {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    font-size: 2rem;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* ── OPT-NAV ── */
+  #opt-nav {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap: 4px;
+    max-width: 180px;
+    justify-content: flex-end;
+  }
+  #opt-nav a {
+    font-size: 9px;
+    color: #2a2a2a;
+    text-decoration: none;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #1e1e1e;
+    transition: color 0.2s, border-color 0.2s;
+    font-family: 'Syne', sans-serif;
+  }
+  #opt-nav a:hover, #opt-nav a.current { color: #f5c842; border-color: #444; }
+</style>
+</head>
+<body>
+
+<!-- FILM STRIP -->
+<div id="film-strip"></div>
+
+<!-- TAB BAR -->
+<div id="tab-bar">
+  <span class="tab-name">Jonah Oskow</span>
+  <div class="tabs">
+    <button class="tab-btn" onclick="snapTo('panel-intro')">Intro</button>
+    <button class="tab-btn" onclick="snapTo('panel-comedy')">Comedy</button>
+    <button class="tab-btn" onclick="snapTo('panel-social')">Social</button>
+    <button class="tab-btn" onclick="snapTo('panel-film')">Film</button>
+    <button class="tab-btn" onclick="snapTo('panel-ai')">AI</button>
+    <button class="tab-btn" onclick="snapTo('panel-about')">About</button>
+  </div>
+</div>
+
+<!-- REEL -->
+<div id="reel">
+
+  <!-- INTRO PANEL -->
+  <div class="panel" id="panel-intro">
+    <div>
+      <div class="intro-name">JONAH<span>OSKOW</span></div>
+      <div class="intro-subtitle">Film &amp; Commercial Editor</div>
+      <div class="intro-tagline">New York · Cannes · Clios · One Show</div>
+      <div class="intro-cta">
+        <button class="watch-intro-btn" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">▶ Watch Intro · 0:37</button>
+        <div class="scroll-hint">Scroll to explore <span class="scroll-arrow">→</span></div>
+      </div>
+    </div>
+    <div class="intro-line"></div>
+  </div>
+
+  <!-- COMEDY PANEL -->
+  <div class="panel cat-panel" id="panel-comedy">
+    <div class="cat-panel-inner">
+      <div class="cat-heading">Comedy</div>
+      <div class="thumb-grid">
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL PANEL -->
+  <div class="panel cat-panel" id="panel-social">
+    <div class="cat-panel-inner">
+      <div class="cat-heading">Social</div>
+      <div class="thumb-grid">
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILM PANEL -->
+  <div class="panel cat-panel" id="panel-film">
+    <div class="cat-panel-inner">
+      <div class="cat-heading">Film</div>
+      <div class="thumb-grid">
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI PANEL -->
+  <div class="panel cat-panel" id="panel-ai">
+    <div class="cat-panel-inner">
+      <div class="cat-heading">AI Direction</div>
+      <div class="thumb-grid">
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT PANEL -->
+  <div class="panel" id="panel-about">
+    <div class="about-left">
+      <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+    </div>
+    <div class="about-right">
+      <h2>JONAH<em>OSKOW</em></h2>
+      <p>NYC commercial editor. Cannes Lions, Clio Awards, One Show. Comedy Central, Netflix.</p>
+      <p>Work with Idris Elba, Pete Davidson, Jamie Lee Curtis.</p>
+      <a href="mailto:joskows@gmail.com" class="contact-link">joskows@gmail.com</a>
+      <div class="about-awards">
+        <span class="award-tag">Cannes Lions</span>
+        <span class="award-tag">Clio Awards</span>
+        <span class="award-tag">One Show</span>
+        <span class="award-tag">Comedy Central</span>
+        <span class="award-tag">Netflix</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /reel -->
+
+<!-- MODAL -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:#000;z-index:9999;align-items:center;justify-content:center;">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2rem;color:#fff;background:none;border:none;cursor:pointer;">×</button>
+</div>
+
+<!-- OPT-NAV -->
+<nav id="opt-nav">
+  <a href="option-1.html">1</a><a href="option-2.html">2</a><a href="option-3.html">3</a><a href="option-4.html">4</a><a href="option-5.html">5</a>
+  <a href="option-6.html">6</a><a href="option-7.html">7</a><a href="option-8.html">8</a><a href="option-9.html">9</a><a href="option-10.html">10</a>
+  <a href="option-11.html">11</a><a href="option-12.html">12</a><a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a>
+  <a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a><a href="option-19.html">19</a><a href="option-20.html">20</a>
+  <a href="option-21.html">21</a><a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a><a href="option-25.html">25</a>
+  <a href="option-26.html">26</a><a href="option-27.html">27</a><a href="option-28.html" class="current">28</a><a href="option-29.html">29</a><a href="option-30.html">30</a>
+</nav>
+
+<script>
+  const reel = document.getElementById('reel');
+
+  // Horizontal scroll via mouse wheel
+  reel.addEventListener('wheel', e => {
+    e.preventDefault();
+    reel.scrollLeft += e.deltaY + e.deltaX;
+  }, { passive: false });
+
+  function snapTo(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+  }
+
+  // Update active tab on scroll
+  const panels = ['panel-intro','panel-comedy','panel-social','panel-film','panel-ai','panel-about'];
+  const tabBtns = document.querySelectorAll('.tab-btn');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+        const idx = panels.indexOf(entry.target.id);
+        tabBtns.forEach((b,i) => b.classList.toggle('active', i === idx));
+      }
+    });
+  }, { root: reel, threshold: 0.5 });
+
+  panels.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  // Modal
+  const modal = document.getElementById('modal');
+  const mv = document.getElementById('modal-video');
+  function openVideo(src) { mv.src = src; modal.style.display = 'flex'; mv.play(); }
+  function closeModal() { mv.pause(); mv.src = ''; modal.style.display = 'none'; }
+  document.getElementById('modal-close').onclick = closeModal;
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>

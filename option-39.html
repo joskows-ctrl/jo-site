@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #000000;
+  --warm-dark: #1a1108;
+  --warm-hover: #211509;
+  --text: #ffffff;
+  --text-dim: rgba(255,255,255,0.45);
+  --text-xdim: rgba(255,255,255,0.2);
+  --line: rgba(255,255,255,0.08);
+  --thumb-bg: #111111;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  overflow: hidden;
+}
+
+/* ─── TOP BAR ─── */
+#topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  z-index: 200;
+  border-bottom: 1px solid var(--line);
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+}
+
+.top-name {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+#intro-topbtn {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: color 0.2s;
+  padding: 0;
+}
+#intro-topbtn:hover { color: var(--text); }
+
+.top-email {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.top-email:hover { color: var(--text); }
+
+/* ─── QUADRANT GRID ─── */
+#grid {
+  position: fixed;
+  top: 52px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  z-index: 100;
+}
+
+.quadrant {
+  position: relative;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background 0.45s ease, transform 0.35s ease;
+  transform-origin: center center;
+}
+
+/* Subtle inset effect on hover */
+.quadrant:hover {
+  background: var(--warm-hover);
+}
+.quadrant.expanded {
+  background: var(--warm-dark);
+}
+
+/* ─── CATEGORY LABEL ─── */
+.quad-label {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(2.8rem, 5.5vw, 6rem);
+  letter-spacing: 0.04em;
+  color: var(--text);
+  text-align: center;
+  line-height: 1;
+  position: relative;
+  z-index: 2;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+  user-select: none;
+}
+.quadrant.expanded .quad-label {
+  opacity: 0;
+  transform: translateY(-16px);
+}
+
+.quad-num {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  font-size: 0.62rem;
+  letter-spacing: 0.24em;
+  color: var(--text-xdim);
+  font-family: 'Inter', sans-serif;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ─── THUMBNAIL TRAY (slides up from bottom of quadrant) ─── */
+.quad-tray {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transform: translateY(100%);
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 4;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 80%, transparent);
+}
+.quadrant.expanded .quad-tray {
+  transform: translateY(0);
+}
+
+/* Label in expanded tray */
+.tray-label {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  margin-bottom: 6px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease 0.25s, transform 0.3s ease 0.25s;
+}
+.quadrant.expanded .tray-label { opacity: 1; transform: translateY(0); }
+
+/* Thumb row inside tray */
+.tray-thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.tray-thumb {
+  aspect-ratio: 16/9;
+  background: var(--thumb-bg);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s, background 0.25s;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.35s ease, transform 0.35s ease, border-color 0.2s, background 0.2s;
+}
+.quadrant.expanded .tray-thumb:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
+.quadrant.expanded .tray-thumb:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.38s; }
+.quadrant.expanded .tray-thumb:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.46s; }
+.tray-thumb:hover { border-color: rgba(255,255,255,0.35); background: #1a1a1a; }
+
+.tray-play {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: var(--text);
+  padding-left: 2px;
+  transition: background 0.2s;
+  z-index: 1;
+}
+.tray-thumb:hover .tray-play { background: rgba(255,255,255,0.22); }
+
+.tray-thumb-sub {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 5px 8px;
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+
+/* ─── CLOSE BUTTON inside expanded quadrant ─── */
+.quad-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-size: 1.4rem;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.2s, color 0.2s;
+  line-height: 1;
+  font-family: sans-serif;
+}
+.quadrant.expanded .quad-close { opacity: 1; }
+.quad-close:hover { color: var(--text); }
+
+/* ─── ABOUT SECTION (below the grid, scroll required) ─── */
+/* We need body to be scrollable for about section */
+/* Trick: about section is in a separate full-page layer that slides in */
+
+/* Alternative: toggle body overflow when viewing about */
+#about-overlay {
+  position: fixed;
+  inset: 52px 0 0 0;
+  background: #111111;
+  z-index: 150;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+#about-overlay.open { transform: translateY(0); }
+
+.about-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 80px 48px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 72px;
+  align-items: start;
+}
+.about-portrait {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  filter: contrast(0.9) brightness(0.88);
+}
+.about-text {}
+.about-eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.28em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.about-name {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 28px;
+}
+.about-body {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--text-dim);
+  margin-bottom: 18px;
+}
+.about-line { width: 40px; height: 1px; background: var(--line); margin: 28px 0; }
+.about-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 32px;
+  margin-bottom: 36px;
+}
+.spec-k { font-size: 0.6rem; letter-spacing: 0.22em; color: rgba(255,255,255,0.3); text-transform: uppercase; margin-bottom: 4px; }
+.spec-v { font-size: 0.85rem; color: var(--text-dim); }
+.about-email {
+  display: inline-block;
+  padding: 11px 28px;
+  border: 1px solid rgba(255,255,255,0.25);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--text);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 0.25s, border-color 0.25s;
+}
+.about-email:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.45); }
+
+.about-close-wrap {
+  padding: 0 48px 48px;
+  text-align: center;
+}
+.about-close-btn {
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 10px 28px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.about-close-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.35); }
+
+/* ─── ABOUT TRIGGER (fixed bottom-left) ─── */
+#about-trigger {
+  position: fixed;
+  bottom: 24px;
+  left: 32px;
+  z-index: 8000;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--text-xdim);
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  padding: 0;
+  transition: color 0.2s;
+}
+#about-trigger:hover { color: var(--text-dim); }
+
+/* ─── MODAL ─── */
+#modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.97);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+#modal-video {
+  width: 90%;
+  max-width: 960px;
+  aspect-ratio: 16/9;
+}
+#modal-close {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  font-size: 2.5rem;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* ─── OPT-NAV ─── */
+#opt-nav {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 8888;
+  font-size: 10px;
+  font-family: monospace;
+  background: rgba(0,0,0,0.85);
+  border: 1px solid #222;
+  border-radius: 4px;
+  padding: 8px 10px;
+  max-height: 220px;
+  overflow-y: auto;
+  line-height: 1.8;
+}
+#opt-nav a {
+  color: #555;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0 3px;
+  transition: color 0.2s;
+}
+#opt-nav a:hover { color: #ccc; }
+#opt-nav a.current { color: #fff; font-weight: bold; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 700px) {
+  #grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
+  .quad-label { font-size: clamp(1.8rem, 8vw, 3rem); }
+  .tray-thumbs { grid-template-columns: 1fr 1fr; }
+  .about-inner { grid-template-columns: 1fr; padding: 48px 24px; gap: 32px; }
+  .about-portrait { max-width: 220px; }
+}
+</style>
+</head>
+<body>
+
+<!-- MODAL -->
+<div id="modal">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2.5rem;color:#fff;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+</div>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="top-name">Jonah Oskow</div>
+  <div class="top-right">
+    <button id="intro-topbtn" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">▶ Intro · 0:37</button>
+    <a href="mailto:joskows@gmail.com" class="top-email">joskows@gmail.com</a>
+  </div>
+</div>
+
+<!-- QUADRANT GRID -->
+<div id="grid">
+
+  <!-- COMEDY -->
+  <div class="quadrant" id="q-comedy" onclick="toggleQuad('comedy', event)">
+    <div class="quad-num">01</div>
+    <div class="quad-label">Comedy</div>
+    <button class="quad-close" onclick="collapseQuad('comedy', event)">×</button>
+    <div class="quad-tray" onclick="e => e.stopPropagation()">
+      <div class="tray-label">Comedy</div>
+      <div class="tray-thumbs">
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">Sketch Series · 2024</div>
+        </div>
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">Branded Comedy · 2023</div>
+        </div>
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">Character Spots · 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL MEDIA -->
+  <div class="quadrant" id="q-social" onclick="toggleQuad('social', event)">
+    <div class="quad-num">02</div>
+    <div class="quad-label">Social<br>Media</div>
+    <button class="quad-close" onclick="collapseQuad('social', event)">×</button>
+    <div class="quad-tray">
+      <div class="tray-label">Social Media</div>
+      <div class="tray-thumbs">
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">Campaign Reels · 2024</div>
+        </div>
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">Short-form Series · 2024</div>
+        </div>
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">Influencer Edits · 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILM / EPISODIC -->
+  <div class="quadrant" id="q-film" onclick="toggleQuad('film', event)">
+    <div class="quad-num">03</div>
+    <div class="quad-label">Film /<br>Episodic</div>
+    <button class="quad-close" onclick="collapseQuad('film', event)">×</button>
+    <div class="quad-tray">
+      <div class="tray-label">Film / Episodic</div>
+      <div class="tray-thumbs">
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">Feature Doc · 2024</div>
+        </div>
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">Pilot Episode · 2023</div>
+        </div>
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">Short Film · 2022</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI DIRECTION -->
+  <div class="quadrant" id="q-ai" onclick="toggleQuad('ai', event)">
+    <div class="quad-num">04</div>
+    <div class="quad-label">AI<br>Direction</div>
+    <button class="quad-close" onclick="collapseQuad('ai', event)">×</button>
+    <div class="quad-tray">
+      <div class="tray-label">AI Direction</div>
+      <div class="tray-thumbs">
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">AI Narrative · 2024</div>
+        </div>
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">Hybrid Prod · 2024</div>
+        </div>
+        <div class="tray-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4'); event.stopPropagation()">
+          <div class="tray-play">▶</div>
+          <div class="tray-thumb-sub">AI Direction · 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /grid -->
+
+<!-- ABOUT TRIGGER -->
+<button id="about-trigger" onclick="openAbout()">About ↑</button>
+
+<!-- ABOUT OVERLAY -->
+<div id="about-overlay">
+  <div class="about-inner">
+    <div>
+      <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow" class="about-portrait">
+    </div>
+    <div class="about-text">
+      <div class="about-eyebrow">About the Editor</div>
+      <div class="about-name">Jonah<br>Oskow</div>
+      <p class="about-body">New York-based film and commercial editor working across comedy, branded content, long-form narrative, and AI-directed media. A decade of craft, built on rhythm, instinct, and an obsession with the right cut at the right moment.</p>
+      <p class="about-body">Every project gets the same disciplined attention — whether it's a 15-second reel or a 90-minute feature. He's worked with networks, brands, and independent filmmakers who care about how their story lands.</p>
+      <div class="about-line"></div>
+      <div class="about-specs">
+        <div>
+          <div class="spec-k">Specialties</div>
+          <div class="spec-v">Comedy · Social · Film · AI</div>
+        </div>
+        <div>
+          <div class="spec-k">Location</div>
+          <div class="spec-v">New York, NY</div>
+        </div>
+        <div>
+          <div class="spec-k">Software</div>
+          <div class="spec-v">Avid · Premiere · DaVinci</div>
+        </div>
+        <div>
+          <div class="spec-k">Availability</div>
+          <div class="spec-v">Freelance &amp; Staff</div>
+        </div>
+      </div>
+      <a href="mailto:joskows@gmail.com" class="about-email">joskows@gmail.com</a>
+    </div>
+  </div>
+  <div class="about-close-wrap">
+    <button class="about-close-btn" onclick="closeAbout()">← Back to Work</button>
+  </div>
+</div>
+
+<!-- OPT-NAV -->
+<div id="opt-nav">
+  Options:
+  <a href="option-1.html">1</a><a href="option-2.html">2</a><a href="option-3.html">3</a><a href="option-4.html">4</a><a href="option-5.html">5</a><a href="option-6.html">6</a><a href="option-7.html">7</a><a href="option-8.html">8</a><a href="option-9.html">9</a><a href="option-10.html">10</a><a href="option-11.html">11</a><a href="option-12.html">12</a><a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a><a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a><a href="option-19.html">19</a><a href="option-20.html">20</a><a href="option-21.html">21</a><a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a><a href="option-25.html">25</a><a href="option-26.html">26</a><a href="option-27.html">27</a><a href="option-28.html">28</a><a href="option-29.html">29</a><a href="option-30.html">30</a><a href="option-31.html">31</a><a href="option-32.html">32</a><a href="option-33.html">33</a><a href="option-34.html">34</a><a href="option-35.html">35</a><a href="option-36.html">36</a><a href="option-37.html">37</a><a href="option-38.html">38</a><a href="option-39.html" class="current">39</a><a href="option-40.html">40</a><a href="option-41.html">41</a><a href="option-42.html">42</a><a href="option-43.html">43</a><a href="option-44.html">44</a><a href="option-45.html">45</a>
+</div>
+
+<script>
+// ─── MODAL ───
+const modal = document.getElementById('modal');
+const mv = document.getElementById('modal-video');
+function openVideo(src) { mv.src = src; modal.style.display = 'flex'; mv.play(); }
+function closeModal() { mv.pause(); mv.src = ''; modal.style.display = 'none'; }
+document.getElementById('modal-close').onclick = closeModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeAbout(); } });
+
+// ─── QUADRANT TOGGLE ───
+const quads = ['comedy', 'social', 'film', 'ai'];
+
+function toggleQuad(id, e) {
+  if (e) e.stopPropagation();
+  const el = document.getElementById('q-' + id);
+  const isExpanded = el.classList.contains('expanded');
+
+  // Collapse all
+  quads.forEach(q => {
+    document.getElementById('q-' + q).classList.remove('expanded');
+  });
+
+  // Expand this one if it wasn't already
+  if (!isExpanded) {
+    el.classList.add('expanded');
+  }
+}
+
+function collapseQuad(id, e) {
+  if (e) e.stopPropagation();
+  document.getElementById('q-' + id).classList.remove('expanded');
+}
+
+// Click on quad-tray shouldn't bubble up and toggle
+document.querySelectorAll('.quad-tray').forEach(tray => {
+  tray.addEventListener('click', e => e.stopPropagation());
+});
+
+// ─── ABOUT OVERLAY ───
+function openAbout() {
+  document.getElementById('about-overlay').classList.add('open');
+}
+function closeAbout() {
+  document.getElementById('about-overlay').classList.remove('open');
+}
+</script>
+</body>
+</html>

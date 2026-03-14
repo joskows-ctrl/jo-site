@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #050505;
+  --white: #ffffff;
+  --grey: rgba(255,255,255,0.45);
+  --display: 'Bebas Neue', 'Impact', sans-serif;
+  --body: 'Inter', system-ui, sans-serif;
+  --overlay: rgba(0,0,0,0.55);
+  --trans: 0.6s ease;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--body);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── DEV NAV ── */
+#opt-nav {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  display: flex;
+  gap: 4px;
+  background: rgba(0,0,0,0.7);
+  padding: 5px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+#opt-nav a {
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  font-size: 10px;
+  padding: 2px 4px;
+  transition: color 0.2s;
+}
+#opt-nav a:hover, #opt-nav a.active { color: var(--white); }
+
+/* ── VIDEO BG ── */
+#bg-video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  opacity: 0;
+  transition: opacity var(--trans);
+}
+#bg-video.visible { opacity: 1; }
+
+#bg-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity var(--trans);
+}
+#bg-overlay.visible { opacity: 1; }
+
+/* ── MAIN LAYOUT (HERO SCREEN) ── */
+.main-screen {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+}
+
+/* LEFT: Name */
+.left-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 60px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.name-stack {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.95;
+}
+.name-part {
+  font-family: var(--display);
+  font-size: clamp(4rem, 7vw, 8rem);
+  letter-spacing: 0.02em;
+  color: var(--white);
+  display: block;
+  text-shadow: 0 2px 30px rgba(0,0,0,0.5);
+}
+.name-role {
+  font-family: var(--body);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  margin-top: 20px;
+}
+.left-footer {
+  position: absolute;
+  bottom: 40px;
+  left: 60px;
+}
+.left-email {
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.4);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.left-email:hover { color: var(--white); }
+
+/* RIGHT: Categories */
+.right-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 60px 80px 40px;
+  min-height: 100vh;
+}
+.cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.cat-item {
+  padding: 28px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.cat-item:first-child { border-top: 1px solid rgba(255,255,255,0.1); }
+
+.cat-item-inner {
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.cat-item:hover .cat-item-inner {
+  transform: translateX(12px);
+}
+
+.cat-num {
+  font-family: var(--body);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 6px;
+  display: block;
+}
+.cat-name {
+  font-family: var(--display);
+  font-size: clamp(2rem, 3.5vw, 3.5rem);
+  letter-spacing: 0.03em;
+  color: var(--white);
+  line-height: 1;
+  display: block;
+  transition: letter-spacing 0.4s ease;
+}
+.cat-item:hover .cat-name {
+  letter-spacing: 0.06em;
+}
+.cat-subtitle {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0);
+  letter-spacing: 0.1em;
+  margin-top: 6px;
+  display: block;
+  transition: color 0.4s ease, transform 0.4s ease;
+  transform: translateY(6px);
+}
+.cat-item:hover .cat-subtitle {
+  color: rgba(255,255,255,0.5);
+  transform: translateY(0);
+}
+
+/* Thumbnails strip */
+.cat-thumbs {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease 0.1s, transform 0.5s cubic-bezier(0.16,1,0.3,1) 0.1s;
+  pointer-events: none;
+}
+.cat-item:hover .cat-thumbs {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+.mini-thumb {
+  width: 100px;
+  aspect-ratio: 16/9;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.mini-thumb:hover { background: rgba(255,255,255,0.15); }
+.mini-play {
+  font-size: 0.45rem;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.5);
+}
+
+/* ── ABOUT SCREEN ── */
+.about-screen {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.about-portrait-wrap {
+  position: relative;
+  overflow: hidden;
+  min-height: 80vh;
+}
+.about-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(10%) contrast(1.05);
+  position: absolute;
+  inset: 0;
+}
+.about-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 60%, #050505 100%);
+}
+.about-content {
+  padding: 80px 60px 80px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--bg);
+}
+.about-kicker {
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 20px;
+}
+.about-heading {
+  font-family: var(--display);
+  font-size: clamp(3rem, 5vw, 5.5rem);
+  letter-spacing: 0.03em;
+  line-height: 1;
+  margin-bottom: 32px;
+}
+.about-bio {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 40px;
+  max-width: 460px;
+}
+.about-bio strong { color: var(--white); font-weight: 500; }
+.about-awards {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.award-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.award-chip-name {
+  font-family: var(--display);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+}
+.award-chip-sub {
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: #000;
+  padding: 32px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.footer-brand {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  color: var(--white);
+}
+.footer-email {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.footer-email:hover { color: var(--white); }
+
+/* ── MOBILE ── */
+@media (max-width: 900px) {
+  .main-screen { grid-template-columns: 1fr; }
+  .left-col {
+    position: relative;
+    height: auto;
+    min-height: auto;
+    padding: 60px 24px 24px;
+  }
+  .left-footer { position: static; margin-top: 20px; left: auto; bottom: auto; }
+  .right-col { padding: 24px 24px 60px; min-height: auto; }
+  .cat-thumbs { flex-wrap: wrap; }
+  .mini-thumb { width: 80px; }
+  .about-screen { grid-template-columns: 1fr; }
+  .about-portrait-wrap { min-height: 60vw; }
+  .about-content { padding: 40px 24px; }
+  footer { padding: 24px; flex-direction: column; gap: 12px; }
+  #opt-nav { display: none; }
+  /* On mobile, show bg for tapped category */
+  .cat-item.tapped .cat-thumbs {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .cat-item.tapped .cat-subtitle { color: rgba(255,255,255,0.5); transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- Dev Nav -->
+<nav id="opt-nav">
+  <a href="option-1.html">1</a>
+  <a href="option-2.html">2</a>
+  <a href="option-3.html">3</a>
+  <a href="option-4.html">4</a>
+  <a href="option-5.html">5</a>
+  <a href="option-6.html">6</a>
+  <a href="option-7.html">7</a>
+  <a href="option-8.html">8</a>
+  <a href="option-9.html">9</a>
+  <a href="option-10.html" class="active">10</a>
+</nav>
+
+<!-- Background video -->
+<video id="bg-video" autoplay muted loop playsinline>
+  <source src="https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4" type="video/mp4">
+</video>
+<div id="bg-overlay"></div>
+
+<!-- Main screen -->
+<div class="main-screen">
+
+  <!-- LEFT: Name fixed -->
+  <div class="left-col">
+    <div class="name-stack">
+      <span class="name-part">Jonah</span>
+      <span class="name-part">Oskow</span>
+    </div>
+    <span class="name-role">Film &amp; Commercial Editor</span>
+    <div class="left-footer">
+      <a href="mailto:joskows@gmail.com" class="left-email">joskows@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- RIGHT: Categories -->
+  <div class="right-col">
+    <div class="cat-list">
+
+      <div class="cat-item" data-cat="comedy">
+        <div class="cat-item-inner">
+          <span class="cat-num">01</span>
+          <span class="cat-name">Comedy</span>
+          <span class="cat-subtitle">Specials · Sketches · Spots</span>
+          <div class="cat-thumbs">
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-item" data-cat="social">
+        <div class="cat-item-inner">
+          <span class="cat-num">02</span>
+          <span class="cat-name">Social Media</span>
+          <span class="cat-subtitle">Campaigns · Branded Content</span>
+          <div class="cat-thumbs">
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-item" data-cat="film">
+        <div class="cat-item-inner">
+          <span class="cat-num">03</span>
+          <span class="cat-name">Film / Episodic</span>
+          <span class="cat-subtitle">Narrative · Series · Docs</span>
+          <div class="cat-thumbs">
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-item" data-cat="ai">
+        <div class="cat-item-inner">
+          <span class="cat-num">04</span>
+          <span class="cat-name">AI Direction</span>
+          <span class="cat-subtitle">Generative · Hybrid · Experimental</span>
+          <div class="cat-thumbs">
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+            <div class="mini-thumb"><span class="mini-play">▶ Play</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top: 48px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.08);">
+      <a href="#about" style="font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.35); text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">About Jonah ↓</a>
+    </div>
+  </div>
+</div>
+
+<!-- About screen -->
+<section id="about" class="about-screen">
+  <div class="about-portrait-wrap">
+    <img class="about-portrait" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+    <div class="about-gradient"></div>
+  </div>
+  <div class="about-content">
+    <p class="about-kicker">About the Editor</p>
+    <h2 class="about-heading">Jonah<br>Oskow</h2>
+    <p class="about-bio">
+      A comedy editor with deep roots in <strong>NYC commercial editorial</strong>. Over a decade of shaping the timing that makes a joke land — and the silence right before it.<br><br>
+      Credits include <strong>Comedy Central</strong> and <strong>Netflix</strong>. On-screen collaborators: <strong>Idris Elba, Pete Davidson, Jamie Lee Curtis</strong>. Clients range from major agencies to global tech. Cannes, Clios, and One Show wins.<br><br>
+      The work is immersive because it has to be. So is this site.
+    </p>
+    <div class="about-awards">
+      <div class="award-chip">
+        <span class="award-chip-name">Cannes</span>
+        <span class="award-chip-sub">Lions Winner</span>
+      </div>
+      <div class="award-chip">
+        <span class="award-chip-name">Clios</span>
+        <span class="award-chip-sub">Winner</span>
+      </div>
+      <div class="award-chip">
+        <span class="award-chip-name">One Show</span>
+        <span class="award-chip-sub">Winner</span>
+      </div>
+      <div class="award-chip">
+        <span class="award-chip-name">NYC</span>
+        <span class="award-chip-sub">Based</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <span class="footer-brand">Jonah Oskow</span>
+  <a href="mailto:joskows@gmail.com" class="footer-email">joskows@gmail.com</a>
+</footer>
+
+<script>
+const video = document.getElementById('bg-video');
+const overlay = document.getElementById('bg-overlay');
+const catItems = document.querySelectorAll('.cat-item');
+
+// Show video bg on category hover (desktop)
+function showBg() {
+  video.classList.add('visible');
+  overlay.classList.add('visible');
+}
+function hideBg() {
+  video.classList.remove('visible');
+  overlay.classList.remove('visible');
+}
+
+catItems.forEach(item => {
+  item.addEventListener('mouseenter', showBg);
+  item.addEventListener('mouseleave', hideBg);
+});
+
+// Mobile: tap to toggle category open state + show bg briefly
+if (window.matchMedia('(max-width: 900px)').matches) {
+  catItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const isOpen = item.classList.contains('tapped');
+      catItems.forEach(i => i.classList.remove('tapped'));
+      if (!isOpen) {
+        item.classList.add('tapped');
+        showBg();
+        setTimeout(hideBg, 2000);
+      } else {
+        hideBg();
+      }
+    });
+  });
+}
+
+// Preload video
+video.load();
+</script>
+</body>
+</html>

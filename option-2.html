@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --left-w: 35vw;
+  --left-bg: #111;
+  --right-bg: #fafafa;
+  --text-dark: #0a0a0a;
+  --text-mid: #555;
+  --border: #e8e8e8;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--right-bg);
+  color: var(--text-dark);
+  overflow-x: hidden;
+}
+
+/* ── OPT NAV ── */
+.opt-nav {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9999;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  max-width: 220px;
+  justify-content: flex-end;
+}
+.opt-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: rgba(0,0,0,0.07);
+  color: #999;
+  text-decoration: none;
+  font-size: 10px;
+  font-family: 'Inter', sans-serif;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+.opt-nav a:hover, .opt-nav a.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+/* ── LEFT PANEL ── */
+.left-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--left-w);
+  height: 100vh;
+  background: var(--left-bg);
+  display: flex;
+  flex-direction: column;
+  padding: 56px 44px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.left-name {
+  flex-shrink: 0;
+}
+
+.left-name .first {
+  display: block;
+  font-size: clamp(2.4rem, 4.5vw, 4.5rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.left-name .last {
+  display: block;
+  font-size: clamp(2.4rem, 4.5vw, 4.5rem);
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.left-tagline {
+  margin-top: 14px;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+
+.left-divider {
+  width: 32px;
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  margin: 40px 0;
+  flex-shrink: 0;
+}
+
+.left-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.left-nav a {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.4);
+  text-decoration: none;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.left-nav a::before {
+  content: attr(data-idx);
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.2);
+  width: 16px;
+  flex-shrink: 0;
+}
+.left-nav a:hover { color: #fff; }
+.left-nav a.active { color: #fff; }
+
+.left-footer {
+  flex-shrink: 0;
+  padding-top: 32px;
+}
+.left-footer a {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.left-footer a:hover { color: rgba(255,255,255,0.7); }
+
+/* ── RIGHT PANEL ── */
+.right-panel {
+  margin-left: var(--left-w);
+  min-height: 100vh;
+  background: var(--right-bg);
+}
+
+/* ── RIGHT HERO (intro strip) ── */
+.right-intro {
+  padding: 80px 64px 56px;
+  border-bottom: 1px solid var(--border);
+}
+.right-intro .awards {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 20px;
+}
+.right-intro .headline {
+  font-size: clamp(1.5rem, 2.8vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-dark);
+  max-width: 540px;
+}
+.right-intro .clients {
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  max-width: 460px;
+}
+
+/* ── CATEGORY SECTIONS ── */
+.cat-section {
+  padding: 72px 64px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cat-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+.cat-index {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: #bbb;
+  text-transform: uppercase;
+}
+.cat-name {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-dark);
+}
+
+.thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #1c1c1c;
+  border-left: 3px solid var(--accent, #333);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.thumb:hover {
+  transform: scale(1.015);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+.thumb-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.4);
+  transition: color 0.2s;
+}
+.thumb:hover .thumb-play { color: rgba(255,255,255,0.8); }
+.thumb-label {
+  position: absolute;
+  bottom: 10px;
+  left: 14px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+}
+
+.cat-comedy  { --accent: #fff; }
+.cat-social  { --accent: #00e5ff; }
+.cat-film    { --accent: #777; }
+.cat-ai      { --accent: #aaff00; }
+
+/* ── ABOUT SECTION ── */
+.about-section {
+  padding: 80px 64px;
+  border-bottom: 1px solid var(--border);
+}
+.about-inner {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 56px;
+  align-items: start;
+}
+.about-portrait {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(10%);
+}
+.about-text {}
+.about-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #bbb;
+  margin-bottom: 20px;
+}
+.about-bio {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #333;
+  margin-bottom: 20px;
+}
+.about-credits {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #888;
+}
+.about-awards {
+  margin-top: 28px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.award-pill {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border: 1px solid #ddd;
+  color: #555;
+  border-radius: 100px;
+}
+
+/* ── FOOTER ── */
+.right-footer {
+  padding: 48px 64px;
+  text-align: left;
+}
+.right-footer a {
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.right-footer a:hover { color: #111; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  :root { --left-w: 0px; }
+
+  .left-panel {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    padding: 14px 20px;
+    gap: 0;
+    z-index: 200;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .left-name .first, .left-name .last {
+    font-size: 1.2rem;
+    display: inline;
+  }
+  .left-name .last { margin-left: 8px; }
+  .left-tagline { display: none; }
+  .left-divider { display: none; }
+  .left-nav {
+    flex-direction: row;
+    flex: 1;
+    justify-content: flex-end;
+    gap: 0;
+  }
+  .left-nav a {
+    font-size: 11px;
+    padding: 6px 10px;
+    border-bottom: none;
+  }
+  .left-nav a::before { display: none; }
+  .left-footer { display: none; }
+
+  .right-panel {
+    margin-left: 0;
+    padding-top: 60px;
+  }
+  .right-intro, .cat-section, .about-section, .right-footer {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .about-inner {
+    grid-template-columns: 1fr;
+  }
+  .about-portrait { max-width: 180px; }
+  .opt-nav { display: none; }
+}
+
+@media (max-width: 560px) {
+  .thumb-grid { grid-template-columns: 1fr; }
+  .left-nav a { font-size: 10px; padding: 4px 7px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Dev Nav -->
+<nav class="opt-nav">
+  <a href="option-1.html">1</a>
+  <a href="option-2.html" class="active">2</a>
+  <a href="option-3.html">3</a>
+  <a href="option-4.html">4</a>
+  <a href="option-5.html">5</a>
+  <a href="option-6.html">6</a>
+  <a href="option-7.html">7</a>
+  <a href="option-8.html">8</a>
+  <a href="option-9.html">9</a>
+  <a href="option-10.html">10</a>
+</nav>
+
+<!-- Left Panel -->
+<aside class="left-panel">
+  <div class="left-name">
+    <span class="first">JONAH</span>
+    <span class="last">OSKOW</span>
+    <div class="left-tagline">Film &amp; Commercial Editor</div>
+  </div>
+  <div class="left-divider"></div>
+  <nav class="left-nav">
+    <a href="#comedy" data-idx="01">Comedy</a>
+    <a href="#social" data-idx="02">Social Media</a>
+    <a href="#film" data-idx="03">Film / Episodic</a>
+    <a href="#ai" data-idx="04">AI Direction</a>
+    <a href="#about" data-idx="—">About</a>
+  </nav>
+  <div class="left-footer">
+    <a href="mailto:joskows@gmail.com">joskows@gmail.com</a>
+  </div>
+</aside>
+
+<!-- Right Panel -->
+<main class="right-panel">
+
+  <!-- Intro -->
+  <div class="right-intro">
+    <div class="awards">Cannes Lions &nbsp;·&nbsp; Clios &nbsp;·&nbsp; One Show</div>
+    <h1 class="headline">Seasoned comedy editor with roots in NYC commercial editorial.</h1>
+    <p class="clients">Comedy Central. Netflix. Idris Elba. Pete Davidson. Jamie Lee Curtis. Two decades shaping the rhythm of the industry's funniest, most awarded work.</p>
+  </div>
+
+  <!-- Comedy -->
+  <section class="cat-section cat-comedy" id="comedy">
+    <div class="cat-header">
+      <span class="cat-index">01</span>
+      <h2 class="cat-name">Comedy</h2>
+    </div>
+    <div class="thumb-grid">
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 01</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 02</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 03</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 04</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 05</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Spot 06</div></div>
+    </div>
+  </section>
+
+  <!-- Social Media -->
+  <section class="cat-section cat-social" id="social">
+    <div class="cat-header">
+      <span class="cat-index">02</span>
+      <h2 class="cat-name">Social Media</h2>
+    </div>
+    <div class="thumb-grid">
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 01</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 02</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 03</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 04</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 05</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Campaign 06</div></div>
+    </div>
+  </section>
+
+  <!-- Film / Episodic -->
+  <section class="cat-section cat-film" id="film">
+    <div class="cat-header">
+      <span class="cat-index">03</span>
+      <h2 class="cat-name">Film / Episodic</h2>
+    </div>
+    <div class="thumb-grid">
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 01</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 02</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 03</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 04</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 05</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Episode 06</div></div>
+    </div>
+  </section>
+
+  <!-- AI Direction -->
+  <section class="cat-section cat-ai" id="ai">
+    <div class="cat-header">
+      <span class="cat-index">04</span>
+      <h2 class="cat-name">AI Direction</h2>
+    </div>
+    <div class="thumb-grid">
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 01</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 02</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 03</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 04</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 05</div></div>
+      <div class="thumb"><div class="thumb-play">▶&nbsp; PLAY</div><div class="thumb-label">Project 06</div></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about-section" id="about">
+    <div class="about-label">About</div>
+    <div class="about-inner">
+      <img class="about-portrait"
+        src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg"
+        alt="Jonah Oskow">
+      <div class="about-text">
+        <p class="about-bio">Jonah Oskow is a New York-based film and commercial editor whose work spans network television, streaming originals, and the most-awarded ad campaigns of the past decade. His instinct for comedic timing is razor-sharp — equal parts craft and instinct, honed across hundreds of spots for the world's biggest brands.</p>
+        <p class="about-bio">He brings the same editorial eye to long-form work, having cut episodes for Comedy Central and Netflix originals. Working with talent like Idris Elba, Pete Davidson, and Jamie Lee Curtis, Jonah finds the human moment inside every take.</p>
+        <p class="about-credits">Clients include major advertising agencies and Fortune 500 tech companies. Emmy-nominated productions. International broadcast and streaming distribution.</p>
+        <div class="about-awards">
+          <span class="award-pill">Cannes Lions</span>
+          <span class="award-pill">Clio Award</span>
+          <span class="award-pill">One Show</span>
+          <span class="award-pill">NYC Commercial</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="right-footer">
+    <a href="mailto:joskows@gmail.com">joskows@gmail.com</a>
+  </div>
+
+</main>
+
+<script>
+// Highlight active nav link on scroll
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.left-nav a');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+      });
+    }
+  });
+}, { threshold: 0.35 });
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

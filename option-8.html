@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0e0e0e;
+  --white: #ffffff;
+  --grey: rgba(255,255,255,0.45);
+  --dim: #1a1a1a;
+  --border: rgba(255,255,255,0.12);
+  --display: 'Bebas Neue', 'Impact', sans-serif;
+  --body: 'DM Sans', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--body);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── DEV NAV ── */
+#opt-nav {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  display: flex;
+  gap: 4px;
+  background: rgba(0,0,0,0.8);
+  padding: 5px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+#opt-nav a {
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  font-family: var(--body);
+  font-size: 10px;
+  padding: 2px 4px;
+  transition: color 0.2s;
+}
+#opt-nav a:hover, #opt-nav a.active { color: var(--white); }
+
+/* ── HEADER ── */
+header {
+  background: #000;
+  padding: 32px 48px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.site-name {
+  font-family: var(--display);
+  font-size: clamp(3rem, 8vw, 8rem);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: var(--white);
+  text-decoration: none;
+}
+.header-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-self: flex-end;
+}
+.header-role {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+header nav {
+  display: flex;
+  gap: 20px;
+}
+header nav a {
+  font-family: var(--body);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+header nav a:hover { color: var(--white); }
+
+/* ── CATEGORY SECTION ── */
+.cat-section {
+  position: relative;
+}
+
+/* Giant bg category name */
+.cat-bg-label {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  font-family: var(--display);
+  font-size: clamp(6rem, 18vw, 18rem);
+  letter-spacing: 0.02em;
+  color: var(--dim);
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  white-space: nowrap;
+  z-index: 0;
+}
+
+/* Category divider bar */
+.cat-divider {
+  background: #000;
+  padding: 18px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 4px solid var(--white);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 2;
+}
+.cat-divider-name {
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  letter-spacing: 0.05em;
+  color: var(--white);
+}
+.cat-divider-count {
+  font-family: var(--body);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+/* ── MAGAZINE GRID ── */
+.mag-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  gap: 1px;
+  background: var(--border);
+  position: relative;
+  z-index: 1;
+}
+.thumb {
+  background: var(--bg);
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+.thumb-1 { grid-column: span 2; grid-row: span 2; aspect-ratio: unset; min-height: 300px; }
+.thumb-5 { grid-column: span 2; }
+.thumb:hover .thumb-overlay { opacity: 1; }
+.thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.thumb-overlay-title {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+  color: var(--white);
+}
+.thumb-overlay-sub {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+}
+.play-base {
+  position: absolute;
+  opacity: 0.25;
+  font-family: var(--body);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--white);
+  transition: opacity 0.25s;
+}
+.thumb:hover .play-base { opacity: 0; }
+
+/* ── ABOUT ── */
+.about-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 4px solid var(--white);
+}
+.about-portrait-col {
+  overflow: hidden;
+  position: relative;
+}
+.about-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(10%) contrast(1.05);
+}
+.about-content-col {
+  background: #000;
+  padding: 60px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.about-kicker {
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--grey);
+  margin-bottom: 16px;
+}
+.about-heading {
+  font-family: var(--display);
+  font-size: clamp(3rem, 5vw, 5.5rem);
+  letter-spacing: 0.03em;
+  line-height: 1;
+  margin-bottom: 28px;
+}
+.about-bio {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 36px;
+  max-width: 480px;
+}
+.about-bio strong { color: var(--white); font-weight: 500; }
+.awards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
+}
+.award {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.award-title {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  letter-spacing: 0.03em;
+  color: var(--white);
+}
+.award-sub {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: #000;
+  border-top: 4px solid var(--white);
+  padding: 40px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.footer-email {
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  letter-spacing: 0.06em;
+  color: var(--white);
+  text-decoration: none;
+  transition: opacity 0.25s;
+}
+.footer-email:hover { opacity: 0.5; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  header { padding: 20px 20px; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .header-right { text-align: left; }
+  header nav { flex-wrap: wrap; }
+  .cat-divider { padding: 14px 20px; }
+  .mag-grid { grid-template-columns: repeat(2, 1fr); }
+  .thumb-1 { grid-column: span 2; }
+  .thumb-5 { grid-column: span 2; }
+  .about-section { grid-template-columns: 1fr; }
+  .about-portrait-col { height: 60vw; }
+  .about-content-col { padding: 40px 20px; }
+  .awards-grid { grid-template-columns: repeat(2, 1fr); }
+  footer { padding: 30px 20px; }
+  #opt-nav { display: none; }
+}
+@media (max-width: 540px) {
+  .mag-grid { grid-template-columns: 1fr; }
+  .thumb-1, .thumb-5 { grid-column: span 1; }
+  .awards-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Dev Nav -->
+<nav id="opt-nav">
+  <a href="option-1.html">1</a>
+  <a href="option-2.html">2</a>
+  <a href="option-3.html">3</a>
+  <a href="option-4.html">4</a>
+  <a href="option-5.html">5</a>
+  <a href="option-6.html">6</a>
+  <a href="option-7.html">7</a>
+  <a href="option-8.html" class="active">8</a>
+  <a href="option-9.html">9</a>
+  <a href="option-10.html">10</a>
+</nav>
+
+<!-- Header -->
+<header>
+  <a href="#" class="site-name">Jonah Oskow</a>
+  <div class="header-right">
+    <span class="header-role">Film &amp; Commercial Editor</span>
+    <nav>
+      <a href="#comedy">Comedy</a>
+      <a href="#social">Social</a>
+      <a href="#film">Film</a>
+      <a href="#ai">AI</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ── COMEDY ── -->
+<div id="comedy" class="cat-section">
+  <div class="cat-bg-label" aria-hidden="true">COMEDY</div>
+  <div class="cat-divider">
+    <span class="cat-divider-name">Comedy</span>
+    <span class="cat-divider-count">6 pieces</span>
+  </div>
+  <div class="mag-grid">
+    <div class="thumb thumb-1">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay">
+        <span class="thumb-overlay-title">Featured Work</span>
+        <span class="thumb-overlay-sub">Comedy Central</span>
+      </div>
+    </div>
+    <div class="thumb thumb-2">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay">
+        <span class="thumb-overlay-title">Spot Title</span>
+        <span class="thumb-overlay-sub">Client TBD</span>
+      </div>
+    </div>
+    <div class="thumb thumb-3">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay">
+        <span class="thumb-overlay-title">Spot Title</span>
+        <span class="thumb-overlay-sub">Client TBD</span>
+      </div>
+    </div>
+    <div class="thumb thumb-4">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay">
+        <span class="thumb-overlay-title">Spot Title</span>
+        <span class="thumb-overlay-sub">Client TBD</span>
+      </div>
+    </div>
+    <div class="thumb thumb-5">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay">
+        <span class="thumb-overlay-title">Spot Title</span>
+        <span class="thumb-overlay-sub">Client TBD</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SOCIAL MEDIA ── -->
+<div id="social" class="cat-section">
+  <div class="cat-bg-label" aria-hidden="true">SOCIAL</div>
+  <div class="cat-divider">
+    <span class="cat-divider-name">Social Media</span>
+    <span class="cat-divider-count">6 pieces</span>
+  </div>
+  <div class="mag-grid">
+    <div class="thumb thumb-1">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay">
+        <span class="thumb-overlay-title">Featured Work</span>
+        <span class="thumb-overlay-sub">Brand TBD</span>
+      </div>
+    </div>
+    <div class="thumb">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+    <div class="thumb">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+    <div class="thumb">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+    <div class="thumb thumb-5">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FILM / EPISODIC ── -->
+<div id="film" class="cat-section">
+  <div class="cat-bg-label" aria-hidden="true">FILM</div>
+  <div class="cat-divider">
+    <span class="cat-divider-name">Film / Episodic</span>
+    <span class="cat-divider-count">6 pieces</span>
+  </div>
+  <div class="mag-grid">
+    <div class="thumb thumb-1">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay">
+        <span class="thumb-overlay-title">Featured Work</span>
+        <span class="thumb-overlay-sub">Netflix</span>
+      </div>
+    </div>
+    <div class="thumb">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+    <div class="thumb">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+    <div class="thumb">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+    <div class="thumb thumb-5">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── AI DIRECTION ── -->
+<div id="ai" class="cat-section">
+  <div class="cat-bg-label" aria-hidden="true">AI</div>
+  <div class="cat-divider">
+    <span class="cat-divider-name">AI Direction</span>
+    <span class="cat-divider-count">6 pieces</span>
+  </div>
+  <div class="mag-grid">
+    <div class="thumb thumb-1">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay">
+        <span class="thumb-overlay-title">Featured Work</span>
+        <span class="thumb-overlay-sub">AI-Directed</span>
+      </div>
+    </div>
+    <div class="thumb">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+    <div class="thumb">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+    <div class="thumb">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+    <div class="thumb thumb-5">
+      <span class="play-base">▶ Play</span>
+      <div class="thumb-overlay"><span class="thumb-overlay-title">Spot Title</span><span class="thumb-overlay-sub">Client TBD</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ABOUT ── -->
+<section id="about" class="about-section">
+  <div class="about-portrait-col">
+    <img class="about-portrait" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+  </div>
+  <div class="about-content-col">
+    <p class="about-kicker">About</p>
+    <h2 class="about-heading">Jonah<br>Oskow</h2>
+    <p class="about-bio">
+      A comedy editor with deep roots in <strong>NYC commercial editorial</strong>. His work shapes the timing that makes a joke land, the cut that makes a brand human, and the rhythm that turns a scene into a moment. Credits span <strong>Comedy Central</strong> and <strong>Netflix</strong>, with on-screen talent including <strong>Idris Elba, Pete Davidson, and Jamie Lee Curtis</strong>.<br><br>
+      Cannes Lions. Clios. One Show. The trophies reflect what the work already proves.
+    </p>
+    <div class="awards-grid">
+      <div class="award">
+        <span class="award-title">Cannes</span>
+        <span class="award-sub">Lions Winner</span>
+      </div>
+      <div class="award">
+        <span class="award-title">Clios</span>
+        <span class="award-sub">Award Winner</span>
+      </div>
+      <div class="award">
+        <span class="award-title">One Show</span>
+        <span class="award-sub">Award Winner</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <a href="mailto:joskows@gmail.com" class="footer-email">joskows@gmail.com</a>
+</footer>
+
+</body>
+</html>

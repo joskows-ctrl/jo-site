@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,700;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --left-bg: #0d0d0d;
+    --right-bg: #f5f5f5;
+    --left-text: #fff;
+    --right-text: #000;
+    --green: #44ff88;
+    --left-mid: #666;
+    --right-mid: #555;
+    --left-rule: #1e1e1e;
+    --right-rule: #ddd;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    background: #000;
+  }
+
+  /* ── LEFT COLUMN ── */
+  #left-col {
+    width: 45vw;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--left-bg);
+    color: var(--left-text);
+    font-family: 'DM Sans', sans-serif;
+    padding: 4rem 3.5rem 4rem 4rem;
+    scrollbar-width: thin;
+    scrollbar-color: #2a2a2a transparent;
+    flex-shrink: 0;
+    border-right: 1px solid #1a1a1a;
+  }
+  #left-col::-webkit-scrollbar { width: 4px; }
+  #left-col::-webkit-scrollbar-track { background: transparent; }
+  #left-col::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+
+  /* ── RIGHT COLUMN ── */
+  #right-col {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--right-bg);
+    color: var(--right-text);
+    font-family: 'DM Sans', sans-serif;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+  }
+  #right-col::-webkit-scrollbar { width: 4px; }
+  #right-col::-webkit-scrollbar-track { background: transparent; }
+  #right-col::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+
+  /* ── LEFT: IDENTITY ── */
+  .left-eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+  }
+
+  .left-name {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--left-text);
+    margin-bottom: 1rem;
+  }
+
+  .left-role {
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--left-mid);
+    margin-bottom: 0.3rem;
+  }
+
+  .left-city {
+    font-size: 0.7rem;
+    font-weight: 300;
+    color: var(--left-mid);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+  }
+
+  .left-rule {
+    border: none;
+    border-top: 1px solid var(--left-rule);
+    margin: 2rem 0;
+  }
+
+  .left-bio {
+    font-size: 0.88rem;
+    font-weight: 300;
+    line-height: 1.9;
+    color: #bbb;
+    margin-bottom: 2rem;
+  }
+
+  .left-section-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+
+  .awards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .award-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+  }
+
+  .award-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+    margin-bottom: 1px;
+  }
+
+  .award-text {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--left-text);
+  }
+
+  .award-detail {
+    font-size: 0.65rem;
+    color: var(--left-mid);
+    margin-left: auto;
+    font-weight: 300;
+  }
+
+  .clients-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .client-name {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #999;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--left-rule);
+  }
+
+  .left-intro-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--left-bg);
+    background: var(--green);
+    border: none;
+    padding: 0.7rem 1.3rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-bottom: 2rem;
+  }
+  .left-intro-btn:hover { opacity: 0.85; }
+
+  .left-email {
+    font-size: 0.72rem;
+    color: var(--left-mid);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-bottom: 0.4rem;
+    transition: color 0.2s;
+  }
+  .left-email:hover { color: var(--green); }
+
+  .left-portrait {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.1);
+    margin-top: 2rem;
+    display: block;
+    border: 1px solid var(--left-rule);
+  }
+
+  /* ── RIGHT: WORK ── */
+  .right-inner {
+    padding: 0;
+  }
+
+  .right-top-bar {
+    background: var(--right-text);
+    color: var(--right-bg);
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .right-top-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .right-top-count {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    font-weight: 700;
+  }
+
+  .cat-block {
+    padding: 3rem 3rem 0;
+  }
+
+  .cat-sticky-header {
+    position: sticky;
+    top: 56px;
+    background: var(--right-bg);
+    z-index: 40;
+    padding: 1rem 0 0.8rem;
+    border-bottom: 2px solid var(--right-text);
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .cat-sticky-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-style: italic;
+    color: var(--right-text);
+    letter-spacing: -0.02em;
+  }
+
+  .cat-sticky-num {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--right-mid);
+    font-weight: 700;
+  }
+
+  .thumb-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-bottom: 3rem;
+  }
+
+  .work-thumb {
+    aspect-ratio: 16/9;
+    background: #1a1a1a;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #eee;
+    transition: border-color 0.2s;
+  }
+  .work-thumb:hover { border-color: var(--right-text); }
+  .work-thumb:hover .wt-play { opacity: 1; color: #fff; }
+  .work-thumb:hover .wt-overlay { opacity: 1; }
+
+  .wt-play {
+    font-size: 1.4rem;
+    color: #555;
+    opacity: 0.5;
+    transition: opacity 0.2s, color 0.2s;
+    position: relative;
+    z-index: 2;
+  }
+
+  .wt-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+
+  .wt-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0.4rem 0.6rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #aaa;
+    font-weight: 500;
+    z-index: 3;
+  }
+
+  .right-footer {
+    padding: 3rem;
+    border-top: 1px solid var(--right-rule);
+    background: #eeeeec;
+  }
+
+  .right-footer-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--right-mid);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .right-footer-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    margin-bottom: 0.5rem;
+  }
+
+  .right-footer-email {
+    font-size: 0.75rem;
+    color: var(--right-mid);
+    text-decoration: none;
+  }
+  .right-footer-email:hover { color: var(--right-text); }
+
+  /* ── MODAL ── */
+  #modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.97); z-index: 9999;
+    align-items: center; justify-content: center;
+  }
+  #modal-video { width: 90%; max-width: 960px; aspect-ratio: 16/9; }
+  #modal-close {
+    position: fixed; top: 24px; right: 32px;
+    font-size: 2.5rem; color: #fff;
+    background: none; border: none; cursor: pointer; line-height: 1;
+  }
+
+  /* ── OPT-NAV ── */
+  #opt-nav {
+    position: fixed; bottom: 1rem; right: 1rem;
+    z-index: 9999;
+    display: flex; flex-wrap: wrap-reverse; gap: 0.25rem;
+    max-width: 130px; justify-content: flex-end;
+  }
+  #opt-nav a {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.5rem; color: #555;
+    text-decoration: none; padding: 0.12rem 0.28rem;
+    border: 1px solid #ccc;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  #opt-nav a:hover, #opt-nav a.current { color: #000; border-color: #000; }
+</style>
+</head>
+<body>
+
+<!-- LEFT COLUMN: IDENTITY -->
+<div id="left-col">
+  <div class="left-eyebrow">Film &amp; Commercial Editor</div>
+
+  <div class="left-name">Jonah<br>Oskow</div>
+
+  <div class="left-role">Film &amp; Commercial Editor</div>
+  <div class="left-city">New York City</div>
+
+  <hr class="left-rule">
+
+  <div class="left-bio">
+    NYC commercial editor with a decade of award-winning work spanning Comedy Central, Netflix, and global brand campaigns. Known for a naturalistic editorial style built on comic timing and a ruthless sense of when to cut. Works equally in long-form episodic, branded content, and the emerging language of AI-directed filmmaking.
+    <br><br>
+    The edit room is where performance lives or dies. Jonah's instinct—shaped by years cutting comedy, drama, and everything in between—is to serve the story first and the brief second. The awards follow from that discipline.
+  </div>
+
+  <hr class="left-rule">
+
+  <div class="left-section-label">Awards</div>
+  <div class="awards-list">
+    <div class="award-row">
+      <div class="award-dot"></div>
+      <span class="award-text">Cannes Lions</span>
+      <span class="award-detail">Winner</span>
+    </div>
+    <div class="award-row">
+      <div class="award-dot"></div>
+      <span class="award-text">Clios</span>
+      <span class="award-detail">Winner</span>
+    </div>
+    <div class="award-row">
+      <div class="award-dot"></div>
+      <span class="award-text">One Show</span>
+      <span class="award-detail">Winner</span>
+    </div>
+  </div>
+
+  <hr class="left-rule">
+
+  <div class="left-section-label">Selected Clients &amp; Collaborators</div>
+  <div class="clients-grid">
+    <div class="client-name">Comedy Central</div>
+    <div class="client-name">Netflix</div>
+    <div class="client-name">Idris Elba</div>
+    <div class="client-name">Pete Davidson</div>
+    <div class="client-name">Jamie Lee Curtis</div>
+    <div class="client-name">Global Brands</div>
+    <div class="client-name">Streaming Networks</div>
+    <div class="client-name">Digital Campaigns</div>
+  </div>
+
+  <hr class="left-rule">
+
+  <button class="left-intro-btn" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">
+    ▶ Watch Intro · 0:37
+  </button>
+
+  <a href="mailto:joskows@gmail.com" class="left-email">joskows@gmail.com</a>
+
+  <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow" class="left-portrait">
+</div>
+
+<!-- RIGHT COLUMN: WORK -->
+<div id="right-col">
+  <div class="right-inner">
+    <div class="right-top-bar">
+      <div class="right-top-title">Selected Work</div>
+      <div class="right-top-count">4 Categories · 24 Projects</div>
+    </div>
+
+    <!-- COMEDY -->
+    <div class="cat-block">
+      <div class="cat-sticky-header">
+        <div class="cat-sticky-name">Comedy</div>
+        <div class="cat-sticky-num">01 / 04</div>
+      </div>
+      <div class="thumb-grid-2">
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Comedy Central — Pete Davidson</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Netflix Stand-Up Special</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Jamie Lee Curtis — Spot</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Comedy Reel 2024</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Sketch — Long Form</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Branded Comedy :60</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOCIAL MEDIA -->
+    <div class="cat-block">
+      <div class="cat-sticky-header">
+        <div class="cat-sticky-name">Social Media</div>
+        <div class="cat-sticky-num">02 / 04</div>
+      </div>
+      <div class="thumb-grid-2">
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Vertical Campaign</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Brand Story :15</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Idris Elba — Social</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Viral Product Launch</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Series — Episode 01</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Micro-Content Pack</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILM/EPISODIC -->
+    <div class="cat-block">
+      <div class="cat-sticky-header">
+        <div class="cat-sticky-name">Film / Episodic</div>
+        <div class="cat-sticky-num">03 / 04</div>
+      </div>
+      <div class="thumb-grid-2">
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Netflix — Series Trailer</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Documentary Feature</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Comedy Drama Pilot</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Short Film — Festival</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Idris Elba — Long Form</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">TV Promotional</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI DIRECTION -->
+    <div class="cat-block">
+      <div class="cat-sticky-header">
+        <div class="cat-sticky-name">AI Direction</div>
+        <div class="cat-sticky-num">04 / 04</div>
+      </div>
+      <div class="thumb-grid-2">
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Generative Brand Film</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">AI-Assisted Narrative</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Synthetic Commercial</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Hybrid — Live + AI</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">Experimental 2025</div>
+        </div>
+        <div class="work-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="wt-overlay"></div><span class="wt-play">▶</span>
+          <div class="wt-label">AI Direction Reel</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-footer">
+      <div class="right-footer-label">Contact</div>
+      <div class="right-footer-name">Jonah Oskow</div>
+      <a href="mailto:joskows@gmail.com" class="right-footer-email">joskows@gmail.com</a>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:9999;align-items:center;justify-content:center;">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2.5rem;color:#fff;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+</div>
+
+<!-- OPT-NAV -->
+<nav id="opt-nav">
+  <a href="option-1.html">1</a><a href="option-2.html">2</a><a href="option-3.html">3</a>
+  <a href="option-4.html">4</a><a href="option-5.html">5</a><a href="option-6.html">6</a>
+  <a href="option-7.html">7</a><a href="option-8.html">8</a><a href="option-9.html">9</a>
+  <a href="option-10.html">10</a><a href="option-11.html">11</a><a href="option-12.html">12</a>
+  <a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a>
+  <a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a>
+  <a href="option-19.html">19</a><a href="option-20.html">20</a><a href="option-21.html">21</a>
+  <a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a>
+  <a href="option-25.html">25</a><a href="option-26.html">26</a><a href="option-27.html">27</a>
+  <a href="option-28.html">28</a><a href="option-29.html">29</a><a href="option-30.html">30</a>
+  <a href="option-31.html">31</a><a href="option-32.html">32</a><a href="option-33.html">33</a>
+  <a href="option-34.html" class="current">34</a><a href="option-35.html">35</a>
+</nav>
+
+<script>
+  const modal = document.getElementById('modal');
+  const mv = document.getElementById('modal-video');
+  function openVideo(src) { mv.src=src; modal.style.display='flex'; mv.play(); }
+  function closeModal() { mv.pause(); mv.src=''; modal.style.display='none'; }
+  document.getElementById('modal-close').onclick = closeModal;
+  modal.addEventListener('click', e => { if(e.target===modal) closeModal(); });
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>

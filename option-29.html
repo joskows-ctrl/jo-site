@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #fff;
+    --fg: #000;
+    --dim: #888;
+    --rule: #ddd;
+    --dark-bg: #000;
+    --dark-fg: #fff;
+  }
+
+  html { background: var(--bg); color: var(--fg); scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 40px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .h-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  nav {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  nav a {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 400;
+  }
+  nav a:hover { color: var(--fg); }
+
+  /* ── HERO ── */
+  #hero {
+    padding: 60px 40px 40px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(4rem, 13vw, 14rem);
+    line-height: 0.9;
+    color: var(--fg);
+    letter-spacing: -0.02em;
+    display: block;
+  }
+  .hero-sub {
+    margin-top: 28px;
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .hero-subtitle {
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--dim);
+    font-weight: 300;
+  }
+  .hero-divider { color: var(--rule); }
+  .intro-link {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--fg);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    padding: 0;
+    font-weight: 400;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s;
+  }
+  .intro-link:hover { opacity: 0.5; }
+
+  /* ── WORK SECTIONS ── */
+  .work-section {
+    padding: 0 40px 48px;
+  }
+  .work-section + .work-section {
+    border-top: 1px solid var(--rule);
+  }
+
+  .section-header {
+    padding: 20px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-header span {
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--dim);
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .section-rule {
+    height: 1px;
+    background: var(--rule);
+    flex: 1;
+  }
+
+  .thumb-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+  }
+  @media (max-width: 800px) { .thumb-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .thumb-grid { grid-template-columns: 1fr; } }
+
+  .thumb {
+    aspect-ratio: 16 / 9;
+    background: #fff;
+    border: 1px solid var(--rule);
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+  .thumb:hover {
+    background: var(--fg);
+  }
+  .thumb:hover .play-ic svg { fill: #fff; }
+  .play-ic {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .play-ic svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--fg);
+    opacity: 0.5;
+    transition: fill 0.2s, opacity 0.2s;
+  }
+  .thumb:hover .play-ic svg { opacity: 1; }
+
+  /* ── ABOUT (dark) ── */
+  #about {
+    background: var(--dark-bg);
+    color: var(--dark-fg);
+    padding: 80px 40px;
+  }
+  .about-inner {
+    display: flex;
+    gap: 80px;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .about-portrait {
+    width: clamp(200px, 28vw, 400px);
+    flex-shrink: 0;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.1);
+  }
+  .about-text {
+    flex: 1;
+    padding-top: 8px;
+  }
+  .about-eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+  .about-name {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(2.5rem, 6vw, 6rem);
+    line-height: 0.95;
+    color: #fff;
+    margin-bottom: 32px;
+    letter-spacing: -0.01em;
+  }
+  .about-text p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #999;
+    max-width: 520px;
+    margin-bottom: 16px;
+    font-weight: 300;
+  }
+  .about-awards {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .award-item {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #555;
+    border-bottom: 1px solid #333;
+    padding-bottom: 6px;
+    font-weight: 500;
+  }
+
+  @media (max-width: 700px) {
+    header { padding: 0 20px; }
+    #hero { padding: 40px 20px 28px; }
+    .work-section { padding: 0 20px 40px; }
+    #about { padding: 48px 20px; }
+    .about-inner { flex-direction: column; gap: 32px; }
+    .about-portrait { width: 100%; max-width: 280px; }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #fff;
+    border-top: 1px solid var(--rule);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+  footer p {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    text-align: center;
+  }
+  footer a {
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  footer a:hover { color: var(--fg); }
+
+  /* ── MODAL ── */
+  #modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  #modal-video { width: 90%; max-width: 960px; aspect-ratio: 16/9; }
+  #modal-close {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    font-size: 2rem;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* ── OPT-NAV ── */
+  #opt-nav {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap: 4px;
+    max-width: 180px;
+    justify-content: flex-end;
+  }
+  #opt-nav a {
+    font-size: 9px;
+    color: #bbb;
+    text-decoration: none;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    font-family: 'Inter', sans-serif;
+    background: rgba(255,255,255,0.9);
+  }
+  #opt-nav a:hover { color: #000; border-color: #000; }
+  #opt-nav a.current { color: #000; border-color: #000; background: #000; color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="#" class="h-name">Jonah Oskow</a>
+  <nav>
+    <a href="#comedy">Comedy</a>
+    <a href="#social">Social</a>
+    <a href="#film">Film</a>
+    <a href="#ai">AI</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section id="hero">
+  <span class="hero-name">Jonah<br>Oskow</span>
+  <div class="hero-sub">
+    <span class="hero-subtitle">Film &amp; Commercial Editor · New York</span>
+    <span class="hero-divider">—</span>
+    <button class="intro-link" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">▶ Watch Intro · 0:37</button>
+  </div>
+</section>
+
+<!-- COMEDY -->
+<section class="work-section" id="comedy">
+  <div class="section-header">
+    <span>Comedy</span>
+    <div class="section-rule"></div>
+  </div>
+  <div class="thumb-grid">
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+  </div>
+</section>
+
+<!-- SOCIAL -->
+<section class="work-section" id="social">
+  <div class="section-header">
+    <span>Social Media</span>
+    <div class="section-rule"></div>
+  </div>
+  <div class="thumb-grid">
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+  </div>
+</section>
+
+<!-- FILM -->
+<section class="work-section" id="film">
+  <div class="section-header">
+    <span>Film / Episodic</span>
+    <div class="section-rule"></div>
+  </div>
+  <div class="thumb-grid">
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+  </div>
+</section>
+
+<!-- AI -->
+<section class="work-section" id="ai">
+  <div class="section-header">
+    <span>AI Direction</span>
+    <div class="section-rule"></div>
+  </div>
+  <div class="thumb-grid">
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')"><div class="play-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <img class="about-portrait" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+    <div class="about-text">
+      <div class="about-eyebrow">Film &amp; Commercial Editor · NYC</div>
+      <div class="about-name">Jonah<br>Oskow</div>
+      <p>NYC commercial editor. Cannes Lions, Clio Awards, One Show. Comedy Central, Netflix. Work with Idris Elba, Pete Davidson, Jamie Lee Curtis.</p>
+      <p>Cutting content for brands and networks that demands to be watched. Comedy that lands. Social that stops scrolling. Film that earns its runtime.</p>
+      <div class="about-awards">
+        <span class="award-item">Cannes Lions</span>
+        <span class="award-item">Clio Awards</span>
+        <span class="award-item">One Show</span>
+        <span class="award-item">Comedy Central</span>
+        <span class="award-item">Netflix</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Jonah Oskow &nbsp;·&nbsp; New York &nbsp;·&nbsp; <a href="mailto:joskows@gmail.com">joskows@gmail.com</a></p>
+  <button class="intro-link" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')" style="font-size:10px;letter-spacing:0.1em;color:#888;">▶ Watch Intro · 0:37</button>
+</footer>
+
+<!-- MODAL -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:#000;z-index:9999;align-items:center;justify-content:center;">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2rem;color:#fff;background:none;border:none;cursor:pointer;">×</button>
+</div>
+
+<!-- OPT-NAV -->
+<nav id="opt-nav">
+  <a href="option-1.html">1</a><a href="option-2.html">2</a><a href="option-3.html">3</a><a href="option-4.html">4</a><a href="option-5.html">5</a>
+  <a href="option-6.html">6</a><a href="option-7.html">7</a><a href="option-8.html">8</a><a href="option-9.html">9</a><a href="option-10.html">10</a>
+  <a href="option-11.html">11</a><a href="option-12.html">12</a><a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a>
+  <a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a><a href="option-19.html">19</a><a href="option-20.html">20</a>
+  <a href="option-21.html">21</a><a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a><a href="option-25.html">25</a>
+  <a href="option-26.html">26</a><a href="option-27.html">27</a><a href="option-28.html">28</a><a href="option-29.html" class="current">29</a><a href="option-30.html">30</a>
+</nav>
+
+<script>
+  const modal = document.getElementById('modal');
+  const mv = document.getElementById('modal-video');
+  function openVideo(src) { mv.src = src; modal.style.display = 'flex'; mv.play(); }
+  function closeModal() { mv.pause(); mv.src = ''; modal.style.display = 'none'; }
+  document.getElementById('modal-close').onclick = closeModal;
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>

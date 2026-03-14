@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #1a1a1a;
+    --fg: #fff;
+    --mint: #00ffaa;
+    --dim: #555;
+    --card-bg: #222;
+    --card-border: rgba(255,255,255,0.08);
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  /* ── TOP BAR ── */
+  #top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    z-index: 200;
+    background: var(--bg);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .brand {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .cat-tabs {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .cat-tab {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    background: none;
+    border: 1px solid transparent;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .cat-tab:hover { color: var(--mint); border-color: rgba(0,255,170,0.3); }
+  .cat-tab.active { color: var(--mint); border-color: var(--mint); }
+
+  /* ── STAGE ── */
+  #stage {
+    position: fixed;
+    inset: 52px 0 64px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
+  }
+
+  /* ── DECK ── */
+  #deck {
+    position: relative;
+    width: min(500px, 88vw);
+    /* height determined by aspect ratio applied via padding trick */
+  }
+
+  /* Card stack container */
+  #card-stack {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .card {
+    position: absolute;
+    inset: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    will-change: transform;
+    overflow: hidden;
+  }
+
+  /* Stacking visual: each card behind is offset slightly */
+  .card.stacked-2 { transform: rotate(1.5deg) translateY(4px) scale(0.97); z-index: 1; }
+  .card.stacked-3 { transform: rotate(3deg) translateY(8px) scale(0.94); z-index: 0; }
+  .card.top {
+    z-index: 10;
+    transform: rotate(0deg) translateY(0) scale(1);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,255,170,0.12);
+  }
+  .card.top:hover {
+    box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,255,170,0.3);
+  }
+
+  /* Play icon in card center */
+  .card-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .card-play svg {
+    width: 36px;
+    height: 36px;
+    fill: rgba(255,255,255,0.3);
+    transition: fill 0.2s;
+  }
+  .card.top:hover .card-play svg { fill: rgba(255,255,255,0.7); }
+
+  /* Next indicator (right edge hover zone) */
+  .card-next-zone {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 22%;
+    bottom: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 14px;
+  }
+  .next-label {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mint);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-weight: 700;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+  .card-next-zone:hover .next-label { opacity: 1; }
+  .card-next-zone:hover ~ .card-play svg { fill: rgba(255,255,255,0.2); }
+
+  /* Play zone (left 78% of card) */
+  .card-play-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 78%;
+    bottom: 0;
+    z-index: 4;
+  }
+
+  /* Card number badge */
+  .card-badge {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.2);
+    font-weight: 700;
+    pointer-events: none;
+    text-transform: uppercase;
+  }
+
+  /* ── COUNTER / INFO ── */
+  #deck-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding: 0 2px;
+  }
+  #position-counter {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  #category-title {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--mint);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  /* ── BOTTOM BAR ── */
+  #bottom-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 64px;
+    background: var(--bg);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    z-index: 200;
+  }
+  .watch-intro-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mint);
+    background: none;
+    border: 1px solid rgba(0,255,170,0.35);
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .watch-intro-btn:hover { background: var(--mint); color: #000; }
+  .bottom-contact {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 400;
+  }
+  .bottom-contact:hover { color: var(--fg); }
+
+  /* Hint text */
+  #hint {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #333;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* ── EMPTY STATE ── */
+  #empty-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    color: var(--dim);
+  }
+  #empty-state p {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  #reset-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--mint);
+    background: none;
+    border: 1px solid rgba(0,255,170,0.4);
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  #reset-btn:hover { background: var(--mint); color: #000; }
+
+  /* ── ABOUT OVERLAY ── */
+  #about-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,26,26,0.97);
+    z-index: 8000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s;
+  }
+  #about-overlay.visible { opacity: 1; pointer-events: all; }
+  .about-inner {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+    max-width: 860px;
+    padding: 48px;
+  }
+  .about-portrait {
+    width: 240px;
+    flex-shrink: 0;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    filter: grayscale(100%);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .about-text h2 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .about-text h2 em { color: var(--mint); font-style: normal; display: block; }
+  .about-text p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #777;
+    max-width: 420px;
+    margin-top: 20px;
+    font-weight: 400;
+  }
+  .about-text .email-link {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mint);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .about-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .about-tag {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #444;
+    border: 1px solid #333;
+    padding: 4px 10px;
+    font-weight: 700;
+  }
+  #about-close {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    font-size: 2rem;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+  }
+  #about-close:hover { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .about-inner { flex-direction: column; gap: 24px; padding: 60px 20px 24px; }
+    .about-portrait { width: 100%; max-width: 200px; }
+    .cat-tabs { gap: 2px; }
+    .cat-tab { padding: 4px 8px; font-size: 9px; }
+  }
+
+  /* ── MODAL ── */
+  #modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  #modal-video { width: 90%; max-width: 960px; aspect-ratio: 16/9; }
+  #modal-close {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    font-size: 2rem;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* ── OPT-NAV ── */
+  #opt-nav {
+    position: fixed;
+    bottom: 76px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap: 4px;
+    max-width: 180px;
+    justify-content: flex-end;
+  }
+  #opt-nav a {
+    font-size: 9px;
+    color: #2a2a2a;
+    text-decoration: none;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #1e1e1e;
+    transition: color 0.2s, border-color 0.2s;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  #opt-nav a:hover, #opt-nav a.current { color: #00ffaa; border-color: #444; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="top-bar">
+  <div class="brand">Jonah Oskow</div>
+  <div class="cat-tabs">
+    <button class="cat-tab active" onclick="loadCategory('all')">All</button>
+    <button class="cat-tab" onclick="loadCategory('Comedy')">Comedy</button>
+    <button class="cat-tab" onclick="loadCategory('Social')">Social</button>
+    <button class="cat-tab" onclick="loadCategory('Film')">Film</button>
+    <button class="cat-tab" onclick="loadCategory('AI')">AI</button>
+    <button class="cat-tab" onclick="showAbout()">About</button>
+  </div>
+</div>
+
+<!-- STAGE -->
+<div id="stage">
+  <div id="deck">
+    <div id="card-stack">
+      <!-- Cards injected by JS -->
+    </div>
+    <div id="empty-state">
+      <p>Deck complete</p>
+      <button id="reset-btn" onclick="resetDeck()">Restart Deck</button>
+    </div>
+    <div id="deck-info">
+      <span id="category-title">All Work</span>
+      <span id="position-counter">1 / 24</span>
+    </div>
+    <div id="hint">← Click center to play &nbsp;·&nbsp; Click edge to skip →</div>
+  </div>
+</div>
+
+<!-- BOTTOM BAR -->
+<div id="bottom-bar">
+  <button class="watch-intro-btn" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">▶ Watch Intro · 0:37</button>
+  <a href="mailto:joskows@gmail.com" class="bottom-contact">joskows@gmail.com</a>
+</div>
+
+<!-- ABOUT OVERLAY -->
+<div id="about-overlay">
+  <div class="about-inner">
+    <img class="about-portrait" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+    <div class="about-text">
+      <h2>JONAH<em>OSKOW</em></h2>
+      <p>NYC commercial editor. Cannes Lions, Clio Awards, One Show. Comedy Central, Netflix. Work with Idris Elba, Pete Davidson, Jamie Lee Curtis.</p>
+      <p>Cutting comedy, social, film and AI-directed content that earns attention in a world that gives it reluctantly.</p>
+      <a href="mailto:joskows@gmail.com" class="email-link">joskows@gmail.com</a>
+      <div class="about-tags">
+        <span class="about-tag">Cannes Lions</span>
+        <span class="about-tag">Clio Awards</span>
+        <span class="about-tag">One Show</span>
+        <span class="about-tag">Comedy Central</span>
+        <span class="about-tag">Netflix</span>
+      </div>
+    </div>
+  </div>
+  <button id="about-close" onclick="hideAbout()">×</button>
+</div>
+
+<!-- MODAL -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:#000;z-index:9999;align-items:center;justify-content:center;">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2rem;color:#fff;background:none;border:none;cursor:pointer;">×</button>
+</div>
+
+<!-- OPT-NAV -->
+<nav id="opt-nav">
+  <a href="option-1.html">1</a><a href="option-2.html">2</a><a href="option-3.html">3</a><a href="option-4.html">4</a><a href="option-5.html">5</a>
+  <a href="option-6.html">6</a><a href="option-7.html">7</a><a href="option-8.html">8</a><a href="option-9.html">9</a><a href="option-10.html">10</a>
+  <a href="option-11.html">11</a><a href="option-12.html">12</a><a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a>
+  <a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a><a href="option-19.html">19</a><a href="option-20.html">20</a>
+  <a href="option-21.html">21</a><a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a><a href="option-25.html">25</a>
+  <a href="option-26.html">26</a><a href="option-27.html">27</a><a href="option-28.html">28</a><a href="option-29.html">29</a><a href="option-30.html" class="current">30</a>
+</nav>
+
+<script>
+  const VIDEO_SRC = 'https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4';
+
+  const allWorks = [
+    { category: 'Comedy' },{ category: 'Comedy' },{ category: 'Comedy' },
+    { category: 'Comedy' },{ category: 'Comedy' },{ category: 'Comedy' },
+    { category: 'Social' },{ category: 'Social' },{ category: 'Social' },
+    { category: 'Social' },{ category: 'Social' },{ category: 'Social' },
+    { category: 'Film' },{ category: 'Film' },{ category: 'Film' },
+    { category: 'Film' },{ category: 'Film' },{ category: 'Film' },
+    { category: 'AI' },{ category: 'AI' },{ category: 'AI' },
+    { category: 'AI' },{ category: 'AI' },{ category: 'AI' },
+  ];
+
+  let deck = [];
+  let currentIndex = 0;
+  let currentCat = 'all';
+  let isDragging = false;
+  let dragStartX = 0;
+
+  const cardStack = document.getElementById('card-stack');
+  const emptyState = document.getElementById('empty-state');
+  const positionCounter = document.getElementById('position-counter');
+  const categoryTitle = document.getElementById('category-title');
+
+  function loadCategory(cat) {
+    currentCat = cat;
+    currentIndex = 0;
+    deck = cat === 'all' ? [...allWorks] : allWorks.filter(w => w.category === cat);
+
+    document.querySelectorAll('.cat-tab').forEach(t => {
+      const isActive = (cat === 'all' && t.textContent === 'All') || t.textContent === cat;
+      t.classList.toggle('active', isActive);
+    });
+
+    const labels = { all: 'All Work', Comedy: 'Comedy', Social: 'Social Media', Film: 'Film / Episodic', AI: 'AI Direction' };
+    categoryTitle.textContent = labels[cat] || cat;
+
+    renderDeck();
+  }
+
+  function renderDeck() {
+    cardStack.innerHTML = '';
+    emptyState.style.display = 'none';
+    cardStack.style.display = '';
+
+    if (currentIndex >= deck.length) {
+      cardStack.style.display = 'none';
+      emptyState.style.display = 'flex';
+      document.getElementById('hint').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('hint').style.display = '';
+
+    const remaining = deck.length - currentIndex;
+    const show = Math.min(3, remaining);
+
+    for (let i = show - 1; i >= 0; i--) {
+      const workIdx = currentIndex + i;
+      const work = deck[workIdx];
+      const card = document.createElement('div');
+      card.className = 'card';
+      if (i === 0) card.classList.add('top');
+      else if (i === 1) card.classList.add('stacked-2');
+      else card.classList.add('stacked-3');
+
+      const globalNum = workIdx + 1;
+      card.innerHTML = `
+        <div class="card-badge">${work.category} · ${String(workIdx + 1).padStart(2,'0')}</div>
+        <div class="card-play-zone" ${i === 0 ? `onclick="playCard()"` : ''}></div>
+        <div class="card-next-zone" ${i === 0 ? `onclick="discardCard(event)"` : ''}>
+          <span class="next-label">${i === 0 ? 'Next →' : ''}</span>
+        </div>
+        <div class="card-play">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      `;
+      cardStack.appendChild(card);
+    }
+
+    updateCounter();
+  }
+
+  function updateCounter() {
+    const n = Math.min(currentIndex + 1, deck.length);
+    positionCounter.textContent = `${n} / ${deck.length}`;
+  }
+
+  function discardCard(e) {
+    if (e) e.stopPropagation();
+    const topCard = cardStack.querySelector('.card.top');
+    if (!topCard) return;
+
+    topCard.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+    topCard.style.transform = 'translateX(140%) rotate(10deg)';
+    topCard.style.opacity = '0';
+
+    setTimeout(() => {
+      currentIndex++;
+      renderDeck();
+    }, 380);
+  }
+
+  function playCard() {
+    openVideo(VIDEO_SRC);
+  }
+
+  function resetDeck() {
+    currentIndex = 0;
+    renderDeck();
+  }
+
+  // Touch / swipe support
+  let touchStartX = 0;
+  cardStack.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  cardStack.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (dx < -60) discardCard(null);
+    else if (dx > 60) {} // swipe right: no action (could add back)
+  });
+
+  // About
+  function showAbout() { document.getElementById('about-overlay').classList.add('visible'); }
+  function hideAbout() { document.getElementById('about-overlay').classList.remove('visible'); }
+
+  // Modal
+  const modal = document.getElementById('modal');
+  const mv = document.getElementById('modal-video');
+  function openVideo(src) { mv.src = src; modal.style.display = 'flex'; mv.play(); }
+  function closeModal() { mv.pause(); mv.src = ''; modal.style.display = 'none'; }
+  document.getElementById('modal-close').onclick = closeModal;
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeModal(); hideAbout(); }
+    if (e.key === 'ArrowRight' || e.key === 'n') discardCard(null);
+    if (e.key === ' ' || e.key === 'Enter') { if (currentIndex < deck.length) playCard(); }
+  });
+
+  // Init
+  loadCategory('all');
+</script>
+</body>
+</html>

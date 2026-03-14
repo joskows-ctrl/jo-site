@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #000;
+  color: #fff;
+}
+
+/* ── PANELS ── */
+.panel {
+  width: 100%;
+  height: 100vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 60px;
+}
+
+/* Panel colors */
+.panel-hero   { background: #0d1b2a; }
+.panel-comedy { background: #0a0a14; }
+.panel-social { background: #1a1a2e; }
+.panel-film   { background: #0e1218; }
+.panel-ai     { background: #020d18; }
+.panel-about  { background: #0d1b2a; }
+
+/* ── PANEL 1: HERO ── */
+.hero-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 18px;
+}
+
+.hero-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5rem, 13vw, 12rem);
+  letter-spacing: 0.04em;
+  line-height: 0.88;
+  text-align: center;
+  color: #fff;
+}
+
+.hero-role {
+  margin-top: 22px;
+  font-size: clamp(0.8rem, 1.4vw, 1rem);
+  font-weight: 300;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+}
+
+.hero-intro-btn {
+  margin-top: 28px;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px 24px;
+  border-radius: 2px;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+}
+.hero-intro-btn:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.06);
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.hero-scroll-hint::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.25), transparent);
+  animation: scrollPulse 2s infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* ── PANEL CATEGORY LABEL ── */
+.cat-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  letter-spacing: 0.06em;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.cat-accent-comedy { color: #fff; }
+.cat-accent-social { color: #a78bfa; }
+.cat-accent-film   { color: #60a5fa; }
+.cat-accent-ai     { color: #22d3ee; }
+
+/* ── THUMBNAILS IN PANELS ── */
+.thumbs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.thumb {
+  aspect-ratio: 16/9;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+}
+.thumb:hover {
+  border-color: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.07);
+}
+.thumb:hover .thumb-play { transform: scale(1.15); }
+
+.thumb-play {
+  font-size: 2rem;
+  color: rgba(255,255,255,0.6);
+  transition: transform 0.2s;
+  line-height: 1;
+}
+
+.thumb-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 8px 12px;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  background: linear-gradient(transparent, rgba(0,0,0,0.6));
+}
+
+/* Comedy accent bar */
+.panel-comedy .thumb { border-color: rgba(255,255,255,0.07); }
+.panel-comedy .thumb:hover { border-color: rgba(255,255,255,0.3); }
+.panel-social .thumb { border-color: rgba(167,139,250,0.15); }
+.panel-social .thumb:hover { border-color: rgba(167,139,250,0.4); }
+.panel-film .thumb { border-color: rgba(96,165,250,0.15); }
+.panel-film .thumb:hover { border-color: rgba(96,165,250,0.4); }
+.panel-ai .thumb { border-color: rgba(34,211,238,0.15); }
+.panel-ai .thumb:hover { border-color: rgba(34,211,238,0.35); }
+
+/* ── AI PANEL: ELECTRIC BLUE GLOW ── */
+.panel-ai::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 60%, rgba(34,211,238,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* ── ABOUT PANEL ── */
+.about-inner {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 60px;
+  align-items: start;
+  width: 100%;
+  max-width: 960px;
+}
+
+.about-portrait {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  filter: grayscale(15%);
+}
+
+.about-text { padding-top: 8px; }
+
+.about-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 18px;
+}
+
+.about-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: 0.05em;
+  margin-bottom: 24px;
+}
+
+.about-bio {
+  font-size: 0.92rem;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 18px;
+}
+
+.about-email {
+  margin-top: 24px;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+.about-email a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 1px;
+  transition: color 0.2s;
+}
+.about-email a:hover { color: #fff; }
+
+/* ── DOT NAVIGATION ── */
+.dot-nav {
+  position: fixed;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: background 0.25s, transform 0.25s;
+  border: none;
+  padding: 0;
+}
+.dot:hover { background: rgba(255,255,255,0.5); transform: scale(1.3); }
+.dot.active { background: #fff; transform: scale(1.3); }
+
+/* ── MODAL ── */
+#modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.97);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── OPT-NAV ── */
+.opt-nav {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 600;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  background: rgba(0,0,0,0.8);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 10px 14px;
+  max-height: 220px;
+  overflow-y: auto;
+  backdrop-filter: blur(8px);
+}
+.opt-nav summary {
+  cursor: pointer;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.58rem;
+  list-style: none;
+  margin-bottom: 6px;
+}
+.opt-nav summary:hover { color: rgba(255,255,255,0.7); }
+.opt-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.opt-nav-links a {
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  font-size: 0.58rem;
+  transition: color 0.15s;
+}
+.opt-nav-links a:hover { color: rgba(255,255,255,0.8); }
+.opt-nav-links a.current { color: rgba(255,255,255,0.65); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ── PANEL 1: HERO ── -->
+<section class="panel panel-hero" id="p1">
+  <p class="hero-eyebrow">Los Angeles</p>
+  <h1 class="hero-name">JONAH<br>OSKOW</h1>
+  <p class="hero-role">Film &amp; Commercial Editor</p>
+  <button class="hero-intro-btn" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">▶ Watch Intro · 0:37</button>
+  <div class="hero-scroll-hint">Scroll</div>
+</section>
+
+<!-- ── PANEL 2: COMEDY ── -->
+<section class="panel panel-comedy" id="p2">
+  <h2 class="cat-label cat-accent-comedy">Comedy</h2>
+  <div class="thumbs-grid">
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">Brand Spot · 30s</span>
+    </div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">Sketch Series · Ep 1</span>
+    </div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">Comedy Reel Cut</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── PANEL 3: SOCIAL MEDIA ── -->
+<section class="panel panel-social" id="p3">
+  <h2 class="cat-label cat-accent-social">Social Media</h2>
+  <div class="thumbs-grid">
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">Viral Campaign</span>
+    </div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">Short-Form Series</span>
+    </div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">Platform Launch</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── PANEL 4: FILM/EPISODIC ── -->
+<section class="panel panel-film" id="p4">
+  <h2 class="cat-label cat-accent-film">Film / Episodic</h2>
+  <div class="thumbs-grid">
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">Short Film</span>
+    </div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">Pilot Cut</span>
+    </div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">Episodic Reel</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── PANEL 5: AI DIRECTION ── -->
+<section class="panel panel-ai" id="p5">
+  <h2 class="cat-label cat-accent-ai">AI Direction</h2>
+  <div class="thumbs-grid">
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">AI Narrative Piece</span>
+    </div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">Synthetic Reel</span>
+    </div>
+    <div class="thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+      <span class="thumb-play">▶</span>
+      <span class="thumb-label">Directed AI Spot</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── PANEL 6: ABOUT ── -->
+<section class="panel panel-about" id="p6">
+  <div class="about-inner">
+    <img class="about-portrait" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+    <div class="about-text">
+      <p class="about-eyebrow">About</p>
+      <h2 class="about-heading">Jonah Oskow</h2>
+      <p class="about-bio">Los Angeles-based film and commercial editor. Specializing in comedy, social media content, episodic storytelling, and AI-directed projects across broadcast, streaming, and digital platforms.</p>
+      <p class="about-bio">A sharp sense of rhythm and an instinct for performance shapes raw footage into work that lands — whether the goal is a laugh, a gut punch, or a slow burn. Close collaboration with directors and brands to find the edit that serves the story first.</p>
+      <p class="about-bio">Clients span major studios, streaming platforms, independent filmmakers, and direct-to-consumer brands.</p>
+      <div class="about-email">Contact: <a href="mailto:joskows@gmail.com">joskows@gmail.com</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DOT NAV ── -->
+<nav class="dot-nav" id="dot-nav">
+  <button class="dot active" data-target="p1" title="Intro" onclick="scrollToPanel('p1')"></button>
+  <button class="dot" data-target="p2" title="Comedy" onclick="scrollToPanel('p2')"></button>
+  <button class="dot" data-target="p3" title="Social Media" onclick="scrollToPanel('p3')"></button>
+  <button class="dot" data-target="p4" title="Film / Episodic" onclick="scrollToPanel('p4')"></button>
+  <button class="dot" data-target="p5" title="AI Direction" onclick="scrollToPanel('p5')"></button>
+  <button class="dot" data-target="p6" title="About" onclick="scrollToPanel('p6')"></button>
+</nav>
+
+<!-- ── MODAL ── -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:9999;align-items:center;justify-content:center;">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2.5rem;color:#fff;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+</div>
+
+<!-- ── OPT-NAV ── -->
+<details class="opt-nav">
+  <summary>Options</summary>
+  <div class="opt-nav-links">
+    <a href="option-1.html">01</a><a href="option-2.html">02</a><a href="option-3.html">03</a>
+    <a href="option-4.html">04</a><a href="option-5.html">05</a><a href="option-6.html">06</a>
+    <a href="option-7.html">07</a><a href="option-8.html">08</a><a href="option-9.html">09</a>
+    <a href="option-10.html">10</a><a href="option-11.html">11</a><a href="option-12.html">12</a>
+    <a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a>
+    <a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a>
+    <a href="option-19.html">19</a><a href="option-20.html">20</a><a href="option-21.html">21</a>
+    <a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a>
+    <a href="option-25.html">25</a><a href="option-26.html">26</a><a href="option-27.html">27</a>
+    <a href="option-28.html">28</a><a href="option-29.html">29</a><a href="option-30.html">30</a>
+    <a href="option-31.html">31</a><a href="option-32.html">32</a><a href="option-33.html">33</a>
+    <a href="option-34.html">34</a><a href="option-35.html">35</a><a href="option-36.html">36</a>
+    <a href="option-37.html">37</a><a href="option-38.html">38</a><a href="option-39.html">39</a>
+    <a href="option-40.html">40</a><a href="option-41.html">41</a>
+    <a href="option-42.html" class="current">42</a>
+    <a href="option-43.html">43</a><a href="option-44.html">44</a><a href="option-45.html">45</a>
+  </div>
+</details>
+
+<script>
+// ── MODAL ──
+const modal = document.getElementById('modal');
+const mv = document.getElementById('modal-video');
+function openVideo(src) { mv.src = src; modal.style.display = 'flex'; mv.play(); }
+function closeModal() { mv.pause(); mv.src = ''; modal.style.display = 'none'; }
+document.getElementById('modal-close').onclick = closeModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── DOT NAV ──
+function scrollToPanel(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
+
+const panels = ['p1','p2','p3','p4','p5','p6'];
+const dots = document.querySelectorAll('.dot');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = panels.indexOf(entry.target.id);
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+  });
+}, { threshold: 0.5 });
+
+panels.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) observer.observe(el);
+});
+</script>
+</body>
+</html>

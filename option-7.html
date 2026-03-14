@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #111111;
+  --blue: #44aaff;
+  --blue-dim: rgba(68,170,255,0.12);
+  --white: #ffffff;
+  --grey: rgba(255,255,255,0.4);
+  --card: #181818;
+  --display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --mono: 'Space Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--display);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── DEV NAV ── */
+#opt-nav {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  display: flex;
+  gap: 4px;
+  background: rgba(0,0,0,0.8);
+  padding: 5px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+#opt-nav a {
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 4px;
+  transition: color 0.2s;
+}
+#opt-nav a:hover, #opt-nav a.active { color: var(--blue); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 60px 60px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg-text {
+  position: absolute;
+  bottom: -0.15em;
+  right: -0.05em;
+  font-size: 28vw;
+  font-weight: 800;
+  color: rgba(255,255,255,0.025);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  font-family: var(--display);
+  letter-spacing: -0.02em;
+}
+
+/* Name letter animation */
+.name-letters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-bottom: 28px;
+}
+.name-word {
+  display: flex;
+  margin-right: 0.35em;
+}
+.letter {
+  display: inline-block;
+  font-size: clamp(3.5rem, 7vw, 7rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(60px);
+  animation: letterIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes letterIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+.space-letter { width: 0.3em; }
+
+.hero-subtitle {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--blue);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 0.6s 1.2s cubic-bezier(0.16,1,0.3,1) forwards;
+  margin-bottom: 60px;
+}
+@keyframes slideUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Category counters */
+.cat-nav {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: slideUp 0.6s 1.5s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.cat-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--white);
+  cursor: pointer;
+  group: true;
+}
+.cat-num {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--blue);
+  letter-spacing: 0.1em;
+}
+.cat-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  transition: color 0.3s;
+}
+.cat-btn:hover .cat-label { color: var(--white); }
+.cat-underline {
+  height: 1px;
+  background: var(--blue);
+  width: 0;
+  transition: width 0.4s ease;
+}
+.cat-btn:hover .cat-underline { width: 100%; }
+
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 60px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  animation: slideUp 0.6s 2s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.scroll-line {
+  width: 40px;
+  height: 1px;
+  background: var(--blue);
+  animation: scrollPulse 2s 2.5s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%,100% { opacity: 0.4; width: 40px; }
+  50% { opacity: 1; width: 60px; }
+}
+.scroll-hint span {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--grey);
+  text-transform: uppercase;
+}
+
+/* ── WORK SECTIONS ── */
+.work-section {
+  padding: 80px 60px;
+  position: relative;
+  overflow: hidden;
+}
+.section-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20vw;
+  font-weight: 800;
+  color: rgba(255,255,255,0.035);
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  font-family: var(--display);
+  line-height: 1;
+}
+.section-header {
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 1;
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--blue);
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+}
+.section-title {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  position: relative;
+  display: inline-block;
+}
+.section-title-underline {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  height: 3px;
+  background: var(--blue);
+  width: 0;
+  transition: width 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.section-title.in-view .section-title-underline { width: 100%; }
+
+.thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+.thumb {
+  aspect-ratio: 16/9;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16,1,0.3,1),
+              box-shadow 0.3s ease;
+}
+.thumb.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+.thumb:hover {
+  box-shadow: 0 0 0 1px var(--blue), 0 8px 40px rgba(68,170,255,0.2);
+}
+.thumb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(68,170,255,0.04) 0%, transparent 60%);
+}
+.play-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+.thumb:hover .play-wrap { opacity: 0.9; }
+.play-icon {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--white);
+}
+.play-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+/* ── ABOUT ── */
+.about-section {
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.about-img-wrap {
+  position: relative;
+}
+.about-img-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--blue), transparent 60%);
+  z-index: 0;
+}
+.about-img {
+  width: 100%;
+  display: block;
+  filter: grayscale(15%);
+  position: relative;
+  z-index: 1;
+}
+.about-content {}
+.about-kicker {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--blue);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.about-name {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 24px;
+}
+.about-bio {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 32px;
+}
+.about-bio strong { color: var(--white); font-weight: 600; }
+.stats-row {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-val {
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--blue);
+}
+.stat-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 40px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.footer-name {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--grey);
+  text-transform: uppercase;
+}
+.footer-email {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--blue);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  position: relative;
+}
+.footer-email::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 1px;
+  background: var(--blue);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+.footer-email:hover::after { transform: scaleX(1); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .hero { padding: 60px 24px 40px; }
+  .scroll-hint { left: 24px; }
+  .work-section { padding: 60px 24px; }
+  .thumb-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-section { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px; }
+  footer { padding: 30px 24px; flex-direction: column; gap: 12px; text-align: center; }
+  #opt-nav { display: none; }
+}
+@media (max-width: 540px) {
+  .thumb-grid { grid-template-columns: 1fr; }
+  .cat-nav { gap: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Dev Nav -->
+<nav id="opt-nav">
+  <a href="option-1.html">1</a>
+  <a href="option-2.html">2</a>
+  <a href="option-3.html">3</a>
+  <a href="option-4.html">4</a>
+  <a href="option-5.html">5</a>
+  <a href="option-6.html">6</a>
+  <a href="option-7.html" class="active">7</a>
+  <a href="option-8.html">8</a>
+  <a href="option-9.html">9</a>
+  <a href="option-10.html">10</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg-text" aria-hidden="true">JO</div>
+
+  <div class="name-letters" aria-label="Jonah Oskow">
+    <div class="name-word" id="word1"></div>
+    <div class="name-word" id="word2"></div>
+  </div>
+
+  <p class="hero-subtitle">Film &amp; Commercial Editor — New York City</p>
+
+  <div class="cat-nav">
+    <a class="cat-btn" href="#comedy">
+      <span class="cat-num" data-target="01">00</span>
+      <span class="cat-label">Comedy</span>
+      <span class="cat-underline"></span>
+    </a>
+    <a class="cat-btn" href="#social">
+      <span class="cat-num" data-target="02">00</span>
+      <span class="cat-label">Social Media</span>
+      <span class="cat-underline"></span>
+    </a>
+    <a class="cat-btn" href="#film">
+      <span class="cat-num" data-target="03">00</span>
+      <span class="cat-label">Film / Episodic</span>
+      <span class="cat-underline"></span>
+    </a>
+    <a class="cat-btn" href="#ai">
+      <span class="cat-num" data-target="04">00</span>
+      <span class="cat-label">AI Direction</span>
+      <span class="cat-underline"></span>
+    </a>
+  </div>
+
+  <div class="scroll-hint">
+    <span class="scroll-line"></span>
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<!-- Comedy -->
+<section id="comedy" class="work-section">
+  <div class="section-watermark" aria-hidden="true">01</div>
+  <div class="section-header">
+    <p class="section-num">01 / 04</p>
+    <h2 class="section-title">Comedy<span class="section-title-underline"></span></h2>
+  </div>
+  <div class="thumb-grid">
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+  </div>
+</section>
+
+<!-- Social Media -->
+<section id="social" class="work-section">
+  <div class="section-watermark" aria-hidden="true">02</div>
+  <div class="section-header">
+    <p class="section-num">02 / 04</p>
+    <h2 class="section-title">Social Media<span class="section-title-underline"></span></h2>
+  </div>
+  <div class="thumb-grid">
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+  </div>
+</section>
+
+<!-- Film / Episodic -->
+<section id="film" class="work-section">
+  <div class="section-watermark" aria-hidden="true">03</div>
+  <div class="section-header">
+    <p class="section-num">03 / 04</p>
+    <h2 class="section-title">Film / Episodic<span class="section-title-underline"></span></h2>
+  </div>
+  <div class="thumb-grid">
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+  </div>
+</section>
+
+<!-- AI Direction -->
+<section id="ai" class="work-section">
+  <div class="section-watermark" aria-hidden="true">04</div>
+  <div class="section-header">
+    <p class="section-num">04 / 04</p>
+    <h2 class="section-title">AI Direction<span class="section-title-underline"></span></h2>
+  </div>
+  <div class="thumb-grid">
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+    <div class="thumb"><div class="play-wrap"><span class="play-dot"></span><span class="play-icon">▶ PLAY</span></div></div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about" class="about-section">
+  <div class="about-img-wrap">
+    <img class="about-img" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+  </div>
+  <div class="about-content">
+    <p class="about-kicker">About the Editor</p>
+    <h2 class="about-name">Jonah<br>Oskow</h2>
+    <p class="about-bio">
+      A comedy editor who cuts with the precision of a surgeon and the instincts of a stand-up. Jonah's work spans <strong>Comedy Central specials, Netflix originals</strong>, and a deep roster of ad campaigns for tech giants and major agencies — the kind of work that wins at <strong>Cannes, the Clios, and the One Show</strong>.<br><br>
+      He's worked with <strong>Idris Elba, Pete Davidson, and Jamie Lee Curtis</strong>. He's made brands funny, and funny brands beloved. Based in New York. Available everywhere.
+    </p>
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-val">3+</span>
+        <span class="stat-label">Award bodies</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">NYC</span>
+        <span class="stat-label">Based</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">CC/NF</span>
+        <span class="stat-label">Comedy Central · Netflix</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <span class="footer-name">Jonah Oskow — 2025</span>
+  <a href="mailto:joskows@gmail.com" class="footer-email">joskows@gmail.com</a>
+</footer>
+
+<script>
+// ── Letter animation stagger ──
+const words = [
+  { id: 'word1', text: 'JONAH' },
+  { id: 'word2', text: 'OSKOW' }
+];
+let globalIdx = 0;
+words.forEach(w => {
+  const el = document.getElementById(w.id);
+  [...w.text].forEach(ch => {
+    const span = document.createElement('span');
+    span.className = 'letter';
+    span.textContent = ch;
+    span.style.animationDelay = (globalIdx * 50) + 'ms';
+    el.appendChild(span);
+    globalIdx++;
+  });
+});
+
+// ── Counter animation ──
+function animateCounter(el, target, duration) {
+  const num = parseInt(target, 10);
+  const start = Date.now();
+  const tick = () => {
+    const elapsed = Date.now() - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const val = Math.round(progress * num);
+    el.textContent = String(val).padStart(2, '0');
+    if (progress < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.cat-num').forEach(el => {
+      animateCounter(el, el.dataset.target, 800);
+    });
+  }, 1600);
+});
+
+// ── IntersectionObserver for scroll-in animations ──
+const thumbObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const thumbs = entry.target.querySelectorAll('.thumb');
+      thumbs.forEach((t, i) => {
+        setTimeout(() => t.classList.add('in-view'), i * 80);
+      });
+      const title = entry.target.querySelector('.section-title');
+      if (title) title.classList.add('in-view');
+      thumbObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.work-section').forEach(s => thumbObserver.observe(s));
+</script>
+</body>
+</html>

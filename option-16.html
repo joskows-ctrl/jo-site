@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JONAH OSKOW — Film & Commercial Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #111;
+  --text: #fff;
+  --accent: #44aaff;
+  --muted: rgba(255,255,255,0.25);
+  --left-w: 38vw;
+  --right-w: 62vw;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* OPT-NAV */
+#opt-nav {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  max-width: 240px;
+  justify-content: flex-end;
+}
+#opt-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+#opt-nav a:hover, #opt-nav a.current {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
+
+/* MAIN LAYOUT */
+.site-main {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* LEFT PANEL */
+.left-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--left-w);
+  height: 100vh;
+  background: var(--bg);
+  border-right: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 2.5rem;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.name-block {
+  margin-bottom: 1.5rem;
+}
+
+.name-block .first {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(4rem, 7vw, 8rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.name-block .last {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(4rem, 7vw, 8rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+.role-line {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+  margin-top: 1rem;
+}
+
+.email-line {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
+
+.email-line a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 1.5rem 0;
+}
+
+/* SPOKESMAN VIDEO */
+.spokesman-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.spokesman-thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.spokesman-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  transition: background 0.2s;
+}
+
+.spokesman-thumb:hover .play-overlay {
+  background: rgba(0,0,0,0.15);
+}
+
+.play-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(4px);
+  border: 2px solid rgba(255,255,255,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.spokesman-thumb:hover .play-circle {
+  transform: scale(1.1);
+  background: rgba(255,255,255,0.28);
+}
+
+.play-circle svg {
+  width: 18px;
+  height: 18px;
+  fill: #fff;
+  margin-left: 3px;
+}
+
+.awards-block {
+  margin-top: 1.5rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.52rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  line-height: 1.8;
+}
+
+.awards-block span {
+  color: rgba(255,255,255,0.5);
+}
+
+/* RIGHT PANEL */
+.right-panel {
+  margin-left: var(--left-w);
+  width: var(--right-w);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* CATEGORY TABS */
+.cat-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 50;
+}
+
+.cat-tab {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  user-select: none;
+}
+
+.cat-tab:hover { color: rgba(255,255,255,0.7); }
+.cat-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* RIGHT PANEL STATES */
+.rp-states {
+  flex: 1;
+  position: relative;
+}
+
+.rp-state {
+  position: absolute;
+  inset: 0;
+  padding: 2.5rem 2rem;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.rp-state.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(30px);
+}
+
+.rp-state.visible {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+
+/* BROWSE STATE */
+#browse-state .cat-name-large {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+  line-height: 1;
+}
+
+#browse-state .cat-desc {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+}
+
+.thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.thumb-cell {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #1c1c1c;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 3px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.thumb-cell:hover {
+  border-color: var(--accent);
+  transform: scale(1.02);
+}
+
+.thumb-num {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.thumb-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumb-play-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.thumb-cell:hover .thumb-play-icon {
+  background: rgba(68,170,255,0.25);
+  border-color: var(--accent);
+}
+
+.thumb-play-icon svg {
+  width: 12px;
+  height: 12px;
+  fill: #fff;
+  margin-left: 2px;
+}
+
+/* WATCH STATE */
+#watch-state {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.watch-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.watch-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.watch-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  font-family: 'Space Mono', monospace;
+}
+
+.watch-close:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+.watch-player-wrap {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.watch-player-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.watch-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.15) transparent;
+}
+
+.watch-strip::-webkit-scrollbar { height: 4px; }
+.watch-strip::-webkit-scrollbar-track { background: transparent; }
+.watch-strip::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+.strip-thumb {
+  flex-shrink: 0;
+  width: 120px;
+  aspect-ratio: 16/9;
+  background: #1c1c1c;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.strip-thumb:hover, .strip-thumb.active-strip {
+  border-color: var(--accent);
+}
+
+.strip-thumb .strip-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.45rem;
+  color: var(--muted);
+  position: absolute;
+  bottom: 4px;
+  left: 6px;
+}
+
+.strip-play {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.strip-play svg {
+  width: 9px;
+  height: 9px;
+  fill: #fff;
+  margin-left: 2px;
+}
+
+/* SPOKESMAN MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-inner {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  aspect-ratio: 16/9;
+}
+
+.modal-inner video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.modal-close {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  font-family: 'Space Mono', monospace;
+  z-index: 2001;
+}
+
+.modal-close:hover { background: rgba(255,255,255,0.22); }
+
+/* ABOUT SECTION */
+.about-section {
+  width: 100%;
+  padding: 6rem 0;
+  background: #0d0d0d;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.about-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.about-portrait {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.about-portrait.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.about-portrait img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 3px;
+  filter: grayscale(20%);
+}
+
+.about-text {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.7s ease 0.1s, transform 0.7s ease 0.1s;
+}
+
+.about-text.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.about-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.about-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 3vw, 3.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+}
+
+.about-bio {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.75);
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
+
+.awards-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.award-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 0.35rem 0.7rem;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  :root { --left-w: 100vw; --right-w: 100vw; }
+
+  .left-panel {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: auto;
+    min-height: unset;
+    padding: 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    z-index: 200;
+  }
+
+  .name-block .first,
+  .name-block .last {
+    font-size: clamp(3rem, 12vw, 5rem);
+  }
+
+  .site-main { flex-direction: column; }
+
+  .right-panel {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .thumb-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .about-inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .about-portrait, .about-text {
+    transform: translateY(30px);
+  }
+
+  .about-portrait.visible, .about-text.visible {
+    transform: translateY(0);
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- OPT-NAV -->
+<nav id="opt-nav">
+  <a href="option-16.html" class="current">16</a>
+  <a href="option-17.html">17</a>
+  <a href="option-18.html">18</a>
+  <a href="option-19.html">19</a>
+  <a href="option-20.html">20</a>
+</nav>
+
+<!-- SPOKESMAN MODAL -->
+<div class="modal-overlay" id="spokesman-modal">
+  <div class="modal-inner">
+    <video id="spokesman-modal-video" src="https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4" controls preload="none"></video>
+  </div>
+  <button class="modal-close" id="spokesman-modal-close">×</button>
+</div>
+
+<div class="site-main">
+  <!-- LEFT PANEL -->
+  <aside class="left-panel">
+    <div class="name-block">
+      <span class="first">JONAH</span>
+      <span class="last">OSKOW</span>
+    </div>
+    <div class="role-line">Film &amp; Commercial Editor</div>
+    <div class="email-line"><a href="mailto:joskows@gmail.com">joskows@gmail.com</a></div>
+
+    <div class="divider"></div>
+
+    <div class="spokesman-label">Get Up to Speed</div>
+    <div class="spokesman-thumb" id="spokesman-thumb" role="button" tabindex="0" aria-label="Play spokesman video">
+      <video src="https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4" preload="none" muted playsinline></video>
+      <div class="play-overlay">
+        <div class="play-circle">
+          <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="awards-block">
+      <span>Cannes Lions</span> &nbsp;·&nbsp; <span>Clios</span> &nbsp;·&nbsp; <span>One Show</span><br>
+      Comedy Central &nbsp;·&nbsp; Netflix<br>
+      Idris Elba &nbsp;·&nbsp; Pete Davidson &nbsp;·&nbsp; Jamie Lee Curtis
+    </div>
+  </aside>
+
+  <!-- RIGHT PANEL -->
+  <main class="right-panel">
+    <!-- CATEGORY TABS -->
+    <div class="cat-tabs">
+      <div class="cat-tab active" data-cat="comedy">Comedy</div>
+      <div class="cat-tab" data-cat="social">Social</div>
+      <div class="cat-tab" data-cat="film">Film</div>
+      <div class="cat-tab" data-cat="ai">AI Direction</div>
+    </div>
+
+    <!-- STATES CONTAINER -->
+    <div class="rp-states">
+      <!-- BROWSE STATE -->
+      <div class="rp-state visible" id="browse-state">
+        <div class="cat-name-large" id="browse-cat-name">Comedy</div>
+        <div class="cat-desc" id="browse-cat-desc">SELECT A WORK TO WATCH</div>
+        <div class="thumb-grid" id="thumb-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- WATCH STATE -->
+      <div class="rp-state hidden" id="watch-state">
+        <div class="watch-header">
+          <div class="watch-title" id="watch-label">NOW PLAYING</div>
+          <button class="watch-close" id="watch-close">×</button>
+        </div>
+        <div class="watch-player-wrap">
+          <video id="main-player" src="" controls preload="none"></video>
+        </div>
+        <div class="watch-strip" id="watch-strip">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ABOUT SECTION -->
+<section class="about-section">
+  <div class="about-inner">
+    <div class="about-portrait" id="about-portrait">
+      <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+    </div>
+    <div class="about-text" id="about-text">
+      <div class="about-label">About</div>
+      <h2 class="about-heading">Seasoned<br>Comedy Editor</h2>
+      <p class="about-bio">
+        NYC commercial roots, global recognition. Jonah Oskow has built a career at the intersection of comedy and craft — cutting work for Comedy Central, Netflix, and some of entertainment's most recognizable faces. Awarded at Cannes Lions, the Clios, and the One Show.
+      </p>
+      <div class="awards-list">
+        <span class="award-tag">Cannes Lions</span>
+        <span class="award-tag">Clios</span>
+        <span class="award-tag">One Show</span>
+        <span class="award-tag">Comedy Central</span>
+        <span class="award-tag">Netflix</span>
+        <span class="award-tag">NYC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// VIDEO MANAGER
+const VM = {
+  current: null,
+  play(el) {
+    if (this.current && this.current !== el) {
+      this.current.pause();
+      this.current.currentTime = 0;
+    }
+    this.current = el;
+  },
+  stop() {
+    if (this.current) {
+      this.current.pause();
+      this.current.currentTime = 0;
+      this.current = null;
+    }
+  }
+};
+
+// DATA
+const VIDEO_SRC = 'https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4';
+
+const categories = {
+  comedy: { label: 'Comedy', desc: 'COMEDIC CUTTING · 6 WORKS' },
+  social: { label: 'Social Media', desc: 'SOCIAL & DIGITAL · 6 WORKS' },
+  film:   { label: 'Film / Episodic', desc: 'LONG FORM · 6 WORKS' },
+  ai:     { label: 'AI Direction', desc: 'AI-DIRECTED WORK · 6 WORKS' }
+};
+
+let currentCat = 'comedy';
+let currentThumbIndex = 0;
+
+// STATE MANAGEMENT
+const browseState = document.getElementById('browse-state');
+const watchState = document.getElementById('watch-state');
+const mainPlayer = document.getElementById('main-player');
+const watchStrip = document.getElementById('watch-strip');
+const browseCatName = document.getElementById('browse-cat-name');
+const browseCatDesc = document.getElementById('browse-cat-desc');
+const watchClose = document.getElementById('watch-close');
+const thumbGrid = document.getElementById('thumb-grid');
+
+function showBrowse() {
+  browseState.classList.remove('hidden');
+  browseState.classList.add('visible');
+  watchState.classList.remove('visible');
+  watchState.classList.add('hidden');
+}
+
+function showWatch() {
+  watchState.classList.remove('hidden');
+  watchState.classList.add('visible');
+  browseState.classList.remove('visible');
+  browseState.classList.add('hidden');
+}
+
+function buildGrid(cat) {
+  thumbGrid.innerHTML = '';
+  for (let i = 1; i <= 6; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'thumb-cell';
+    cell.dataset.index = i - 1;
+    cell.innerHTML = `
+      <div class="thumb-play">
+        <div class="thumb-play-icon">
+          <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+      <div class="thumb-num">0${i}</div>
+    `;
+    cell.addEventListener('click', () => playFromGrid(i - 1));
+    thumbGrid.appendChild(cell);
+  }
+}
+
+function buildStrip(activeIndex) {
+  watchStrip.innerHTML = '';
+  for (let i = 0; i < 6; i++) {
+    const st = document.createElement('div');
+    st.className = 'strip-thumb' + (i === activeIndex ? ' active-strip' : '');
+    st.dataset.index = i;
+    st.innerHTML = `
+      <div class="strip-play">
+        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+      <span class="strip-num">0${i + 1}</span>
+    `;
+    st.addEventListener('click', () => playFromStrip(i));
+    watchStrip.appendChild(st);
+  }
+}
+
+function playFromGrid(index) {
+  currentThumbIndex = index;
+  mainPlayer.src = VIDEO_SRC;
+  showWatch();
+  buildStrip(index);
+  VM.play(mainPlayer);
+  mainPlayer.play().catch(() => {});
+}
+
+function playFromStrip(index) {
+  currentThumbIndex = index;
+  const strips = watchStrip.querySelectorAll('.strip-thumb');
+  strips.forEach((s, i) => s.classList.toggle('active-strip', i === index));
+  mainPlayer.src = VIDEO_SRC;
+  VM.play(mainPlayer);
+  mainPlayer.play().catch(() => {});
+}
+
+watchClose.addEventListener('click', () => {
+  VM.stop();
+  showBrowse();
+});
+
+// CATEGORY TABS
+document.querySelectorAll('.cat-tab').forEach(tab => {
+  tab.addEventListener('mouseenter', () => {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentCat = tab.dataset.cat;
+    const info = categories[currentCat];
+    browseCatName.textContent = info.label;
+    browseCatDesc.textContent = info.desc;
+    buildGrid(currentCat);
+    // If in watch state, close it
+    VM.stop();
+    showBrowse();
+  });
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentCat = tab.dataset.cat;
+    const info = categories[currentCat];
+    browseCatName.textContent = info.label;
+    browseCatDesc.textContent = info.desc;
+    buildGrid(currentCat);
+    VM.stop();
+    showBrowse();
+  });
+});
+
+// INIT
+buildGrid('comedy');
+
+// SPOKESMAN MODAL
+const spokesmanThumb = document.getElementById('spokesman-thumb');
+const spokesmanModal = document.getElementById('spokesman-modal');
+const spokesmanModalVideo = document.getElementById('spokesman-modal-video');
+const spokesmanModalClose = document.getElementById('spokesman-modal-close');
+
+spokesmanThumb.addEventListener('click', openSpokesman);
+spokesmanThumb.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openSpokesman(); });
+
+function openSpokesman() {
+  VM.play(spokesmanModalVideo);
+  spokesmanModal.classList.add('open');
+  spokesmanModalVideo.play().catch(() => {});
+}
+
+function closeSpokesman() {
+  VM.stop();
+  spokesmanModal.classList.remove('open');
+}
+
+spokesmanModalClose.addEventListener('click', closeSpokesman);
+spokesmanModal.addEventListener('click', e => {
+  if (e.target === spokesmanModal) closeSpokesman();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeSpokesman();
+  }
+});
+
+// ABOUT INTERSECTION OBSERVER
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.25 });
+
+observer.observe(document.getElementById('about-portrait'));
+observer.observe(document.getElementById('about-text'));
+</script>
+</body>
+</html>

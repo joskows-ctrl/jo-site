@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JONAH OSKOW — Film & Commercial Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #111;
+    --text: #fff;
+    --accent: #44aaff;
+    --muted: rgba(255,255,255,0.25);
+    --left-w: 38vw;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    height: 100%;
+  }
+
+  body { overflow-x: hidden; }
+
+  /* OPT-NAV */
+  #opt-nav {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 220px;
+  }
+  #opt-nav a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--muted);
+    padding: 2px 5px;
+    border-radius: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  #opt-nav a:hover, #opt-nav a.active { color: var(--accent); border-color: var(--accent); }
+
+  /* MAIN LAYOUT */
+  .site-wrapper {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width: var(--left-w);
+    min-width: 280px;
+    flex-shrink: 0;
+    background: var(--bg);
+    border-right: 1px solid rgba(255,255,255,0.08);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 52px 40px;
+    z-index: 20;
+  }
+
+  .name-block { margin-bottom: 20px; }
+  .name-block .first {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(2.2rem, 3.8vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--text);
+  }
+  .name-block .last {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(2.2rem, 3.8vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .role {
+    font-size: 0.72rem;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 12px;
+    margin-bottom: 6px;
+  }
+  .email-link {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    transition: color 0.2s;
+  }
+  .email-link:hover { color: var(--accent); }
+
+  .spokesman-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 32px;
+    margin-bottom: 8px;
+  }
+  .spokesman-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #1a1a1a;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.2s;
+    max-width: 340px;
+  }
+  .spokesman-thumb:hover { border-color: var(--accent); }
+  .spokesman-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.45;
+  }
+  .play-circle {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .play-circle svg { width: 48px; height: 48px; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.7)); }
+
+  .left-footer {
+    margin-top: auto;
+    font-size: 0.6rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    line-height: 1.7;
+  }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    margin-left: var(--left-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* CATEGORY TABS */
+  .cat-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+    padding-top: 52px;
+  }
+  .cat-tab {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 14px 22px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+  .cat-tab:hover { color: var(--text); }
+  .cat-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* CONTENT AREA */
+  .content-area {
+    flex: 1;
+    padding: 32px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .cat-name-large {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+
+  /* FILMSTRIP */
+  .filmstrip-wrap {
+    position: relative;
+  }
+  .filmstrip {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.12) transparent;
+    padding-bottom: 8px;
+  }
+  .filmstrip::-webkit-scrollbar { height: 4px; }
+  .filmstrip::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+
+  .strip-item {
+    flex-shrink: 0;
+    width: 240px;
+    aspect-ratio: 16/9;
+    background: #1c1c1c;
+    border-radius: 3px;
+    scroll-snap-align: start;
+    cursor: pointer;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .strip-item:hover { transform: scale(1.03); }
+  .strip-item.selected { border-color: var(--accent); }
+
+  .strip-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .strip-play svg { width: 28px; height: 28px; opacity: 0.7; transition: opacity 0.2s; }
+  .strip-item:hover .strip-play svg { opacity: 1; }
+  .strip-item.selected .strip-play svg { opacity: 0.4; }
+
+  .strip-num {
+    position: absolute;
+    bottom: 6px;
+    left: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* LARGE PLAYER */
+  .large-player-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #0a0a0a;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  #main-player {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+  }
+
+  .player-default-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: opacity 0.3s;
+  }
+  .player-default-overlay.hidden { opacity: 0; pointer-events: none; }
+  .player-default-overlay .arrow-up {
+    font-size: 1.8rem;
+    color: var(--muted);
+  }
+  .player-default-overlay p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ABOUT SECTION */
+  .about-section {
+    min-height: 100vh;
+    background: #0e0e0e;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    padding: 80px 40px;
+  }
+
+  .about-inner {
+    display: flex;
+    gap: 80px;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .about-portrait-wrap {
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+  .about-portrait {
+    width: 300px;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transform: translateX(-60px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .about-portrait.revealed { opacity: 1; transform: translateX(0); }
+
+  .about-text-side {
+    flex: 1;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s;
+  }
+  .about-text-side.revealed { opacity: 1; transform: translateX(0); }
+
+  .about-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .about-text-side h2 {
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  .about-text-side p {
+    font-size: 0.9rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 14px;
+  }
+  .about-awards {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .award-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 5px 10px;
+    border-radius: 2px;
+  }
+
+  /* SPOKESMAN MODAL */
+  #spokesman-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.93);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  #spokesman-modal.open { display: flex; }
+  .modal-inner {
+    position: relative;
+    width: min(80vw, 900px);
+  }
+  .modal-inner video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: block;
+    background: #000;
+    border-radius: 4px;
+  }
+  .modal-close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.6rem;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .modal-close:hover { opacity: 1; }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .left-panel {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      min-width: unset;
+      height: auto;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 14px 20px;
+      gap: 12px;
+      border-right: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .name-block .first, .name-block .last { font-size: 1.4rem; }
+    .spokesman-label, .spokesman-thumb, .left-footer { display: none; }
+    .right-panel { margin-left: 0; }
+    .cat-tabs { padding-top: 16px; overflow-x: auto; }
+    .content-area { padding: 20px; }
+    .about-section { padding: 40px 20px; }
+    .about-inner { flex-direction: column; gap: 40px; }
+    .about-portrait { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="opt-nav">
+  <a href="option-21.html">21</a>
+  <a href="option-22.html" class="active">22</a>
+  <a href="option-23.html">23</a>
+  <a href="option-24.html">24</a>
+  <a href="option-25.html">25</a>
+</nav>
+
+<div class="site-wrapper">
+
+  <!-- LEFT PANEL -->
+  <aside class="left-panel">
+    <div class="name-block">
+      <div class="first">JONAH</div>
+      <div class="last">OSKOW</div>
+    </div>
+    <div class="role">Film &amp; Commercial Editor</div>
+    <a class="email-link" href="mailto:joskows@gmail.com">joskows@gmail.com</a>
+
+    <div class="spokesman-label">Get Up To Speed</div>
+    <div class="spokesman-thumb" id="spokesman-thumb" role="button" tabindex="0">
+      <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+      <div class="play-circle">
+        <svg viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="23" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.4)"/>
+          <polygon points="20,15 34,24 20,33" fill="white"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="left-footer">
+      CANNES · CLIOS · ONE SHOW<br>
+      COMEDY CENTRAL · NETFLIX<br>
+      IDRIS ELBA · PETE DAVIDSON<br>
+      JAMIE LEE CURTIS
+    </div>
+  </aside>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <!-- TABS -->
+    <div class="cat-tabs" id="cat-tabs">
+      <!-- populated by JS -->
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content-area" id="content-area">
+      <div class="cat-name-large" id="cat-name-large"></div>
+      <div class="filmstrip" id="filmstrip"></div>
+      <div class="large-player-wrap">
+        <video id="main-player" controls playsinline></video>
+        <div class="player-default-overlay" id="player-overlay">
+          <div class="arrow-up">↑</div>
+          <p>Select from strip</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section class="about-section" id="about">
+      <div class="about-inner">
+        <div class="about-portrait-wrap">
+          <img class="about-portrait" id="about-portrait" src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow">
+        </div>
+        <div class="about-text-side" id="about-text">
+          <div class="about-label">About</div>
+          <h2>Comedy editor.<br>NYC commercial roots.</h2>
+          <p>Jonah Oskow is a film and commercial editor with deep roots in New York's advertising world. His work spans comedy, narrative, and brand storytelling — always with a sharp eye for timing and rhythm.</p>
+          <p>Award winner at Cannes Lions, the Clios, and the One Show. Featured work on Comedy Central and Netflix. Collaborated with Idris Elba, Pete Davidson, and Jamie Lee Curtis.</p>
+          <div class="about-awards">
+            <span class="award-tag">CANNES LIONS</span>
+            <span class="award-tag">CLIOS</span>
+            <span class="award-tag">ONE SHOW</span>
+            <span class="award-tag">COMEDY CENTRAL</span>
+            <span class="award-tag">NETFLIX</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- SPOKESMAN MODAL -->
+<div id="spokesman-modal" role="dialog" aria-modal="true">
+  <div class="modal-inner">
+    <button class="modal-close" id="modal-close">×</button>
+    <video id="spokesman-video" controls playsinline src="https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4"></video>
+  </div>
+</div>
+
+<script>
+const VM = {
+  current: null,
+  play(el) {
+    if (this.current && this.current !== el) {
+      this.current.pause();
+      this.current.currentTime = 0;
+    }
+    this.current = el;
+  },
+  stop() {
+    if (this.current) {
+      this.current.pause();
+      this.current.currentTime = 0;
+      this.current = null;
+    }
+  }
+};
+
+const CATEGORIES = [
+  { id: 'comedy', label: 'Comedy' },
+  { id: 'social', label: 'Social Media' },
+  { id: 'film', label: 'Film / Episodic' },
+  { id: 'ai', label: 'AI Direction' },
+];
+
+const TITLES = [
+  'Mountain Dew "Kickstart"', 'Tide "Miracle Clothes"', 'Old Spice "Horse"',
+  'Pizza Hut "Stuffed"', 'Pepsi "Live For Now"', 'Snickers "You\'re Not You"',
+  'Charmin "Bears"', 'E*TRADE "Baby"', 'Geico "Hump Day"',
+  'Bud Light "Dilly Dilly"', 'Progressive "Flo"', 'Dollar Shave Club',
+  'Netflix "Stranger Promos"', 'Comedy Central Rebrand', 'SNL Digital Short',
+  'Adult Swim "Off the Air"', 'Hulu Original Cut', 'Amazon "Making The Cut"',
+  'AI Campaign "Next Self"', 'Synthetic Spot "FutureCo"', 'DeepBrand "Launch"',
+  'Generative Film "Echo"', 'LLM Director Cut', 'Neural Reel 2025',
+];
+
+const WORK_SRC = 'https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4';
+
+const catTabs = document.getElementById('cat-tabs');
+const filmstrip = document.getElementById('filmstrip');
+const catNameLarge = document.getElementById('cat-name-large');
+const mainPlayer = document.getElementById('main-player');
+const playerOverlay = document.getElementById('player-overlay');
+
+let activeCat = 0;
+
+// Build tabs
+CATEGORIES.forEach((cat, i) => {
+  const tab = document.createElement('button');
+  tab.className = 'cat-tab' + (i === 0 ? ' active' : '');
+  tab.textContent = cat.label;
+  tab.addEventListener('mouseenter', () => switchCat(i));
+  catTabs.appendChild(tab);
+});
+
+function switchCat(idx) {
+  // sticky hover: only mouseenter, no deactivation on leave
+  document.querySelectorAll('.cat-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  activeCat = idx;
+  buildFilmstrip(idx);
+}
+
+function buildFilmstrip(catIdx) {
+  const cat = CATEGORIES[catIdx];
+  catNameLarge.textContent = cat.label;
+  filmstrip.innerHTML = '';
+
+  VM.stop();
+  mainPlayer.src = '';
+  playerOverlay.classList.remove('hidden');
+
+  for (let i = 0; i < 6; i++) {
+    const titleIdx = catIdx * 6 + i;
+    const item = document.createElement('div');
+    item.className = 'strip-item';
+    item.innerHTML = `
+      <div class="strip-play">
+        <svg viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+      <span class="strip-num">${String(i + 1).padStart(2,'0')}</span>
+    `;
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.strip-item').forEach(s => s.classList.remove('selected'));
+      item.classList.add('selected');
+      mainPlayer.src = WORK_SRC;
+      playerOverlay.classList.add('hidden');
+      VM.play(mainPlayer);
+      mainPlayer.play().catch(() => {});
+    });
+    filmstrip.appendChild(item);
+  }
+}
+
+// Init
+buildFilmstrip(0);
+
+// Spokesman modal
+const spokeThumb = document.getElementById('spokesman-thumb');
+const spokeModal = document.getElementById('spokesman-modal');
+const spokeVideo = document.getElementById('spokesman-video');
+const modalClose = document.getElementById('modal-close');
+
+function openModal() {
+  spokeModal.classList.add('open');
+  VM.play(spokeVideo);
+  spokeVideo.play().catch(() => {});
+}
+function closeModal() {
+  VM.stop();
+  spokeModal.classList.remove('open');
+}
+
+spokeThumb.addEventListener('click', openModal);
+spokeThumb.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(); });
+modalClose.addEventListener('click', closeModal);
+spokeModal.addEventListener('click', e => { if (e.target === spokeModal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// About IntersectionObserver: slide in from sides
+const aboutPortrait = document.getElementById('about-portrait');
+const aboutText = document.getElementById('about-text');
+
+const aboutObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      aboutPortrait.classList.add('revealed');
+      aboutText.classList.add('revealed');
+    }
+  });
+}, { threshold: 0.2 });
+
+aboutObs.observe(document.getElementById('about'));
+</script>
+</body>
+</html>

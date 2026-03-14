@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonah Oskow — Film & Commercial Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Special+Elite&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f0e8;
+  --bg2: #ede7d9;
+  --bg3: #e6dfd0;
+  --text: #2a2318;
+  --text-dim: #7a6e5e;
+  --text-xdim: #b5aa98;
+  --border: rgba(42,35,24,0.18);
+  --border-warm: rgba(42,35,24,0.28);
+  --accent: #8b6914;
+  --sepia: sepia(25%) brightness(0.92) contrast(1.05);
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ─── FILM GRAIN OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 400px 400px;
+  mix-blend-mode: multiply;
+}
+
+/* Animated grain */
+@keyframes grain {
+  0%   { background-position: 0 0; }
+  10%  { background-position: -5% -10%; }
+  20%  { background-position: -15% 5%; }
+  30%  { background-position: 7% -15%; }
+  40%  { background-position: -5% 20%; }
+  50%  { background-position: -20% 10%; }
+  60%  { background-position: 15% 0%; }
+  70%  { background-position: 0 25%; }
+  80%  { background-position: 20% 10%; }
+  90%  { background-position: -10% 15%; }
+  100% { background-position: 0 0; }
+}
+body::before { animation: grain 0.5s steps(1) infinite; }
+
+/* ─── HEADER ─── */
+header {
+  padding: 56px 64px 40px;
+  text-align: center;
+  border-bottom: 2px solid var(--border-warm);
+  position: relative;
+}
+
+/* Film perforations strip top */
+header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 14px,
+      var(--border) 14px, var(--border) 15px,
+      transparent 15px, transparent 20px
+    );
+  border-bottom: 1px solid var(--border);
+}
+
+.site-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  letter-spacing: 0.12em;
+  color: var(--text);
+  line-height: 1;
+  margin-top: 8px;
+}
+
+.site-role {
+  font-family: 'Special Elite', cursive;
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  color: var(--text-dim);
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+
+/* ─── FILM STRIP HERO (Spokesman) ─── */
+.filmstrip-hero {
+  margin: 48px auto;
+  max-width: 640px;
+  position: relative;
+  padding: 0 40px;
+}
+
+/* Sprocket holes left */
+.filmstrip-hero::before,
+.filmstrip-hero::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 32px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  background-image:
+    radial-gradient(circle, var(--bg) 5px, transparent 5px);
+  background-repeat: repeat-y;
+  background-size: 32px 28px;
+  background-position: center 8px;
+}
+.filmstrip-hero::before { left: 0; border-right: none; }
+.filmstrip-hero::after  { right: 0; border-left: none; }
+
+.filmstrip-frame {
+  background: var(--bg3);
+  border: 1px solid var(--border-warm);
+  border-left: none;
+  border-right: none;
+  padding: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  transition: background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.filmstrip-frame:hover { background: var(--bg2); }
+
+.filmstrip-frame::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--border-warm);
+}
+.filmstrip-frame::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--border-warm);
+}
+
+.strip-play {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid var(--border-warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: var(--text);
+  padding-left: 5px;
+  transition: background 0.3s, border-color 0.3s;
+}
+.filmstrip-frame:hover .strip-play {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+.strip-label {
+  font-family: 'Special Elite', cursive;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+/* ─── WORK STRIPS (accordion) ─── */
+.strips-section {
+  max-width: 900px;
+  margin: 0 auto 0;
+  padding: 0 48px;
+}
+
+.strip-row {
+  border-top: 1px solid var(--border);
+  overflow: hidden;
+}
+.strip-row:last-child { border-bottom: 1px solid var(--border); }
+
+.strip-header {
+  display: flex;
+  align-items: center;
+  padding: 22px 0;
+  cursor: pointer;
+  transition: background 0.25s;
+  position: relative;
+  gap: 20px;
+}
+.strip-header:hover { background: rgba(42,35,24,0.03); }
+.strip-header.open { background: rgba(42,35,24,0.04); }
+
+.strip-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: var(--text-xdim);
+  min-width: 32px;
+}
+.strip-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  letter-spacing: 0.1em;
+  color: var(--text);
+  line-height: 1;
+  transition: color 0.25s;
+}
+.strip-header:hover .strip-title { color: var(--accent); }
+.strip-header.open .strip-title { color: var(--accent); }
+
+.strip-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-left: auto;
+}
+.strip-arrow {
+  font-size: 1rem;
+  color: var(--text-xdim);
+  margin-left: 16px;
+  transition: transform 0.35s ease, color 0.25s;
+}
+.strip-header.open .strip-arrow {
+  transform: rotate(90deg);
+  color: var(--accent);
+}
+
+/* Accordion content */
+.strip-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.strip-body.open { max-height: 400px; }
+
+.strip-thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 4px 0 28px;
+}
+
+.strip-thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: var(--bg3);
+  border: 1px solid var(--border-warm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: background 0.25s, border-color 0.25s;
+}
+.strip-thumb:hover { background: var(--bg2); border-color: var(--border-warm); }
+
+/* Sprocket decoration on thumbs */
+.strip-thumb::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background-image:
+    radial-gradient(circle at 50% 50%, var(--border-warm) 2px, transparent 2px);
+  background-repeat: repeat-x;
+  background-size: 18px 6px;
+  opacity: 0.6;
+}
+.strip-thumb::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background-image:
+    radial-gradient(circle at 50% 50%, var(--border-warm) 2px, transparent 2px);
+  background-repeat: repeat-x;
+  background-size: 18px 6px;
+  opacity: 0.6;
+}
+
+.thumb-play-inner {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-warm);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  padding-left: 3px;
+  transition: background 0.25s, color 0.25s, border-color 0.25s;
+  z-index: 1;
+}
+.strip-thumb:hover .thumb-play-inner {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+.thumb-caption {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: 'Special Elite', cursive;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--text-xdim);
+  text-transform: uppercase;
+}
+
+/* ─── ABOUT SECTION ─── */
+.about-section {
+  margin-top: 72px;
+  padding: 72px 48px;
+  background: var(--bg2);
+  border-top: 2px solid var(--border-warm);
+  position: relative;
+}
+
+/* Film strip top edge */
+.about-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 12px,
+      var(--border) 12px, var(--border) 13px,
+      transparent 13px, transparent 18px
+    );
+  border-bottom: 1px solid var(--border);
+}
+
+.about-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.about-portrait-wrap {
+  position: relative;
+}
+.about-portrait {
+  width: 100%;
+  display: block;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: top;
+  filter: var(--sepia);
+  border: 2px solid var(--border-warm);
+}
+
+/* Film frame corners */
+.portrait-corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--accent);
+  border-style: solid;
+  opacity: 0.5;
+}
+.portrait-corner.tl { top: -8px; left: -8px; border-width: 2px 0 0 2px; }
+.portrait-corner.tr { top: -8px; right: -8px; border-width: 2px 2px 0 0; }
+.portrait-corner.bl { bottom: -8px; left: -8px; border-width: 0 0 2px 2px; }
+.portrait-corner.br { bottom: -8px; right: -8px; border-width: 0 2px 2px 0; }
+
+.portrait-caption {
+  margin-top: 14px;
+  font-family: 'Special Elite', cursive;
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  color: var(--text-xdim);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.about-text {}
+.about-eyebrow {
+  font-family: 'Special Elite', cursive;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.about-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  letter-spacing: 0.08em;
+  color: var(--text);
+  line-height: 1.05;
+  margin-bottom: 24px;
+}
+.about-body {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+.about-rule {
+  width: 48px;
+  height: 1px;
+  background: var(--border-warm);
+  margin: 24px 0;
+}
+.about-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 32px;
+  margin-bottom: 32px;
+}
+.spec-k {
+  font-family: 'Special Elite', cursive;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--text-xdim);
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.spec-v {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+}
+.about-cta {
+  display: inline-block;
+  padding: 11px 28px;
+  border: 1px solid var(--border-warm);
+  font-family: 'Special Elite', cursive;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--text);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 0.3s, color 0.3s;
+}
+.about-cta:hover { background: var(--text); color: var(--bg); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 28px 48px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg3);
+  position: relative;
+}
+footer::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 12px,
+      var(--border) 12px, var(--border) 13px,
+      transparent 13px, transparent 18px
+    );
+  border-top: 1px solid var(--border);
+}
+footer p { font-family: 'Special Elite', cursive; font-size: 0.68rem; letter-spacing: 0.14em; color: var(--text-xdim); }
+footer a { font-family: 'Special Elite', cursive; font-size: 0.68rem; letter-spacing: 0.14em; color: var(--text-dim); text-decoration: none; }
+footer a:hover { color: var(--text); }
+
+/* ─── MODAL ─── */
+#modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.97);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+#modal-video {
+  width: 90%;
+  max-width: 960px;
+  aspect-ratio: 16/9;
+}
+#modal-close {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  font-size: 2.5rem;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* ─── OPT-NAV ─── */
+#opt-nav {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 8888;
+  font-size: 10px;
+  font-family: monospace;
+  background: rgba(245,240,232,0.96);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 8px 10px;
+  max-height: 220px;
+  overflow-y: auto;
+  line-height: 1.8;
+}
+#opt-nav a {
+  color: #aaa;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0 3px;
+  transition: color 0.2s;
+}
+#opt-nav a:hover { color: #5a4a2a; }
+#opt-nav a.current { color: #8b6914; font-weight: bold; }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border-warm); border-radius: 2px; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 800px) {
+  header { padding: 40px 24px 32px; }
+  .strips-section { padding: 0 24px; }
+  .strip-thumbs { grid-template-columns: 1fr 1fr; }
+  .strip-tagline { display: none; }
+  .filmstrip-hero { padding: 0 24px; }
+  .about-section { padding: 56px 24px; }
+  .about-inner { grid-template-columns: 1fr; gap: 32px; }
+  .about-portrait { max-width: 220px; }
+  footer { padding: 20px 24px; flex-direction: column; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- MODAL -->
+<div id="modal">
+  <video id="modal-video" controls style="width:90%;max-width:960px;aspect-ratio:16/9;"></video>
+  <button id="modal-close" style="position:fixed;top:24px;right:32px;font-size:2.5rem;color:#fff;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="site-name">Jonah Oskow</div>
+  <div class="site-role">Film &amp; Commercial Editor</div>
+</header>
+
+<!-- FILMSTRIP HERO — SPOKESMAN -->
+<div class="filmstrip-hero">
+  <div class="filmstrip-frame" onclick="openVideo('https://highly-appropriate.b-cdn.net/WeAreJonah_0305.mp4')">
+    <div class="strip-play">▶</div>
+    <div class="strip-label">▶ Watch Intro · 0:37</div>
+  </div>
+</div>
+
+<!-- WORK STRIPS -->
+<div class="strips-section">
+
+  <!-- COMEDY -->
+  <div class="strip-row">
+    <div class="strip-header" id="sh-comedy" onclick="toggleStrip('comedy')">
+      <span class="strip-num">01</span>
+      <span class="strip-title">Comedy</span>
+      <span class="strip-tagline">Timing is everything</span>
+      <span class="strip-arrow">›</span>
+    </div>
+    <div class="strip-body" id="sb-comedy">
+      <div class="strip-thumbs">
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">Sketch Series · 2024</div>
+        </div>
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">Branded Comedy · 2023</div>
+        </div>
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">Character Spots · 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL MEDIA -->
+  <div class="strip-row">
+    <div class="strip-header" id="sh-social" onclick="toggleStrip('social')">
+      <span class="strip-num">02</span>
+      <span class="strip-title">Social Media</span>
+      <span class="strip-tagline">Native-first, scroll-stopping</span>
+      <span class="strip-arrow">›</span>
+    </div>
+    <div class="strip-body" id="sb-social">
+      <div class="strip-thumbs">
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">Campaign Reels · 2024</div>
+        </div>
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">Short-form Series · 2024</div>
+        </div>
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">Influencer Edits · 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILM / EPISODIC -->
+  <div class="strip-row">
+    <div class="strip-header" id="sh-film" onclick="toggleStrip('film')">
+      <span class="strip-num">03</span>
+      <span class="strip-title">Film / Episodic</span>
+      <span class="strip-tagline">Long-form, by intention</span>
+      <span class="strip-arrow">›</span>
+    </div>
+    <div class="strip-body" id="sb-film">
+      <div class="strip-thumbs">
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">Feature Doc · 2024</div>
+        </div>
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">Pilot Episode · 2023</div>
+        </div>
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">Short Film · 2022</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI DIRECTION -->
+  <div class="strip-row">
+    <div class="strip-header" id="sh-ai" onclick="toggleStrip('ai')">
+      <span class="strip-num">04</span>
+      <span class="strip-title">AI Direction</span>
+      <span class="strip-tagline">Frontier of generative media</span>
+      <span class="strip-arrow">›</span>
+    </div>
+    <div class="strip-body" id="sb-ai">
+      <div class="strip-thumbs">
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">AI Narrative · 2024</div>
+        </div>
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">Hybrid Prod · 2024</div>
+        </div>
+        <div class="strip-thumb" onclick="openVideo('https://highly-appropriate.b-cdn.net/HA%20reel/individualshots/BGReel.mp4')">
+          <div class="thumb-play-inner">▶</div>
+          <div class="thumb-caption">AI Direction Reel · 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /strips-section -->
+
+<!-- ABOUT SECTION -->
+<section class="about-section">
+  <div class="about-inner">
+    <div class="about-portrait-wrap">
+      <img src="https://highly-appropriate.b-cdn.net/portraits/jonah.jpg" alt="Jonah Oskow" class="about-portrait">
+      <div class="portrait-corner tl"></div>
+      <div class="portrait-corner tr"></div>
+      <div class="portrait-corner bl"></div>
+      <div class="portrait-corner br"></div>
+      <div class="portrait-caption">Jonah Oskow — New York</div>
+    </div>
+    <div class="about-text">
+      <div class="about-eyebrow">About the Editor</div>
+      <h2 class="about-headline">Craft Refined Through<br>Every Frame</h2>
+      <p class="about-body">Jonah Oskow is a New York-based film and commercial editor whose work spans comedy, branded content, long-form narrative, and the emerging frontier of AI-directed media. His editorial voice is built on rhythm, emotional precision, and a deep respect for the story in every cut.</p>
+      <p class="about-body">Whether shaping a network comedy pilot or a single-take brand film, he brings the same obsessive craft to every project. The work is in the details — the frame you hold, the one you drop, and exactly when.</p>
+      <div class="about-rule"></div>
+      <div class="about-specs">
+        <div>
+          <div class="spec-k">Disciplines</div>
+          <div class="spec-v">Comedy · Social Media · Film / Episodic · AI Direction</div>
+        </div>
+        <div>
+          <div class="spec-k">Location</div>
+          <div class="spec-v">New York, NY</div>
+        </div>
+        <div>
+          <div class="spec-k">Software</div>
+          <div class="spec-v">Avid Media Composer · Premiere Pro · DaVinci Resolve</div>
+        </div>
+        <div>
+          <div class="spec-k">Engagements</div>
+          <div class="spec-v">Freelance &amp; Staff</div>
+        </div>
+      </div>
+      <a href="mailto:joskows@gmail.com" class="about-cta">Get in Touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2024 Jonah Oskow — Film &amp; Commercial Editor</p>
+  <a href="mailto:joskows@gmail.com">joskows@gmail.com</a>
+</footer>
+
+<!-- OPT-NAV -->
+<div id="opt-nav">
+  Options:
+  <a href="option-1.html">1</a><a href="option-2.html">2</a><a href="option-3.html">3</a><a href="option-4.html">4</a><a href="option-5.html">5</a><a href="option-6.html">6</a><a href="option-7.html">7</a><a href="option-8.html">8</a><a href="option-9.html">9</a><a href="option-10.html">10</a><a href="option-11.html">11</a><a href="option-12.html">12</a><a href="option-13.html">13</a><a href="option-14.html">14</a><a href="option-15.html">15</a><a href="option-16.html">16</a><a href="option-17.html">17</a><a href="option-18.html">18</a><a href="option-19.html">19</a><a href="option-20.html">20</a><a href="option-21.html">21</a><a href="option-22.html">22</a><a href="option-23.html">23</a><a href="option-24.html">24</a><a href="option-25.html">25</a><a href="option-26.html">26</a><a href="option-27.html">27</a><a href="option-28.html">28</a><a href="option-29.html">29</a><a href="option-30.html">30</a><a href="option-31.html">31</a><a href="option-32.html">32</a><a href="option-33.html">33</a><a href="option-34.html">34</a><a href="option-35.html">35</a><a href="option-36.html">36</a><a href="option-37.html">37</a><a href="option-38.html">38</a><a href="option-39.html">39</a><a href="option-40.html" class="current">40</a><a href="option-41.html">41</a><a href="option-42.html">42</a><a href="option-43.html">43</a><a href="option-44.html">44</a><a href="option-45.html">45</a>
+</div>
+
+<script>
+// ─── MODAL ───
+const modal = document.getElementById('modal');
+const mv = document.getElementById('modal-video');
+function openVideo(src) { mv.src = src; modal.style.display = 'flex'; mv.play(); }
+function closeModal() { mv.pause(); mv.src = ''; modal.style.display = 'none'; }
+document.getElementById('modal-close').onclick = closeModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ─── ACCORDION STRIPS ───
+const strips = ['comedy', 'social', 'film', 'ai'];
+
+function toggleStrip(id) {
+  const header = document.getElementById('sh-' + id);
+  const body = document.getElementById('sb-' + id);
+  const isOpen = body.classList.contains('open');
+
+  // Close all
+  strips.forEach(s => {
+    document.getElementById('sh-' + s).classList.remove('open');
+    document.getElementById('sb-' + s).classList.remove('open');
+  });
+
+  // Open this one if it wasn't open
+  if (!isOpen) {
+    header.classList.add('open');
+    body.classList.add('open');
+  }
+}
+
+// Auto-open comedy on load
+setTimeout(() => toggleStrip('comedy'), 150);
+</script>
+</body>
+</html>
