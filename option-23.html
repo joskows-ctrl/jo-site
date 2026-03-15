@@ -26,28 +26,38 @@
   }
 
   /* OPT-NAV */
-  #opt-nav {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    z-index: 9999;
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    max-width: 220px;
-  }
-  #opt-nav a {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    color: var(--muted);
-    text-decoration: none;
-    border: 1px solid var(--muted);
-    padding: 2px 5px;
-    border-radius: 2px;
-    transition: color 0.2s, border-color 0.2s;
-  }
-  #opt-nav a:hover, #opt-nav a.active { color: var(--accent); border-color: var(--accent); }
+  .opt-nav {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0,0,0,0.75);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 6px 16px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+}
+.opt-nav a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+  transition: color 0.2s;
+  font-family: sans-serif;
+}
+.opt-nav a:hover { color: #fff; }
+.opt-nav .opt-label {
+  color: rgba(255,255,255,0.5);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  font-family: sans-serif;
+}
 
   /* LAYOUT */
   .site-wrapper {
@@ -485,12 +495,10 @@
 </head>
 <body>
 
-<nav id="opt-nav">
-  <a href="option-21.html">21</a>
-  <a href="option-22.html">22</a>
-  <a href="option-23.html" class="active">23</a>
-  <a href="option-24.html">24</a>
-  <a href="option-25.html">25</a>
+<nav class="opt-nav">
+  <a href="option-22.html" class="opt-prev">&#8592;</a>
+  <span class="opt-label">23 / 45 &mdash; VIDEOMANAGER</span>
+  <a href="option-24.html" class="opt-next">&#8594;</a>
 </nav>
 
 <div class="site-wrapper">

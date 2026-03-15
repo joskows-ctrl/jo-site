@@ -29,27 +29,38 @@ body {
 }
 
 /* ── DEV NAV ── */
-#opt-nav {
+.opt-nav {
   position: fixed;
-  top: 12px;
-  right: 12px;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 9999;
   display: flex;
-  gap: 4px;
-  background: rgba(0,0,0,0.08);
-  padding: 5px 8px;
-  border-radius: 3px;
-  border: 1px solid rgba(0,0,0,0.1);
+  align-items: center;
+  gap: 14px;
+  background: rgba(0,0,0,0.75);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 6px 16px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
 }
-#opt-nav a {
-  color: rgba(0,0,0,0.35);
+.opt-nav a {
+  color: rgba(255,255,255,0.7);
   text-decoration: none;
-  font-family: var(--sans);
-  font-size: 10px;
+  font-size: 16px;
+  line-height: 1;
   padding: 2px 4px;
   transition: color 0.2s;
+  font-family: sans-serif;
 }
-#opt-nav a:hover, #opt-nav a.active { color: var(--black); }
+.opt-nav a:hover { color: #fff; }
+.opt-nav .opt-label {
+  color: rgba(255,255,255,0.5);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  font-family: sans-serif;
+}
 
 /* ── WRAPPER ── */
 .wrapper {
@@ -362,17 +373,10 @@ footer {
 <body>
 
 <!-- Dev Nav -->
-<nav id="opt-nav">
-  <a href="option-1.html">1</a>
-  <a href="option-2.html">2</a>
-  <a href="option-3.html">3</a>
-  <a href="option-4.html">4</a>
-  <a href="option-5.html">5</a>
-  <a href="option-6.html">6</a>
-  <a href="option-7.html">7</a>
-  <a href="option-8.html">8</a>
-  <a href="option-9.html" class="active">9</a>
-  <a href="option-10.html">10</a>
+<nav class="opt-nav">
+  <a href="option-8.html" class="opt-prev">&#8592;</a>
+  <span class="opt-label">9 / 45 &mdash; INDEX</span>
+  <a href="option-10.html" class="opt-next">&#8594;</a>
 </nav>
 
 <!-- Header -->

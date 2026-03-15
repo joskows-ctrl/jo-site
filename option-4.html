@@ -27,33 +27,35 @@ body {
 /* ── OPT NAV ── */
 .opt-nav {
   position: fixed;
-  top: 14px;
-  right: 14px;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 9999;
   display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  max-width: 220px;
-  justify-content: flex-end;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0,0,0,0.75);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 6px 16px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
 }
 .opt-nav a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px; height: 26px;
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.7);
   text-decoration: none;
-  font-size: 10px;
-  font-family: var(--mono);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 3px;
-  transition: all 0.2s;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+  transition: color 0.2s;
+  font-family: sans-serif;
 }
-.opt-nav a:hover, .opt-nav a.active {
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  border-color: rgba(255,255,255,0.3);
+.opt-nav a:hover { color: #fff; }
+.opt-nav .opt-label {
+  color: rgba(255,255,255,0.5);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  font-family: sans-serif;
 }
 
 /* ── STAGE (initial minimal screen) ── */
@@ -395,16 +397,9 @@ body {
 
 <!-- Dev Nav -->
 <nav class="opt-nav">
-  <a href="option-1.html">1</a>
-  <a href="option-2.html">2</a>
-  <a href="option-3.html">3</a>
-  <a href="option-4.html" class="active">4</a>
-  <a href="option-5.html">5</a>
-  <a href="option-6.html">6</a>
-  <a href="option-7.html">7</a>
-  <a href="option-8.html">8</a>
-  <a href="option-9.html">9</a>
-  <a href="option-10.html">10</a>
+  <a href="option-3.html" class="opt-prev">&#8592;</a>
+  <span class="opt-label">4 / 45 &mdash; HOVER REVEAL</span>
+  <a href="option-5.html" class="opt-next">&#8594;</a>
 </nav>
 
 <!-- Vertical rule -->

@@ -293,41 +293,35 @@ body {
 .opt-nav {
   position: fixed;
   bottom: 20px;
-  right: 20px;
-  z-index: 600;
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  background: rgba(0,0,0,0.8);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 6px;
-  padding: 10px 14px;
-  max-height: 220px;
-  overflow-y: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0,0,0,0.75);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 6px 16px;
+  border-radius: 999px;
   backdrop-filter: blur(8px);
 }
-.opt-nav summary {
-  cursor: pointer;
-  color: rgba(255,255,255,0.3);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-size: 0.58rem;
-  list-style: none;
-  margin-bottom: 6px;
-}
-.opt-nav summary:hover { color: rgba(255,255,255,0.7); }
-.opt-nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.opt-nav-links a {
-  color: rgba(255,255,255,0.3);
+.opt-nav a {
+  color: rgba(255,255,255,0.7);
   text-decoration: none;
-  font-size: 0.58rem;
-  transition: color 0.15s;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+  transition: color 0.2s;
+  font-family: sans-serif;
 }
-.opt-nav-links a:hover { color: rgba(255,255,255,0.8); }
-.opt-nav-links a.current { color: rgba(255,255,255,0.65); font-weight: 600; }
+.opt-nav a:hover { color: #fff; }
+.opt-nav .opt-label {
+  color: rgba(255,255,255,0.5);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  font-family: sans-serif;
+}
 </style>
 </head>
 <body>

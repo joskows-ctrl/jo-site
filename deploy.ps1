@@ -2,8 +2,8 @@
 # Site: jo-site-jonah.netlify.app
 
 $siteId  = "9b7a0a93-101e-4e19-8bea-02d6e2b502b4"
-$dir     = "C:\Users\josko\Documents\JONAHOSKOW\jo-site"
-$envFile = "C:\Users\josko\Documents\HACLAUDE\ha-site\.env"
+$dir     = "C:\Users\josko\jo-site"
+$envFile = "C:\Users\josko\ha-site\.env"
 
 # Load token
 $envVars = @{}

@@ -31,35 +31,37 @@ body {
 }
 
 /* OPT-NAV */
-#opt-nav {
+.opt-nav {
   position: fixed;
-  top: 12px;
-  right: 12px;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 9999;
   display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  max-width: 240px;
-  justify-content: flex-end;
-}
-#opt-nav a {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  background: rgba(255,255,255,0.07);
+  gap: 14px;
+  background: rgba(0,0,0,0.75);
   border: 1px solid rgba(255,255,255,0.15);
-  color: var(--muted);
-  font-family: 'Space Mono', monospace;
-  font-size: 0.5rem;
-  text-decoration: none;
-  transition: background 0.2s, color 0.2s;
+  padding: 6px 16px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
 }
-#opt-nav a:hover, #opt-nav a.current {
-  background: var(--accent);
-  color: #000;
-  border-color: var(--accent);
+.opt-nav a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+  transition: color 0.2s;
+  font-family: sans-serif;
+}
+.opt-nav a:hover { color: #fff; }
+.opt-nav .opt-label {
+  color: rgba(255,255,255,0.5);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  font-family: sans-serif;
 }
 
 /* MAIN LAYOUT */
@@ -679,12 +681,10 @@ body {
 <body>
 
 <!-- OPT-NAV -->
-<nav id="opt-nav">
-  <a href="option-16.html" class="current">16</a>
-  <a href="option-17.html">17</a>
-  <a href="option-18.html">18</a>
-  <a href="option-19.html">19</a>
-  <a href="option-20.html">20</a>
+<nav class="opt-nav">
+  <a href="option-15.html" class="opt-prev">&#8592;</a>
+  <span class="opt-label">16 / 45 &mdash; VIDEOMANAGER</span>
+  <a href="option-17.html" class="opt-next">&#8594;</a>
 </nav>
 
 <!-- SPOKESMAN MODAL -->
